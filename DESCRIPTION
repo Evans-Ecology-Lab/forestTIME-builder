@@ -45,6 +45,6 @@ Suggests:
     waldo,
     withr
 VignetteBuilder: knitr, quarto
-URL: https://github.com/mekevans/forestTIME-builder https://cct-datascience.r-universe.dev/forestTIME.builder
-BugReports: https://github.com/mekevans/forestTIME-builder/issues
+URL: https://github.com/Evans-Ecology-Lab/forestTIME-builder https://cct-datascience.r-universe.dev/forestTIME.builder
+BugReports: https://github.com/Evans-Ecology-Lab/forestTIME-builder/issues
 Config/testthat/edition: 3

@@ -3,8 +3,8 @@
 <!-- badges: start -->
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![run_workflow.yml](https://github.com/mekevans/forestTIME-builder/actions/workflows/run_workflow.yml/badge.svg?branch=main)](https://github.com/mekevans/forestTIME-builder/actions/workflows/run_workflow.yml)
-[![R-CMD-check](https://github.com/mekevans/forestTIME-builder/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mekevans/forestTIME-builder/actions/workflows/R-CMD-check.yaml)
+[![run_workflow.yml](https://github.com/Evans-Ecology-Lab/forestTIME-builder/actions/workflows/run_workflow.yml/badge.svg?branch=main)](https://github.com/Evans-Ecology-Lab/forestTIME-builder/actions/workflows/run_workflow.yml)
+[![R-CMD-check](https://github.com/Evans-Ecology-Lab/forestTIME-builder/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Evans-Ecology-Lab/forestTIME-builder/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 > [!CAUTION]
@@ -47,7 +47,7 @@ To cite this work, please use:
 
 > Scott E.R., Diaz R., Steinberg D., Riemer K., Evans M. (2025).
 > “forestTIME.builder: Generate Annualized Carbon and Biomass Estimates From FIA
-  Data” <https://github.com/mekevans/forestTIME-builder>.
+  Data” <https://github.com/Evans-Ecology-Lab/forestTIME-builder>.
 
 Please also cite Westfall et al. (2024):
 
