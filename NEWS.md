@@ -1,4 +1,4 @@
-# forestTIME.builder (development version)
+# forestTIME.builder 2.0.0
 
 - The separate `prep_carbon()` and `estimate_carbon()` functions are no longer exported and are replaced by the combined `fia_estimate()` function.
 - Added `fia_annualize()` which is a wrapper for `df |> expand_data() |> interpolate_data |> adjust_mortality()` and prefered over running each step separately as the individual steps contain artifacts of the annualization process.
