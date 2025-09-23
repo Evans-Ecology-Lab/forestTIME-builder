@@ -1,5 +1,7 @@
 # forestTIME (development version)
 
+- The results of `fia_annualize()` now include a `midpt_dead` column which is the year a tree is estimated to be dead when `MORTYR` is not used.  If `use_mortyr = TRUE` it *also* includes a `MORTYR_eff` ("effective MORTYR") column, which is usually `MORTYR` except when a tree is alive in the recorded `MORTYR`, in which case it is `MORTYR` + 1
+
 # forestTIME 2.1.0
 
 - This package has been re-named from `forestTIME.builder` to `forestTIME`
