@@ -8,10 +8,7 @@
 #' handled with [step_interp()]. Also converts temporary `999` values created by
 #' [expand_data()] back to `NA`s.  This also assigns a value for `TPA_UNADJ`
 #' based on `DESIGNCD` and interpolated values of `DIA` according to Appendix G
-#' of the FIADB user guide and adds an `EXPNS` column equivalent to the one in
-#' FIA, but accounting for the fact that the data now contains interpolated
-#' plots (i.e. `EXPNS` = the state land area divided by the total number of
-#' plots in that state in that year in the *interpolated* data).
+#' of the FIADB user guide.
 #'
 #' @note If `HT` or `ACTUALHT` are extrapolated to values < 4.5 (or < 1 for
 #' woodland species) OR `DIA` is extrapolated to < 1, the tree is marked as
@@ -158,21 +155,21 @@ interpolate_data <- function(data_expanded) {
 
   # merge in land areas and calculate EXPNS
   out <- data_adjusted_cond |>
-    dplyr::mutate(
-      #get STATECD out of plot_ID
-      STATECD = as.numeric(stringr::str_extract(plot_ID, "\\d+(?=_)")),
-      # .before = plot_ID
-    ) |>
-    dplyr::left_join(
-      state_areas |> dplyr::select(STATECD, state_land_area),
-      by = dplyr::join_by(STATECD)
-    ) |>
-    dplyr::group_by(YEAR, STATECD) |>
-    dplyr::mutate(
-      EXPNS = state_land_area / length(unique(plot_ID))
-    ) |>
-    dplyr::ungroup() |>
-    dplyr::select(-STATECD, -state_land_area) |>
+    # dplyr::mutate(
+    #   #get STATECD out of plot_ID
+    #   STATECD = as.numeric(stringr::str_extract(plot_ID, "\\d+(?=_)")),
+    #   # .before = plot_ID
+    # ) |>
+    # dplyr::left_join(
+    #   state_areas |> dplyr::select(STATECD, state_land_area),
+    #   by = dplyr::join_by(STATECD)
+    # ) |>
+    # dplyr::group_by(YEAR, STATECD) |>
+    # dplyr::mutate(
+    #   EXPNS = state_land_area / length(unique(plot_ID))
+    # ) |>
+    # dplyr::ungroup() |>
+    # dplyr::select(-STATECD, -state_land_area) |>
     # Switch tree_ID for empty conditions back to NA
     dplyr::mutate(
       tree_ID = dplyr::if_else(stringr::str_starts(tree_ID, "NA_"), NA, tree_ID)
