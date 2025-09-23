@@ -3,19 +3,12 @@
 
 cff-version: 1.2.0
 title: >-
-  forestTIME-builder: generating annualized carbon and
-  biomass estimates from FIA data
+  forestTIME: Generate Annualized Carbon and Biomass Estimates From FIA Data
 message: >-
   If you use this software, please cite it as well as Westfall et al. 
   (2024) using the metadata from this file.
 type: software
 authors:
-  - given-names: Renata
-    family-names: Diaz
-    affiliation: >-
-      University of Arizona, Communications & Cyber
-      Technology
-    orcid: 'https://orcid.org/0000-0003-0803-4734'
   - given-names: Eric R.
     family-names: Scott
     email: ericrscott@arizona.edu
@@ -23,6 +16,12 @@ authors:
       University of Arizona, Communications & Cyber
       Technology
     orcid: 'https://orcid.org/0000-0002-7430-7879'
+  - given-names: Renata
+    family-names: Diaz
+    affiliation: >-
+      University of Arizona, Communications & Cyber
+      Technology
+    orcid: 'https://orcid.org/0000-0003-0803-4734'
   - given-names: Dani
     family-names: Steinberg
     affiliation: >-
@@ -40,16 +39,18 @@ authors:
     affiliation: >-
       University of Arizona, Laboratory of Tree Ring
       Research
-repository-code: 'https://github.com/mekevans/forestTIME-builder'
-url: 'https://github.com/mekevans/forestTIME-builder'
+repository-code: 'https://github.com/Evans-Ecology-Lab/forestTIME'
+url: 'https://evans-ecology-lab.github.io/forestTIME/'
 keywords:
   - FIA
   - forest inventory analysis
   - carbon estimation
   - biomass estimation
 license: GPL-3.0
-version: v1.1.0
-date-released: 2025-04-14
+version: 2.1.0
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.17088598
 references:
   - type: report
     title: A national-scale tree volume, biomass, and carbon modeling system for the
