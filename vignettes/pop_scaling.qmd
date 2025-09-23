@@ -128,13 +128,14 @@ data_midpt <-
 
 ## Expansion factors
 
-The FIA data provides users with expansion factors, `EXPNS`, to aid in scaling estimates up to state levels.
-There are two issues in using these provided `EXPNS` with our annualized data: 1) it is not straightforward to join the tables in to get the `EXPNS` column, and 2) there are now many more plots in each year, so the `EXPNS` column is no longer accurate (it is the acres of the entire state represented by each plot). 
-Therefore, `fia_annualize()` re-calculates the `EXPNS` column as the total land area of the state divided by the number of plots in the interpolated data for that state in each year.  
+There are two issues in using the `EXPNS` provided in the FIA data with our annualized data: 1) it is not straightforward to join the tables in to get the `EXPNS` column, and 2) there are now many more plots in each year, so the `EXPNS` column is no longer accurate (it is the acres of the entire state represented by each plot). 
+Therefore, `fia_calc_expns()` calculates the `EXPNS` column as the total land area of the state divided by the number of plots in the interpolated data for that state in each year.  
 We think these `EXPNS` values can be used much in the same way as the ones in the "raw" FIA database.
 
 ```{r}
 #| label: expns
+
+data_midpt <- data_midpt |> fia_calc_expns()
 
 data_midpt |>
   select(YEAR, EXPNS) |>

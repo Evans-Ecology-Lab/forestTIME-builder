@@ -1,5 +1,8 @@
 # forestTIME (development version)
 
+- The calculation of the `EXPNS` column no longer occurs as part of `interpolate_data()`.
+- Added a utility function, `fia_calc_expns()` to calculate and add an `EXPNS` column.
+
 # forestTIME 2.1.0
 
 - This package has been re-named from `forestTIME.builder` to `forestTIME`
