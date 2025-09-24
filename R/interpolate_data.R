@@ -39,8 +39,11 @@ interpolate_data <- function(data_expanded) {
     "DIA",
     "HT",
     "CULL",
-    "CR" #,
-    #  "CONDPROP_UNADJ" #this gets interpolated separately
+    "CR",
+    # Temporary workaround to get carbon estimates for woodland species
+    # TODO: eventually remove these
+    "CARBON_AG",
+    "DRYBIO_AG"
   )
   #variables that switch at the midpoint (rounded down) between surveys
   cols_midpt_switch <- c(

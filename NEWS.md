@@ -1,5 +1,9 @@
 # forestTIME (development version)
 
+- A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (#163). Eventually, we will modify `fia_estimate()` to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.
+  - `fia_tidy()` now keeps the `CARBON_AG` and `DRYBIO_AG` columns
+  - `interpolate_data()` (and therefore `fia_annualize()`) now linearly interpolates `CARBON_AG` and `DRYBIO_AG`
+  - `fia_estimate()` now overwrites `CARBON_AG` and `DRYBIO_AG` columns in the input unless the result of carbon estimation is `NA` (as is the case with woodland species and the occasional model fit error from the carbon estimation code)
 - The calculation of the `EXPNS` column no longer occurs as part of `interpolate_data()`.
 - Added a utility function, `fia_calc_expns()` to calculate and add an `EXPNS` column.
 
