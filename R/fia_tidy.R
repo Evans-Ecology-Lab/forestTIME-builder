@@ -76,7 +76,12 @@ fia_tidy <- function(db) {
       HT,
       ACTUALHT,
       CULL,
-      SPCD
+      SPCD,
+      # Temporary workaround for woodland species is to linearly interpolate
+      # carbon and biomass rather than re-calculated it.
+      # TODO: Eventually remove these columns to avoid confusing users.
+      CARBON_AG,
+      DRYBIO_AG
     )
 
   # Join the tables

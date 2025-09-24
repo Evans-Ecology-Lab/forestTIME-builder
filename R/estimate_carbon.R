@@ -3,7 +3,7 @@
 #' Estimates carbon using code provided by David Walker with slight
 #' modifications
 #'
-#' @param data_prepped tibble produced by [prep_carbon()]. 
+#' @param data_prepped tibble produced by [prep_carbon()].
 #' @author David Walker
 #' @noRd
 #' @returns a tibble
@@ -17,7 +17,7 @@ estimate_carbon <- function(data_prepped) {
     # Can't estimate carbon for trees with missing heights or woodland species woodland species
     dplyr::filter(JENKINS_SPGRPCD < 10, !is.na(HT)) |>
     # Can't estimate carbon for empty plots
-    dplyr::filter(!is.na(tree_ID) | !stringr::str_starts(tree_ID, "NA_")) |> 
+    dplyr::filter(!is.na(tree_ID) | !stringr::str_starts(tree_ID, "NA_")) |>
     dplyr::left_join(
       med_cr_prop |> dplyr::select(PROVINCE = Province, SFTWD_HRDWD, CRmn),
       by = dplyr::join_by(SFTWD_HRDWD, PROVINCE)
@@ -43,7 +43,10 @@ estimate_carbon <- function(data_prepped) {
 
   # original code doesn't work with NAs for STATUSCD as is the case with plots with no trees
   # fiadb[is.na(fiadb$CR) & fiadb$STATUSCD == 1, 'CR'] <- 0
-  fiadb <- dplyr::mutate(fiadb, CR = dplyr::if_else(is.na(CR) & STATUSCD == 1, 0, CR))
+  fiadb <- dplyr::mutate(
+    fiadb,
+    CR = dplyr::if_else(is.na(CR) & STATUSCD == 1, 0, CR)
+  )
 
   # planted loblolly/slash use separate equations
   fiadb[is.na(fiadb$STDORGCD), "STDORGCD"] <- 0
@@ -100,18 +103,38 @@ estimate_carbon <- function(data_prepped) {
         "DRYBIO_AG" = "BIOMASS", #Does not include foliage
         "DRIBIO_FOLIAGE" = "FOLIAGE", #just foliage
         "CARBON_AG" = "CARBON",
-        
+
         #total stem volumes
         "VOLTSGRS" = "VTOTIB_GROSS",
-        "VOLTSSND" = "VTOTIB_SOUND"#,
-        
+        "VOLTSSND" = "VTOTIB_SOUND" #,
+
         #bole volumes
-        # "VOLCFNET" = 
+        # "VOLCFNET" =
         # "VOLCFGRS" =
-        # "VOLCFSND" = 
+        # "VOLCFSND" =
       ))
     )
 
   #return
-  dplyr::left_join(data_prepped, fiadb2, by = dplyr::join_by(plot_ID, tree_ID, YEAR))
+  dplyr::left_join(
+    data_prepped, # input
+    fiadb2, # carbon estimates
+    by = dplyr::join_by(plot_ID, tree_ID, YEAR),
+    suffix = c("_interpolated", "_recalculated") # TODO: temporary
+  ) |>
+    # This is a temporary workaround for estimating carbon of woodland species
+    # through interpolation rather than re-calculating.  The `coalesce()` fills
+    # in any NAs for the re-calculated values with interpolated values
+    # TODO: eventually remove this
+    dplyr::mutate(
+      DRYBIO_AG = dplyr::coalesce(
+        DRYBIO_AG_recalculated,
+        DRYBIO_AG_interpolated
+      ),
+      CARBON_AG = dplyr::coalesce(
+        CARBON_AG_recalculated,
+        DRYBIO_AG_interpolated
+      ),
+      .keep = "unused"
+    )
 }

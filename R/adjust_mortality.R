@@ -50,7 +50,7 @@ adjust_mortality <- function(data_interpolated, use_mortyr = TRUE) {
     df <- data_interpolated |>
       dplyr::group_by(tree_ID) |>
       dplyr::mutate(
-        MORTYR_eff = if_else(
+        MORTYR_eff = dplyr::if_else(
           YEAR == MORTYR & STATUSCD == 1,
           MORTYR + 1,
           MORTYR
