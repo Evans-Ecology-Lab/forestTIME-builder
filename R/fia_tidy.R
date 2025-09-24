@@ -141,7 +141,8 @@ fia_tidy <- function(db) {
         PLT_CN,
         INVYR,
         MACRO_BREAKPOINT_DIA,
-        INTENSITY
+        INTENSITY,
+        SUBCYCLE
       )
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>

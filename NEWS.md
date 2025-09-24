@@ -1,5 +1,6 @@
 # forestTIME (development version)
 
+- Fixed a bug in `fia_tidy()` resulting in duplicated `SUBCYCLE` columns ([#173](https://github.com/Evans-Ecology-Lab/forestTIME/issues/173)).
 - The calculation of the `EXPNS` column no longer occurs as part of `interpolate_data()`.
 - Added a utility function, `fia_calc_expns()` to calculate and add an `EXPNS` column.
 
