@@ -39,7 +39,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="foresttime-development-version">forestTIME (development version)<a class="anchor" aria-label="anchor" href="#foresttime-development-version"></a></h2>
-<ul><li>The calculation of the <code>EXPNS</code> column no longer occurs as part of <code><a href="../reference/interpolate_data.html">interpolate_data()</a></code>.</li>
+<ul><li>A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/163" class="external-link">#163</a>). Eventually, we will modify <code><a href="../reference/fia_estimate.html">fia_estimate()</a></code> to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.
+<ul><li>
+<code><a href="../reference/fia_tidy.html">fia_tidy()</a></code> now keeps the <code>CARBON_AG</code> and <code>DRYBIO_AG</code> columns</li>
+<li>
+<code><a href="../reference/interpolate_data.html">interpolate_data()</a></code> (and therefore <code><a href="../reference/fia_annualize.html">fia_annualize()</a></code>) now linearly interpolates <code>CARBON_AG</code> and <code>DRYBIO_AG</code>
+</li>
+<li>
+<code><a href="../reference/fia_estimate.html">fia_estimate()</a></code> now overwrites <code>CARBON_AG</code> and <code>DRYBIO_AG</code> columns in the input unless the result of carbon estimation is <code>NA</code> (as is the case with woodland species).</li>
+</ul></li>
+<li>The calculation of the <code>EXPNS</code> column no longer occurs as part of <code><a href="../reference/interpolate_data.html">interpolate_data()</a></code>.</li>
 <li>Added a utility function, <code><a href="../reference/fia_calc_expns.html">fia_calc_expns()</a></code> to calculate and add an <code>EXPNS</code> column.</li>
 </ul></div>
     <div class="section level2">
