@@ -1,5 +1,6 @@
 # forestTIME (development version)
 
+- Fixed a bug in `fia_tidy()` resulting in duplicated `SUBCYCLE` columns ([#173](https://github.com/Evans-Ecology-Lab/forestTIME/issues/173)).
 - A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (#163). Eventually, we will modify `fia_estimate()` to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.
   - `fia_tidy()` now keeps the `CARBON_AG` and `DRYBIO_AG` columns
   - `interpolate_data()` (and therefore `fia_annualize()`) now linearly interpolates `CARBON_AG` and `DRYBIO_AG`
