@@ -39,7 +39,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="foresttime-development-version">forestTIME (development version)<a class="anchor" aria-label="anchor" href="#foresttime-development-version"></a></h2>
-<ul><li>A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/163" class="external-link">#163</a>). Eventually, we will modify <code><a href="../reference/fia_estimate.html">fia_estimate()</a></code> to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.
+<ul><li>Fixed a bug in <code><a href="../reference/fia_tidy.html">fia_tidy()</a></code> resulting in duplicated <code>SUBCYCLE</code> columns (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/173" class="external-link">#173</a>).</li>
+<li>A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/163" class="external-link">#163</a>). Eventually, we will modify <code><a href="../reference/fia_estimate.html">fia_estimate()</a></code> to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.
 <ul><li>
 <code><a href="../reference/fia_tidy.html">fia_tidy()</a></code> now keeps the <code>CARBON_AG</code> and <code>DRYBIO_AG</code> columns</li>
 <li>
