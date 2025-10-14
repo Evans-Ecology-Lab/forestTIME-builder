@@ -61,6 +61,7 @@ keywords:
   - biomass estimation
 license: GPL-3.0
 version: 2.1.0
+year: 2025
 identifiers:
   - type: doi
     value: 10.5281/zenodo.17088598
