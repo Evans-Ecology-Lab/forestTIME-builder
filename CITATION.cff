@@ -22,6 +22,10 @@ authors:
       University of Arizona, Communications & Cyber
       Technology
     orcid: 'https://orcid.org/0000-0003-0803-4734'
+  - given-names: David M.
+    family-names: Walker
+    affiliation: >-
+      USDA Forest Service, Southern Research Station
   - given-names: Dani
     family-names: Steinberg
     affiliation: >-
@@ -34,6 +38,15 @@ authors:
       University of Arizona, Communications & Cyber
       Technology
     orcid: 'https://orcid.org/0000-0003-3802-3331'
+  - given-names: Grant
+    family-names: Domke
+    affiliation: >-
+      USDA Forest Service, Northern Research Station
+    orcid: https://orcid.org/0000-0003-0485-0355
+  - given-names: Brian F.
+    family-names: Walters
+    affiliation: >-
+      USDA Forest Service, Northern Research Station
   - given-names: Margaret
     family-names: Evans
     affiliation: >-
