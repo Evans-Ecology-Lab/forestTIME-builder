@@ -21,13 +21,11 @@ fia_tidy <- function(db) {
   cli::cli_progress_step("Wrangling data")
   PLOTGEOM <-
     db$PLOTGEOM |>
-    dplyr::filter(INVYR >= 2000L) |>
     dplyr::mutate(CN = as.character(CN)) |>
     dplyr::select(PLT_CN = CN, INVYR, ECOSUBCD)
 
   PLOT <-
     db$PLOT |>
-    dplyr::filter(INVYR >= 2000L) |>
     dplyr::mutate(CN = as.character(CN)) |>
     fia_add_composite_ids() |>
     dplyr::select(
@@ -41,7 +39,6 @@ fia_tidy <- function(db) {
 
   COND <-
     db$COND |>
-    dplyr::filter(INVYR >= 2000L) |>
     dplyr::mutate(PLT_CN = as.character(PLT_CN)) |>
     fia_add_composite_ids() |>
     dplyr::select(
@@ -57,7 +54,6 @@ fia_tidy <- function(db) {
 
   TREE <-
     db$TREE |>
-    dplyr::filter(INVYR >= 2000L) |>
     dplyr::mutate(PLT_CN = as.character(PLT_CN)) |>
     fia_add_composite_ids() |>
     dplyr::select(
@@ -95,9 +91,12 @@ fia_tidy <- function(db) {
     dplyr::left_join(PLOT, by = dplyr::join_by(plot_ID, PLT_CN, INVYR)) |>
     dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN))
 
-  # use only base intensity plots "Subcycle is 0 for a periodic inventory.
+  # Use only base intensity plots "Subcycle is 0 for a periodic inventory.
   # Subcycle 99 may be used for plots that are not included in the estimation
-  # process." --FIADB user guide
+  # process." --FIADB user guide. For *most* states, this effectively filters
+  # INVYR>= 2000, but in some southern states it appears all base-intenstiy
+  # plots were measured in 1999
+  # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/171)
   data <- data |>
     dplyr::filter(INTENSITY == 1 & SUBCYCLE != 0 & SUBCYCLE != 99)
 
@@ -120,21 +119,6 @@ fia_tidy <- function(db) {
   # coalesce ACTUALHT so it can be interpolated
   data <- data |>
     dplyr::mutate(ACTUALHT = dplyr::coalesce(ACTUALHT, HT))
-
-  #   # deal with "problem" trees
-  # data <- data |>
-  #   dplyr::group_by(tree_ID) |>
-  #   dplyr::filter(
-  #     sum(!is.na(DIA)) > 1 & sum(!is.na(HT)) > 1
-  #   ) |>
-  #   # remove trees that have always been fallen and have no measurements
-  #   dplyr::filter(
-  #     !(sum(is.finite(DIA) & is.finite(HT)) == 0 & all(STANDING_DEAD_CD == 0))
-  #   ) |>
-  #   # remove trees that were measured in error
-  #   # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/59#issuecomment-2758575994)
-  #   dplyr::filter(!any(RECONCILECD %in% c(7, 8))) |>
-  #   dplyr::ungroup() |>
 
   # join the empty plots back in
   data <-

@@ -24,7 +24,6 @@ test_that("estimates match those in raw data", {
       DRYBIO_AG
     )
   data_prepped <- fia_tidy(db) |>
-    dplyr::filter(INVYR >= 2000L) |>
     rename(YEAR = INVYR) |>
     prep_carbon() |>
     # add back TPA_UNADJ from raw data because we are skipping interpolation steps
