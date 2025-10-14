@@ -8,9 +8,13 @@ Authors@R: c(
            comment = c(ORCID = "0000-0003-0803-4734")),
     person("Dani", "Steinberg", role = "ctb",
            comment = c(ORCID = "0000-0002-3695-3837")),
+    person("David M.", "Walker", role = "ctb"),
     person("Kristina", "Riemer", role = "ctb",
            comment = c(ORCID = "0000-0003-3802-3331")),
-    person("Margaret", "Evans", role = "ctb")
+    person("Margaret", "Evans", role = "ctb"),
+    person("Grant", "Domke", role = "ctb",
+           comment = c(ORCID = "0000-0003-0485-0355")),
+    person("Brian F.", "Walters", role = "ctb")
   )
 Description: Uses interpolation and extrapolation to create annualized
     versions of Forest Inventory Analysis (FIA).

@@ -41,16 +41,16 @@ If you just want to download annualized FIA tables produced by `forestTIME.build
 
 If you'd like to make modifications to the functions in this package, you are welcome to do so.  However, it would be ideal if those modifications could be incorporated into this package to benefit everyone using it and to keep a single "source of truth" for this workflow. 
 
-If you are brand new to R package development or using GitHub, I recommend you start by opening an issue to make a suggestion or report a bug.  If you have some familiarity with R code and feel comfortable, feel free to make a pull request. I recommend using `usethis` to handle this process if you are not familiar with git and GitHub.  Start by [setting up your GitHub credentials](https://usethis.r-lib.org/articles/git-credentials.html) and then use `usethis::create_from_github("Evans-Ecology-Lab/forestTIME")` to (possibly fork) and clone this repository. The `usethis` package has some [nice documentation](https://usethis.r-lib.org/articles/pr-functions.html) on how to create pull requests using it's `pr_*()` functions, namely `pr_init()` to create a new branch, `pr_push()` to actually open the pull request on GitHub, and `pr_finish()` to clean things up after yoru pull request is merged.
+If you are brand new to R package development or using GitHub, I recommend you start by opening an issue to make a suggestion or report a bug.  If you have some familiarity with R code and feel comfortable, feel free to make a pull request. I recommend using `usethis` to handle this process if you are not familiar with git and GitHub.  Start by [setting up your GitHub credentials](https://usethis.r-lib.org/articles/git-credentials.html) and then use `usethis::create_from_github("Evans-Ecology-Lab/forestTIME")` to (possibly fork and) clone this repository. The `usethis` package has some [nice documentation](https://usethis.r-lib.org/articles/pr-functions.html) on how to create pull requests using it's `pr_*()` functions, namely `pr_init()` to create a new branch, `pr_push()` to actually open the pull request on GitHub, and `pr_finish()` to clean things up after yoru pull request is merged.
 
 
 ## Citation
 
 To cite this work, please use:
 
-> Diaz, R., Scott, E. R., Steinberg, D., Riemer, K., & Evans, M. (2025).
-> forestTIME: Generate Annualized Carbon and Biomass Estimates From FIA Data [Computer software].
-> Zenodo. <https://doi.org/10.5281/zenodo.17088598>
+> Scott E, Diaz R, Walker D, Steinberg D, Riemer K, Domke G, Walters B, Evans M (2025).
+> “forestTIME: Generate Annualized Carbon and Biomass Estimates From FIA Data.” 
+> <https://doi.org/10.5281/zenodo.17088598>
 
 Please also cite Westfall et al. (2024):
 
