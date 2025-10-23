@@ -117,17 +117,23 @@ fia_download <- function(
       multiplex = TRUE,
       useragent = "forestTIME (https://github.com/Evans-Ecology-Lab/forestTIME)"
     )
-    # zips <- resp$destfile #not sure if this is used
-    # TODO: Don't error if download fails, instead check response for issues and
-    # retry.  Then warn if only some downloads failed.
-    # https://github.com/Evans-Ecology-Lab/forestTIME/issues/91
+    failed <- resp |> dplyr::filter(success == FALSE)
+    # Retry failed downloads once
+    curl::multi_download(
+      urls = failed$url,
+      destfiles = failed$destfile,
+      resume = TRUE,
+      progress = TRUE,
+      multiplex = TRUE,
+      useragent = "forestTIME (https://github.com/Evans-Ecology-Lab/forestTIME)"
+    )
 
-    # if (!any(fs::file_exists(resp$destfile))) {
-    #   cli::cli_abort(c(
-    #     "Download failed:",
-    #     resp$destfile[!fs::file_exists(resp$destfile)]
-    #   ))
-    # }
+    if (!any(fs::file_exists(resp$destfile))) {
+      cli::cli_abort(c(
+        "Download failed:",
+        resp$destfile[!fs::file_exists(resp$destfile)]
+      ))
+    }
 
     #update zip_check
     zip_check <- fs::path(download_dir, files) |> fs::file_exists()
