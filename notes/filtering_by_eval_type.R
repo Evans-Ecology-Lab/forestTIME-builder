@@ -98,5 +98,5 @@ data |>
 # Unfortunately these are not the numbers we are looking for to calculate EXPNS.
 # The number we need is the total number of plots *in an EVALID* which spans
 # multiple years, not the total number of plots in each INVYR.  It still leaves
-# the question of what the equivalent to an EVALID is for interpolated data or
-# if this approach even makes sense for annualized data.
+# the question of what the equivalent to an EVALID is for annual data orif this
+# approach even makes sense for interpolated data.
