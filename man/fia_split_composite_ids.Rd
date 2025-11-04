@@ -10,7 +10,7 @@ fia_split_composite_ids(data)
 \item{data}{A tibble with the \code{tree_ID} and/or \code{plot_ID} columns}
 }
 \value{
-The input tibble with additional columns \code{STATECD}, \code{UNITCD},
+The input tibble with additional columns \code{UNITCD}, \code{STATECD},
 \code{COUNTYCD}, \code{PLOT} and possibly \code{SUBP} and \code{TREE}.
 }
 \description{
