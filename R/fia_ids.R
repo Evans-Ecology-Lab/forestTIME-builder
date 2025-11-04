@@ -1,12 +1,11 @@
-
 #' Add composite ID columns to data
 #'
 #' Creates a `tree_ID` and/or a `plot_ID` column that contain unique tree and
 #' plot identifiers, respectively.  These are created by pasting together the
-#' values for `STATECD`, `UNITCD`, `COUNTYCD`, `PLOT` and in the case of trees
+#' values for `UNITCD`, `STATECD`, `COUNTYCD`, `PLOT` and in the case of trees
 #' `SUBP` and `TREE`.
 #'
-#' @param data A tibble or data frame with at least the `STATECD`, `UNITCD`,
+#' @param data A tibble or data frame with at least the `UNITCD`, `STATECD`,
 #'   `COUNTYCD` and `PLOT` columns
 #'
 #' @seealso See [fia_split_composite_ids()] for "undoing" this.
@@ -16,20 +15,20 @@
 fia_add_composite_ids <- function(data) {
   cols <- colnames(data)
   if (
-    all(c("STATECD", "UNITCD", "COUNTYCD", "PLOT", "SUBP", "TREE") %in% cols)
+    all(c("UNITCD", "STATECD", "COUNTYCD", "PLOT", "SUBP", "TREE") %in% cols)
   ) {
     data <-
       data |>
       dplyr::mutate(
-        plot_ID = paste(STATECD, UNITCD, COUNTYCD, PLOT, sep = "_"),
-        tree_ID = paste(STATECD, UNITCD, COUNTYCD, PLOT, SUBP, TREE, sep = "_"),
+        plot_ID = paste(UNITCD, STATECD, COUNTYCD, PLOT, sep = "_"),
+        tree_ID = paste(UNITCD, STATECD, COUNTYCD, PLOT, SUBP, TREE, sep = "_"),
         .before = 1
       )
-  } else if (all(c("STATECD", "UNITCD", "COUNTYCD", "PLOT") %in% cols)) {
+  } else if (all(c("UNITCD", "STATECD", "COUNTYCD", "PLOT") %in% cols)) {
     data <-
       data |>
       dplyr::mutate(
-        plot_ID = paste(STATECD, UNITCD, COUNTYCD, PLOT, sep = "_"),
+        plot_ID = paste(UNITCD, STATECD, COUNTYCD, PLOT, sep = "_"),
         .before = 1
       )
   } else {
@@ -44,7 +43,7 @@ fia_add_composite_ids <- function(data) {
 #' original component columns
 #'
 #' @param data A tibble with the `tree_ID` and/or `plot_ID` columns
-#' @returns The input tibble with additional columns `STATECD`, `UNITCD`,
+#' @returns The input tibble with additional columns `UNITCD`, `STATECD`,
 #'   `COUNTYCD`, `PLOT` and possibly `SUBP` and `TREE`.
 #' @seealso [fia_add_composite_ids()]
 #' @export
@@ -61,7 +60,7 @@ fia_split_composite_ids <- function(data) {
       tidyr::separate_wider_delim(
         plot_ID,
         delim = "_",
-        names = c("STATECD", "UNITCD", "COUNTYCD", "PLOT"),
+        names = c("UNITCD", "STATECD", "COUNTYCD", "PLOT"),
         cols_remove = FALSE
       )
     if ("tree_ID" %in% cols) {
@@ -93,7 +92,7 @@ fia_split_composite_ids <- function(data) {
       tidyr::separate_wider_delim(
         tree_ID,
         delim = "_",
-        names = c("STATECD", "UNITCD", "COUNTYCD", "PLOT", "SUBP", "TREE"),
+        names = c("UNITCD", "STATECD", "COUNTYCD", "PLOT", "SUBP", "TREE"),
         cols_remove = FALSE
       )
     return(data)

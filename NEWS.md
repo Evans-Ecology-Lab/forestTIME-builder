@@ -1,5 +1,6 @@
 # forestTIME (development version)
 
+- Changeed the way composit IDs `plot_ID` and `tree_ID` are constructed by changing the order of STATECD and UNITCD so that now it is UNITCD_STATECD_COUNTYCD_PLOT ([#189](https://github.com/Evans-Ecology-Lab/forestTIME/issues/189))
 - Fixed a bug in `fia_tidy()` resulting in duplicated `SUBCYCLE` columns ([#173](https://github.com/Evans-Ecology-Lab/forestTIME/issues/173)).
 - A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (#163). Eventually, we will modify `fia_estimate()` to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.
   - `fia_tidy()` now keeps the `CARBON_AG` and `DRYBIO_AG` columns
