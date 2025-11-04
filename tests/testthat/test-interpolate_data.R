@@ -5,7 +5,7 @@ test_that("variables with NAs get interpolated correctly", {
     dir = system.file("exdata", package = "forestTIME")
   )
   data <- fia_tidy(db) |>
-    dplyr::filter(tree_ID == "10_1_1_104_1_28") |>
+    dplyr::filter(tree_ID == "1_10_1_104_1_28") |>
     dplyr::select(
       plot_ID,
       tree_ID,
@@ -42,7 +42,7 @@ test_that("interpolation of CULL is correct", {
     dir = system.file("exdata", package = "forestTIME")
   ) |>
     fia_tidy() |>
-    dplyr::filter(tree_ID == "10_1_1_128_1_24")
+    dplyr::filter(tree_ID == "1_10_1_128_1_24")
 
   data_interpolated <- data |>
     expand_data() |>

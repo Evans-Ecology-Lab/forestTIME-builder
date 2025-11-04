@@ -5,7 +5,7 @@ test_that("fallen dead trees get NAs correctly", {
     dir = system.file("exdata", package = "forestTIME")
   )
   data <- fia_tidy(db) |>
-    dplyr::filter(tree_ID == "10_1_1_104_1_28") |>
+    dplyr::filter(tree_ID == "1_10_1_104_1_28") |>
     dplyr::select(
       plot_ID,
       tree_ID,
@@ -46,7 +46,7 @@ test_that("trees moving to non-sampled conditions have NAs", {
     dir = system.file("exdata", package = "forestTIME")
   )
   data <- fia_tidy(db) |>
-    dplyr::filter(tree_ID == "10_1_1_22_4_3") |>
+    dplyr::filter(tree_ID == "1_10_1_22_4_3") |>
     dplyr::select(
       plot_ID,
       tree_ID,
@@ -87,7 +87,7 @@ test_that("method doesn't matter for DE", {
     dir = system.file("exdata", package = "forestTIME")
   )
   data <- fia_tidy(db) |>
-    dplyr::filter(tree_ID == "10_1_1_104_1_28") |>
+    dplyr::filter(tree_ID == "1_10_1_104_1_28") |>
     dplyr::select(
       plot_ID,
       tree_ID,
@@ -129,7 +129,7 @@ test_that("No values below thresholds for measurement", {
     dir = system.file("exdata", package = "forestTIME")
   )
   data <- fia_tidy(db) |>
-    dplyr::filter(tree_ID %in% c("10_1_1_104_3_4", "10_1_1_148_4_2")) |>
+    dplyr::filter(tree_ID %in% c("1_10_1_104_3_4", "1_10_1_148_4_2")) |>
     dplyr::select(
       plot_ID,
       tree_ID,
