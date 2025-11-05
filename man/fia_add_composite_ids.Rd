@@ -7,7 +7,7 @@
 fia_add_composite_ids(data)
 }
 \arguments{
-\item{data}{A tibble or data frame with at least the \code{STATECD}, \code{UNITCD},
+\item{data}{A tibble or data frame with at least the \code{UNITCD}, \code{STATECD},
 \code{COUNTYCD} and \code{PLOT} columns}
 }
 \value{
@@ -17,7 +17,7 @@ column added
 \description{
 Creates a \code{tree_ID} and/or a \code{plot_ID} column that contain unique tree and
 plot identifiers, respectively.  These are created by pasting together the
-values for \code{STATECD}, \code{UNITCD}, \code{COUNTYCD}, \code{PLOT} and in the case of trees
+values for \code{UNITCD}, \code{STATECD}, \code{COUNTYCD}, \code{PLOT} and in the case of trees
 \code{SUBP} and \code{TREE}.
 }
 \seealso{
