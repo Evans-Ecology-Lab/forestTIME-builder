@@ -37,6 +37,23 @@ fia_tidy <- function(db) {
       SUBCYCLE
     )
 
+  # Currently only used to get EVAL_TYP_CD
+  POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
+    fia_add_composite_ids() |>
+    dplyr::select(plot_ID, EVALID, INVYR) |>
+    dplyr::distinct() |>
+    dplyr::mutate(
+      EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
+    )
+
+  plot_eval_types <- POP_PLOT_STRATUM_ASSGN |>
+    dplyr::group_by(plot_ID, INVYR) |>
+    dplyr::summarize(
+      EVAL_TYP_EXPCURR = any(EVAL_TYP_CD == "01"),
+      EVAL_TYP_EXPVOL = any(EVAL_TYP_CD == "02"),
+      .groups = "drop"
+    )
+
   COND <-
     db$COND |>
     dplyr::mutate(PLT_CN = as.character(PLT_CN)) |>
@@ -97,8 +114,9 @@ fia_tidy <- function(db) {
   # INVYR>= 2000, but in some southern states it appears all base-intenstiy
   # plots were measured in 1999
   # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/171)
-  data <- data |>
-    dplyr::filter(INTENSITY == 1 & SUBCYCLE != 0 & SUBCYCLE != 99)
+
+  # data <- data |>
+  #   dplyr::filter(INTENSITY == 1 & SUBCYCLE != 0 & SUBCYCLE != 99)
 
   # fill MORTYR so it is a property of trees
   data <- data |>
@@ -136,6 +154,13 @@ fia_tidy <- function(db) {
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
     dplyr::select(plot_ID, tree_ID, INVYR, everything())
+
+  # Join in EVAL_TYP indicators
+  data <- dplyr::left_join(
+    data,
+    plot_eval_types,
+    by = dplyr::join_by(plot_ID, INVYR)
+  )
 
   # return:
   data

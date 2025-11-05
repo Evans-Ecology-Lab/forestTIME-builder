@@ -3,11 +3,11 @@
 #' This is an "internal" function—most users will want to run [fia_annualize()]
 #' instead. This expands the data frame in preparation for interpolation of now
 #' "missing" values between inventory years. Time-invariant variables `tree_ID`,
-#' `plot_ID`, `INTENSITY`, `SPCD`, `MORTYR`, `ECOSUBCD`, `DESIGNCD`, and
-#' `PROP_BASIS` are simply filled in with [tidyr::fill()]. Categorical variables
-#' `STATUDSCD`, `RECONCILECD`, `STDORGCD`, `CONDID`, and `COND_STATUS_CD` are
-#' modified to replace `NA`s with `999` so that they are properly interpolated
-#' by [interpolate_data()] (which converts them back to `NA`s).
+#' `plot_ID`, `SPCD`, `MORTYR`, `ECOSUBCD`, `DESIGNCD`, and `PROP_BASIS` are
+#' simply filled in with [tidyr::fill()]. Categorical variables `STATUDSCD`,
+#' `RECONCILECD`, `STDORGCD`, `CONDID`, and `COND_STATUS_CD` are modified to
+#' replace `NA`s with `999` so that they are properly interpolated by
+#' [interpolate_data()] (which converts them back to `NA`s).
 #'
 #' @param data tibble produced by [fia_tidy()]---must have at least `tree_ID`
 #'   and `INVYR` columns.
@@ -71,7 +71,7 @@ expand_data <- function(data) {
     tidyr::fill(
       any_of(c(
         "plot_ID",
-        "INTENSITY",
+        # "INTENSITY",
         "SPCD",
         "ECOSUBCD",
         "PROP_BASIS",
