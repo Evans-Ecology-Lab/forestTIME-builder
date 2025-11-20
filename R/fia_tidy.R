@@ -37,23 +37,6 @@ fia_tidy <- function(db) {
       SUBCYCLE
     )
 
-  # Currently only used to get EVAL_TYP_CD
-  POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
-    fia_add_composite_ids() |>
-    dplyr::select(plot_ID, EVALID, INVYR) |>
-    dplyr::distinct() |>
-    dplyr::mutate(
-      EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
-    )
-
-  plot_eval_types <- POP_PLOT_STRATUM_ASSGN |>
-    dplyr::group_by(plot_ID, INVYR) |>
-    dplyr::summarize(
-      EVAL_TYP_EXPCURR = any(EVAL_TYP_CD == "01"),
-      EVAL_TYP_EXPVOL = any(EVAL_TYP_CD == "02"),
-      .groups = "drop"
-    )
-
   COND <-
     db$COND |>
     dplyr::mutate(PLT_CN = as.character(PLT_CN)) |>
@@ -97,6 +80,64 @@ fia_tidy <- function(db) {
       DRYBIO_AG
     )
 
+  # POP table stuff
+  POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
+    fia_add_composite_ids() |>
+    dplyr::select(plot_ID, INVYR, EVALID, ESTN_UNIT, STRATUMCD) |>
+    dplyr::distinct()
+
+  POP_STRATUM <- db$POP_STRATUM |>
+    dplyr::select(EVALID, ESTN_UNIT, STRATUMCD, P1POINTCNT) |>
+    dplyr::distinct()
+
+  POP_ESTN_UNIT <- db$POP_ESTN_UNIT |>
+    dplyr::select(EVALID, ESTN_UNIT, P1PNTCNT_EU, AREA_USED)
+
+  POP_EVAL <- db$POP_EVAL |>
+    dplyr::select(EVALID, END_INVYR)
+
+  pop_info <- POP_PLOT_STRATUM_ASSGN |>
+    dplyr::left_join(
+      POP_STRATUM,
+      by = dplyr::join_by(EVALID, ESTN_UNIT, STRATUMCD)
+    ) |>
+    dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
+    dplyr::left_join(POP_EVAL, by = dplyr::join_by(EVALID)) |>
+    dplyr::mutate(
+      EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
+    ) |>
+    # for every plot_ID, INVYR and eval type, only keep the EVALID that is the
+    # most recent one
+    dplyr::filter(
+      END_INVYR == max(END_INVYR),
+      .by = c(plot_ID, EVAL_TYP_CD, INVYR)
+    ) |>
+    dplyr::select(-END_INVYR) |>
+    # Keep only eval types 01 (EXPCURR) and 02 (EXPVOL)
+    dplyr::filter(EVAL_TYP_CD %in% c("01", "02")) |>
+    dplyr::arrange(plot_ID, INVYR, EVAL_TYP_CD) |>
+    # Create indicator columns for these eval types
+    dplyr::mutate(
+      .by = plot_ID,
+      INVYR,
+      EVAL_TYPE_EXPCURR = any(EVAL_TYP_CD == "01"),
+      EVAL_TYPE_EXPVOL = any(EVAL_TYP_CD == "02")
+    ) |>
+    # Pivot wider to get separate columns for each eval type and just one row
+    # per plot x year
+    dplyr::mutate(
+      eval_type = dplyr::case_match(
+        EVAL_TYP_CD,
+        "01" ~ "EXPCURR",
+        "02" ~ "EXPVOL"
+      )
+    ) |>
+    dplyr::select(-EVAL_TYP_CD, -EVALID) |>
+    tidyr::pivot_wider(
+      names_from = eval_type,
+      values_from = c(ESTN_UNIT, STRATUMCD, P1POINTCNT, P1PNTCNT_EU, AREA_USED)
+    )
+
   # Join the tables
   data <-
     COND |>
@@ -106,7 +147,12 @@ fia_tidy <- function(db) {
       by = dplyr::join_by(plot_ID, PLT_CN, CONDID, INVYR)
     ) |>
     dplyr::left_join(PLOT, by = dplyr::join_by(plot_ID, PLT_CN, INVYR)) |>
-    dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN))
+    dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN)) |>
+    dplyr::left_join(pop_info, by = dplyr::join_by(plot_ID, INVYR))
+
+  # Only keep plots that are part of an EXPCURR or EXPVOL eval.
+
+  data <- data |> dplyr::filter(EVAL_TYPE_EXPVOL | EVAL_TYPE_EXPCURR)
 
   # Use only base intensity plots "Subcycle is 0 for a periodic inventory.
   # Subcycle 99 may be used for plots that are not included in the estimation
@@ -154,13 +200,6 @@ fia_tidy <- function(db) {
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
     dplyr::select(plot_ID, tree_ID, INVYR, everything())
-
-  # Join in EVAL_TYP indicators
-  data <- dplyr::left_join(
-    data,
-    plot_eval_types,
-    by = dplyr::join_by(plot_ID, INVYR)
-  )
 
   # return:
   data
