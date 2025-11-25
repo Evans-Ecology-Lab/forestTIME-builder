@@ -157,10 +157,6 @@ fia_tidy <- function(db) {
     dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN)) |>
     dplyr::left_join(pop_info, by = dplyr::join_by(plot_ID, INVYR))
 
-  # Only keep plots that are part of an EXPCURR or EXPVOL eval.
-
-  data <- data |> dplyr::filter(EVAL_TYPE_EXPVOL | EVAL_TYPE_EXPCURR)
-
   # Use only base intensity plots "Subcycle is 0 for a periodic inventory.
   # Subcycle 99 may be used for plots that are not included in the estimation
   # process." --FIADB user guide. For *most* states, this effectively filters
