@@ -11,6 +11,12 @@
 #'   (to handle trees that change `SPCD`).
 #' 4. Fills a tree's `MORTYR` column so every row contains the recorded
 #'   mortality year.
+#' 5. Adds `EVALID`-related columns. `EVALID`s are merged such that each plot
+#'    in each `INVYR` is associated with the `EVALID` of each type (last two
+#'    digits) that has the greatest end year.  Then, logical indicator columns
+#'    `EVAL_TYPE_EXPVOL` and `EVAL_TYPE_EXPCURR` are added along with other
+#'    columns from various `POP_*` tables suffixed with `_EXPVOL` and
+#'    `_EXPCURR`.
 #'
 #' @param db a list of tables produced by [fia_load()]
 #' @export
