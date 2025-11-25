@@ -3,11 +3,11 @@
 #' This is an "internal" function—most users will want to run [fia_annualize()]
 #' instead. This expands the data frame in preparation for interpolation of now
 #' "missing" values between inventory years. Time-invariant variables `tree_ID`,
-#' `plot_ID`, `INTENSITY`, `SPCD`, `MORTYR`, `ECOSUBCD`, `DESIGNCD`, and
-#' `PROP_BASIS` are simply filled in with [tidyr::fill()]. Categorical variables
-#' `STATUDSCD`, `RECONCILECD`, `STDORGCD`, `CONDID`, and `COND_STATUS_CD` are
-#' modified to replace `NA`s with `999` so that they are properly interpolated
-#' by [interpolate_data()] (which converts them back to `NA`s).
+#' `plot_ID`, `SPCD`, `MORTYR`, `ECOSUBCD`, `DESIGNCD`, and `PROP_BASIS` are
+#' simply filled in with [tidyr::fill()]. Categorical variables `STATUDSCD`,
+#' `RECONCILECD`, `STDORGCD`, `CONDID`, and `COND_STATUS_CD` are modified to
+#' replace `NA`s with `999` so that they are properly interpolated by
+#' [interpolate_data()] (which converts them back to `NA`s).
 #'
 #' @param data tibble produced by [fia_tidy()]---must have at least `tree_ID`
 #'   and `INVYR` columns.
@@ -33,6 +33,10 @@ expand_data <- function(data) {
         "COND_STATUS_CD"
       )),
       \(x) dplyr::if_else(is.na(x) & !is.na(tree_ID), 999, x)
+    )) |>
+    dplyr::mutate(dplyr::across(
+      c(dplyr::ends_with("_EXPCURR"), dplyr::ends_with("_EXPVOL")),
+      \(x) ifelse(is.na(x) & !is.na(tree_ID), -999, x)
     )) |>
     # replace NAs for CULL with 0s so they interpolate correctly
     # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/77)
@@ -71,7 +75,7 @@ expand_data <- function(data) {
     tidyr::fill(
       any_of(c(
         "plot_ID",
-        "INTENSITY",
+        # "INTENSITY",
         "SPCD",
         "ECOSUBCD",
         "PROP_BASIS",
@@ -80,6 +84,15 @@ expand_data <- function(data) {
       )),
       .direction = "downup"
     ) |>
+    tidyr::fill(
+      c(ends_with("_EXPVOL"), ends_with("_EXPCURR")),
+      .direction = "down"
+    ) |>
+    # Switch -999 placehold back to NAs because we aren't interpolating these
+    dplyr::mutate(across(
+      c(dplyr::ends_with("_EXPCURR"), dplyr::ends_with("_EXPVOL")),
+      \(x) ifelse(x == -999, NA, x)
+    )) |>
     dplyr::ungroup() |>
     #rearrange
     dplyr::select(

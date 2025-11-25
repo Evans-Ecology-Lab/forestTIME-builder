@@ -1,5 +1,7 @@
 # forestTIME (development version)
 
+- `fia_tidy()` now adds several columns from the POP_* tables relating to EVALIDs.  Each plot in each INVYR is matched to the EVALID of each type that has the latest end year.  Then, for EVALIDs ending in 01 and 02 ("EXPCURR" and "EXPVOL", respectively), two columns are created for each of EVALID, ESTN_UNIT, STRATUMCD, P1POINTCNT, P1PNTCNT_EU, and AREA_USED suffixed with _EXPVOL or _EXPCURR.  There are also two logical columns EVAL_TYPE_EXPCURR and EVAL_TYPE_EXPVOL.  These get filled down and switch at the next inventory (rather than at the midpoint like everything else) (#192). 
+- `fia_tidy()` no longer filters to base intensity plots and reverts to just filtering to `INVYR≥2000`.
 - Changeed the way composit IDs `plot_ID` and `tree_ID` are constructed by changing the order of STATECD and UNITCD so that now it is UNITCD_STATECD_COUNTYCD_PLOT ([#189](https://github.com/Evans-Ecology-Lab/forestTIME/issues/189))
 - Fixed a bug in `fia_tidy()` resulting in duplicated `SUBCYCLE` columns ([#173](https://github.com/Evans-Ecology-Lab/forestTIME/issues/173)).
 - A temporary workaround was implmented to deal with missing code for calculating biomass and carbon for woodland species (#163). Eventually, we will modify `fia_estimate()` to be able to produce carbon and biomass estimates for woodland species and this can be reverted to avoid confusion.

@@ -54,7 +54,11 @@ interpolate_data <- function(data_expanded) {
     "STANDING_DEAD_CD",
     "STDORGCD",
     "CONDID",
-    "COND_STATUS_CD"
+    "COND_STATUS_CD",
+    "INTENSITY",
+    "SUBCYCLE",
+    "EVAL_TYP_EXPCURR",
+    "EVAL_TYP_EXPVOL"
   )
 
   # Interpolate COND table separately to account for the number of conditions
