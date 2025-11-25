@@ -217,9 +217,9 @@ fia_tidy <- function(db) {
   # double-check that there is only a single row per tree x year, because if
   # not, things will break downstream
   dups <- data |>
-    filter(!is.na(tree_ID)) |>
-    count(tree_ID, INVYR) |>
-    filter(n > 1)
+    dplyr::filter(!is.na(tree_ID)) |>
+    dplyr::count(tree_ID, INVYR) |>
+    dplyr::filter(n > 1)
 
   # TODO: this is mostly for development.  Hopefully users never see this, but
   # consider improving this error message.
