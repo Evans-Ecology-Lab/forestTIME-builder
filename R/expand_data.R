@@ -34,6 +34,10 @@ expand_data <- function(data) {
       )),
       \(x) dplyr::if_else(is.na(x) & !is.na(tree_ID), 999, x)
     )) |>
+    dplyr::mutate(dplyr::across(
+      c(dplyr::ends_with("_EXPCURR"), dplyr::ends_with("_EXPVOL")),
+      \(x) ifelse(is.na(x) & !is.na(tree_ID), -999, x)
+    )) |>
     # replace NAs for CULL with 0s so they interpolate correctly
     # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/77)
     dplyr::mutate(
@@ -80,6 +84,15 @@ expand_data <- function(data) {
       )),
       .direction = "downup"
     ) |>
+    tidyr::fill(
+      c(ends_with("_EXPVOL"), ends_with("_EXPCURR")),
+      .direction = "down"
+    ) |>
+    # Switch -999 placehold back to NAs because we aren't interpolating these
+    dplyr::mutate(across(
+      c(dplyr::ends_with("_EXPCURR"), dplyr::ends_with("_EXPVOL")),
+      \(x) ifelse(x == -999, NA, x)
+    )) |>
     dplyr::ungroup() |>
     #rearrange
     dplyr::select(
