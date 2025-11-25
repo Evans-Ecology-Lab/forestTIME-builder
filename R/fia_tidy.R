@@ -118,7 +118,7 @@ fia_tidy <- function(db) {
     dplyr::arrange(plot_ID, INVYR, EVAL_TYP_CD) |>
     # Create indicator columns for these eval types
     dplyr::mutate(
-      .by = plot_ID,
+      .by = c(plot_ID, INVYR),
       INVYR,
       EVAL_TYPE_EXPCURR = any(EVAL_TYP_CD == "01"),
       EVAL_TYPE_EXPVOL = any(EVAL_TYP_CD == "02")
@@ -132,10 +132,17 @@ fia_tidy <- function(db) {
         "02" ~ "EXPVOL"
       )
     ) |>
-    dplyr::select(-EVAL_TYP_CD, -EVALID) |>
+    dplyr::select(-EVAL_TYP_CD) |>
     tidyr::pivot_wider(
       names_from = eval_type,
-      values_from = c(ESTN_UNIT, STRATUMCD, P1POINTCNT, P1PNTCNT_EU, AREA_USED)
+      values_from = c(
+        EVALID,
+        ESTN_UNIT,
+        STRATUMCD,
+        P1POINTCNT,
+        P1PNTCNT_EU,
+        AREA_USED
+      )
     )
 
   # Join the tables
