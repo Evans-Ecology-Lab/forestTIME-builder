@@ -164,6 +164,12 @@ fia_tidy <- function(db) {
   # data <- data |>
   #   dplyr::filter(INTENSITY == 1 & SUBCYCLE != 0 & SUBCYCLE != 99)
 
+  # Actually, maybe we want to keep intensification plots??  Just filter to
+  # INVYR>=2000 for now
+
+  data <- data |>
+    dplyr::filter(INVYR >= 2000)
+
   # fill MORTYR so it is a property of trees
   data <- data |>
     dplyr::group_by(tree_ID) |>
@@ -200,6 +206,19 @@ fia_tidy <- function(db) {
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
     dplyr::select(plot_ID, tree_ID, INVYR, everything())
+
+  # double-check that there is only a single row per tree x year, because if
+  # not, things will break downstream
+  dups <- data |>
+    filter(!is.na(tree_ID)) |>
+    count(tree_ID, INVYR) |>
+    filter(n > 1)
+
+  # TODO: this is mostly for development.  Hopefully users never see this, but
+  # consider improving this error message.
+  if (nrow(dups) > 0) {
+    stop("There are trees with more than one row per year after tidying!")
+  }
 
   # return:
   data
