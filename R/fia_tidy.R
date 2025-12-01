@@ -88,37 +88,45 @@ fia_tidy <- function(db) {
 
   # POP table stuff
   POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
+    dplyr::mutate(dplyr::across(dplyr::ends_with("_CN"), as.character)) |>
     fia_add_composite_ids() |>
-    dplyr::select(plot_ID, INVYR, EVALID, ESTN_UNIT, STRATUMCD) |>
+    dplyr::select(plot_ID, INVYR, EVALID, ESTN_UNIT, STRATUMCD, STRATUM_CN) |>
     dplyr::distinct()
 
   POP_STRATUM <- db$POP_STRATUM |>
-    dplyr::select(EVALID, ESTN_UNIT, STRATUMCD, P1POINTCNT) |>
+    dplyr::mutate(dplyr::across(dplyr::ends_with("_CN"), as.character)) |>
+    dplyr::select(EVALID, ESTN_UNIT, ESTN_UNIT_CN, STRATUMCD, P1POINTCNT) |>
     dplyr::distinct()
 
   POP_ESTN_UNIT <- db$POP_ESTN_UNIT |>
-    dplyr::select(EVALID, ESTN_UNIT, P1PNTCNT_EU, AREA_USED)
+    dplyr::mutate(dplyr::across(dplyr::ends_with("_CN"), as.character)) |>
+    dplyr::select(EVALID, EVAL_CN, ESTN_UNIT, P1PNTCNT_EU, AREA_USED)
 
   POP_EVAL <- db$POP_EVAL |>
-    dplyr::select(EVALID, END_INVYR)
+    dplyr::mutate(dplyr::across(dplyr::ends_with("_CN"), as.character)) |>
+    dplyr::select(EVALID, EVAL_GRP_CN, END_INVYR)
 
   pop_info <- POP_PLOT_STRATUM_ASSGN |>
     dplyr::left_join(
       POP_STRATUM,
       by = dplyr::join_by(EVALID, ESTN_UNIT, STRATUMCD)
     ) |>
-    dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
+    dplyr::left_join(
+      POP_ESTN_UNIT,
+      by = dplyr::join_by(EVALID, ESTN_UNIT)
+    ) |>
     dplyr::left_join(POP_EVAL, by = dplyr::join_by(EVALID)) |>
     dplyr::mutate(
       EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
     ) |>
     # for every plot_ID, INVYR and eval type, only keep the EVALID that is the
     # most recent one
+    # TODO: this may need to by by EVAL_GRP_CN or something to ensure that the evals are all compatible
     dplyr::filter(
       END_INVYR == max(END_INVYR),
       .by = c(plot_ID, EVAL_TYP_CD, INVYR)
     ) |>
-    dplyr::select(-END_INVYR) |>
+    # dplyr::select(-END_INVYR) |>
     # Keep only eval types 01 (EXPCURR) and 02 (EXPVOL)
     dplyr::filter(EVAL_TYP_CD %in% c("01", "02")) |>
     dplyr::arrange(plot_ID, INVYR, EVAL_TYP_CD) |>
