@@ -121,7 +121,7 @@ fia_tidy <- function(db) {
     ) |>
     # for every plot_ID, INVYR and eval type, only keep the EVALID that is the
     # most recent one
-    # TODO: this may need to by by EVAL_GRP_CN or something to ensure that the evals are all compatible
+    # TODO: this may need to be done by EVAL_GRP_CN or something to ensure that both evals in each year are "compatible" (i.e. use the same estimation units and strata)
     dplyr::filter(
       END_INVYR == max(END_INVYR),
       .by = c(plot_ID, EVAL_TYP_CD, INVYR)
@@ -146,13 +146,26 @@ fia_tidy <- function(db) {
         "02" ~ "EXPVOL"
       )
     ) |>
-    dplyr::select(-EVAL_TYP_CD) |>
+    dplyr::select(
+      plot_ID,
+      INVYR,
+      EVALID,
+      ESTN_UNIT_CN,
+      STRATUM_CN,
+      P1POINTCNT,
+      P1PNTCNT_EU,
+      AREA_USED,
+      EVAL_TYPE_EXPCURR,
+      EVAL_TYPE_EXPVOL,
+      eval_type
+    ) |>
+    # TODO might only need P1POINTCNT, P1PNTCNT_EU and AREA_USED for the EXPCURR eval type.
     tidyr::pivot_wider(
       names_from = eval_type,
       values_from = c(
         EVALID,
-        ESTN_UNIT,
-        STRATUMCD,
+        ESTN_UNIT_CN,
+        STRATUM_CN,
         P1POINTCNT,
         P1PNTCNT_EU,
         AREA_USED
