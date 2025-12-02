@@ -10,3 +10,7 @@
   connect:
     - id: 77a37eb8-8eed-40ba-8078-5ab5e9845709
       url: https://viz.datascience.arizona.edu:443/content/77a37eb8-8eed-40ba-8078-5ab5e9845709/
+- source: evalids.qmd
+  connect:
+    - id: c2ee6f47-8170-414c-a15b-6256f00285e4
+      url: https://viz.datascience.arizona.edu:443/content/c2ee6f47-8170-414c-a15b-6256f00285e4/

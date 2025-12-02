@@ -1,0 +1,205 @@
+---
+title: "Choosing EVALIDs and carrying them forward"
+author: Eric R. Scott
+date: today
+format:
+  html:
+    code-fold: true
+    df-print: paged
+---
+
+```{r}
+#| label: setup
+#| output: false
+library(forestTIME)
+library(tidyverse)
+library(here)
+```
+
+In each inventory year, a plot is associated with multiple EVALIDs. 
+We need to get this into a form such that each plot is associated with exactly one "EXPCURR" eval and one "EXPVOL" eval in each year in order to follow code to make population-level estimates of carbon and biomass.
+Plots can change their association with these two useful eval types over time, and we have some questions about how to deal with this.
+
+## Assembling data
+
+```{r}
+# Use RI as an example
+db <- fia_load("DE", dir = here("fia"))
+```
+
+
+```{r}
+POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
+  fia_add_composite_ids() |>
+  dplyr::select(plot_ID, INVYR, EVALID, ESTN_UNIT, STRATUMCD) |>
+  dplyr::distinct()
+
+POP_STRATUM <- db$POP_STRATUM |>
+  dplyr::select(EVALID, ESTN_UNIT, STRATUMCD, P1POINTCNT) |>
+  dplyr::distinct()
+
+POP_ESTN_UNIT <- db$POP_ESTN_UNIT |>
+  dplyr::select(EVALID, ESTN_UNIT, P1PNTCNT_EU, AREA_USED)
+
+POP_EVAL <- db$POP_EVAL |>
+  dplyr::select(EVALID, END_INVYR)
+```
+
+
+
+```{r}
+pop_info <- POP_PLOT_STRATUM_ASSGN |>
+  dplyr::left_join(
+    POP_STRATUM,
+    by = dplyr::join_by(EVALID, ESTN_UNIT, STRATUMCD)
+  ) |>
+  dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
+  dplyr::left_join(POP_EVAL, by = dplyr::join_by(EVALID)) |>
+  dplyr::mutate(
+    EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
+  )
+```
+
+## Example plot
+
+This example plot has 4 inventory years.  In 2005 it belonged to 10 different EVALIDs, 4 ending in 01 ("EXPCURR"), one ending in 02 ("EXPVOL"), and the rest of other types.  In 2010 it **only belonged to EVALIDs ending in 00**, then in 2015 and 2022 it belonged to EVALIDs ending in 01, but **none ending in 02**.
+
+```{r}
+#| column: page-inset
+pop_info_plot <- pop_info |>
+  filter(plot_ID == "1_10_1_133") |>
+  select(plot_ID, INVYR, EVALID, EVAL_TYP_CD, END_INVYR, everything())
+pop_info_plot
+```
+
+
+Here's the same plot filtered to just include EVALIDs ending in 01 or 02, for ease of viewing:
+
+```{r}
+#| column: page-inset
+pop_info_plot_filtered <- pop_info_plot |>
+  group_by(plot_ID, INVYR) |>
+  filter(EVAL_TYP_CD %in% c("01", "02"), .preserve = TRUE) |>
+  ungroup() |>
+  complete(INVYR = pop_info_plot$INVYR) |> #bring back 2010
+  arrange(INVYR)
+pop_info_plot_filtered
+```
+
+The first challenge: in each `INVYR`, choose at most one EVALID ending in 01 and one ending in 02.
+We *think* that if EVALIDs have the same end year, the estimation units and stratum codes are guaranteed to be "compatible"  (i.e. the plot is not in a different stratum in the two evals).
+
+We choose the earliest of the `END_INVYR`s shared by both eval types if both exist.
+
+```{r}
+#| column: page-inset
+#| warning: false
+pop_info_long <- pop_info_plot |>
+  mutate(
+    END_INVYR_01 = if_else(EVAL_TYP_CD == "01", END_INVYR, NA),
+    END_INVYR_02 = if_else(EVAL_TYP_CD == "02", END_INVYR, NA)
+  ) |>
+  mutate(
+    .by = c(plot_ID, INVYR),
+    END_INVYR_min = if_else(
+      any(!is.na(END_INVYR_01)) & any(!is.na(END_INVYR_02)),
+      min(intersect(END_INVYR_01, END_INVYR_02), na.rm = TRUE),
+      min(END_INVYR)
+    )
+  ) |>
+  select(plot_ID, INVYR, EVALID, EVAL_TYP_CD, END_INVYR, everything()) |>
+  filter(EVAL_TYP_CD %in% c("01", "02")) |>
+  filter(END_INVYR == END_INVYR_min, .by = c(INVYR)) |>
+  select(-END_INVYR_01, -END_INVYR_02, -END_INVYR_min) |>
+  # complete(INVYR = pop_info_plot$INVYR) |>
+  arrange(INVYR)
+pop_info_long
+```
+
+::: callout-important
+## Question 1
+
+Is this correct to use the EVALIDs with the earliest *shared* end year?  Is it safe to assume that if they have the same end year they will be "compatible" (i.e. the plot will be in the same stratum and estimation unit)?
+:::
+
+Then, to make this "atmoic" (i.e. one row per plot x INVYR), we can pivot wider and keep only certain columns—e.g. we only need `P1POINTCNT`, `P1PNTCNT_EU`, and `AREA_USED` from the EXPCURR eval and because we've chosen the *same* end year for the two inventory types in each `INVYR`, the `ESTN_UNIT` and `STRATUMCD` *should* be identical.  I also add TRUE/FALSE columns indicating whether the plot belonged to an EXPCURR or EXPVOL eval type in that inventory year.
+
+
+```{r}
+#| column: page-inset
+pop_info_wide <- pop_info_long |>
+  mutate(
+    eval_type = case_match(EVAL_TYP_CD, "01" ~ "EXPCURR", "02" ~ "EXPVOL")
+  ) |>
+  select(-EVAL_TYP_CD) |>
+  pivot_wider(
+    names_from = eval_type,
+    values_from = c(
+      EVALID,
+      ESTN_UNIT,
+      STRATUMCD,
+      P1POINTCNT,
+      P1PNTCNT_EU,
+      AREA_USED
+    )
+  ) |>
+  complete(plot_ID = pop_info_plot$plot_ID, INVYR = pop_info_plot$INVYR) |>
+  mutate(
+    EXPCURR = !is.na(EVALID_EXPCURR),
+    EXPVOL = !is.na(EVALID_EXPVOL)
+  ) |>
+  select(
+    plot_ID,
+    INVYR,
+    EVALID_EXPCURR,
+    EVALID_EXPVOL,
+    END_INVYR,
+    ESTN_UNIT = ESTN_UNIT_EXPCURR,
+    STRATUMCD = STRATUMCD_EXPCURR,
+    P1POINTCNT = P1POINTCNT_EXPCURR,
+    P1PNTCNT_EU = P1PNTCNT_EU_EXPCURR,
+    AREA_USED = AREA_USED_EXPCURR,
+    EXPCURR,
+    EXPVOL
+  )
+pop_info_wide
+```
+
+## Carrying EVALIDs forward
+
+Now, the question is what to do about 2010 when we expand the data to include all years?  Should we carry forward the values from 2005 all the way to 2015 or should the plot *not* be used from 2010 to 2015?
+
+::: callout-important
+## Question 2
+
+Which option should we use here?  Why would a plot *not* be used for area estimation in one inventory, but used again in the next, and how does that translate to our annualized data?
+
+:::
+
+```{r}
+#| rows.print: 20
+#| column: page-inset
+#| tbl-cap: "Option 1: fill down between each inventory, populating only columns associated with eval types that the plots belonged to in those years."
+pop_info_wide |>
+  mutate(across(where(is.numeric), \(x) replace_na(x, -999))) |>
+  complete(INVYR = full_seq(INVYR, 1)) |>
+  fill(everything()) |>
+  mutate(across(where(is.numeric), \(x) na_if(x, -999)))
+```
+
+
+```{r}
+#| rows.print: 20
+#| column: page-inset
+#| tbl-cap: "Option 2: Carry 2005 data for EXPCURR eval through to 2015, despite the plot not being associated with an EXPCURR eval in the 2010 inventory."
+pop_info_wide |>
+  mutate(across(ends_with("_EXPVOL"), \(x) replace_na(x, -999))) |>
+  complete(INVYR = full_seq(INVYR, 1)) |>
+  fill(everything()) |>
+  mutate(across(where(is.numeric), \(x) na_if(x, -999)))
+```
+
+With the first option, the plot would not be used *at all* in carbon estimation in 2010--2014.
+With the second option, the plot would be in the *denominator only* for carbon estimation from 2010--2022.
+
+You can't carry the EXPVOL EVALIDs forward to plots that are only associated with EXPCURR evals because the estimation units and stratum codes possibly won't match (getting these to match is the whole point).  This makes me think that option 1 above is "correct".
