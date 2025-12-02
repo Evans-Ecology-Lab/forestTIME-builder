@@ -119,16 +119,14 @@ fia_tidy <- function(db) {
     dplyr::mutate(
       EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
     ) |>
-    # for every plot_ID, INVYR and eval type, only keep the EVALID that is the
-    # most recent one
-    # TODO: this may need to be done by EVAL_GRP_CN or something to ensure that both evals in each year are "compatible" (i.e. use the same estimation units and strata)
-    dplyr::filter(
-      END_INVYR == max(END_INVYR),
-      .by = c(plot_ID, EVAL_TYP_CD, INVYR)
-    ) |>
-    # dplyr::select(-END_INVYR) |>
     # Keep only eval types 01 (EXPCURR) and 02 (EXPVOL)
     dplyr::filter(EVAL_TYP_CD %in% c("01", "02")) |>
+    # for every plot_ID, INVYR and eval type, only keep the EVALID that is the
+    # most recent one
+    dplyr::filter(
+      END_INVYR == max(END_INVYR),
+      .by = c(plot_ID, INVYR)
+    ) |>
     dplyr::arrange(plot_ID, INVYR, EVAL_TYP_CD) |>
     # Create indicator columns for these eval types
     dplyr::mutate(
