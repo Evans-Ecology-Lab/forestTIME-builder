@@ -103,7 +103,14 @@ make_eval_info <- function(db) {
 
   # Matches EVALIDs to their START_INVYR and END_INVYR
   POP_EVAL <- db$POP_EVAL |>
-    dplyr::select(EVAL_CN = CN, EVAL_GRP_CN, EVALID, START_INVYR, END_INVYR) |>
+    dplyr::select(
+      EVAL_CN = CN,
+      EVAL_GRP_CN,
+      EVALID,
+      START_INVYR,
+      END_INVYR,
+      ESTN_METHOD
+    ) |>
     dplyr::mutate(dplyr::across(dplyr::ends_with("CN"), as.character))
 
   # Summarize to get just one row per EVALID with indicator columns for just the
