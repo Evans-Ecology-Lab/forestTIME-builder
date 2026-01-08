@@ -34,7 +34,8 @@ fia_tidy <- function(db) {
       INVYR,
       MACRO_BREAKPOINT_DIA, #for assigning TPA_UNADJ
       INTENSITY,
-      SUBCYCLE
+      SUBCYCLE,
+      PLOT_STATUS_CD
     )
 
   COND <-
@@ -134,7 +135,8 @@ fia_tidy <- function(db) {
         INVYR,
         MACRO_BREAKPOINT_DIA,
         INTENSITY,
-        SUBCYCLE
+        SUBCYCLE,
+        PLOT_STATUS_CD
       )
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
