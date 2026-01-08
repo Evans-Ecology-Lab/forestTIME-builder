@@ -1,0 +1,337 @@
+---
+title: "EVALID timeseries for plots"
+author: Eric R. Scott
+date: today
+format: html
+---
+
+
+```{r}
+#| label: setup
+#| output: false
+library(forestTIME)
+library(tidyverse)
+library(readxl)
+library(gt)
+```
+
+The goal is to come up with some "rules" for how to assign annualized plots to EVALIDs and their corresponding values such that they can be used for state-level carbon estimation using stratification.
+
+## Read data
+
+I'll use RI as an example state because it is small, but keep in mind that if things work in RI, this is no guarantee that the same strategy will work in all states.
+
+```{r}
+db <- fia_load("RI", dir = here::here("fia"))
+```
+
+## Assemble `POP_*` tables
+
+```{r}
+# Matches plot_ID & INVYR to stratum code, estimation unit, and EVALID
+POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
+  fia_add_composite_ids() |>
+  select(plot_ID, INVYR, EVALID, ESTN_UNIT, STRATUMCD)
+
+# Contains P1POINTCNT for each stratum x estimation unit x EVALID combination
+POP_STRATUM <- db$POP_STRATUM |>
+  select(EVALID, ESTN_UNIT, STRATUMCD, STRATUM_DESCR, P1POINTCNT)
+
+# Contains P1PNTCNT_EU and AREA_USED for every estimation unit x EVALID combination
+POP_ESTN_UNIT <- db$POP_ESTN_UNIT |>
+  select(EVALID, ESTN_UNIT, ESTN_UNIT_DESCR, P1PNTCNT_EU, AREA_USED)
+
+# Matches EVALIDs to their START_INVYR and END_INVRY
+POP_EVAL <- db$POP_EVAL |>
+  select(EVAL_CN = CN, EVAL_GRP_CN, EVALID, START_INVYR, END_INVYR) |>
+  mutate(across(ends_with("CN"), as.character))
+
+# Summarize to get just one row per EVALID with indicator columns for just the
+# EVAL_TYPs we are interested in.  This table doesn't have EVALID, so we'll
+# have to get EVAL_CN and EVAL_GRP_CN and join on those.
+POP_EVAL_TYP <- db$POP_EVAL_TYP |>
+  select(EVAL_GRP_CN, EVAL_CN, EVAL_TYP) |>
+  mutate(across(ends_with("CN"), as.character)) |>
+  summarize(
+    .by = c(EVAL_GRP_CN, EVAL_CN),
+    EVAL_TYPs = paste0(sort(EVAL_TYP), collapse = ", "),
+    EXPCURR = any(EVAL_TYP == "EXPCURR"),
+    EXPVOL = any(EVAL_TYP == "EXPVOL")
+  )
+
+# Join eval type info to END_INVYR
+pop_eval_type <- full_join(
+  POP_EVAL,
+  POP_EVAL_TYP,
+  by = dplyr::join_by(EVAL_CN, EVAL_GRP_CN)
+)
+
+# Bring it all together
+pop_info <- POP_PLOT_STRATUM_ASSGN |>
+  left_join(
+    POP_STRATUM,
+    by = join_by(EVALID, ESTN_UNIT, STRATUMCD)
+  ) |>
+  left_join(POP_ESTN_UNIT, by = join_by(EVALID, ESTN_UNIT)) |>
+  left_join(pop_eval_type, by = join_by(EVALID))
+```
+
+## Visualizing the EVALIDs
+
+Here are 3 plots randomly selected from 4 `INVYR`s (2005--2007) as an example.
+Identical EVALIDs are the same color to make it easier to track them.
+
+::: callout-important
+
+For simplicity I've **only** included `EVALID`s with the types "EXPCURR" or "EXPVOL".
+Later on I'll show *all* the `EVALID`s for a single plot.
+
+:::
+
+```{r}
+#| column: screen-inset
+set.seed(123)
+table_df <- pop_info |>
+  mutate(EVALID = as.factor(EVALID)) |>
+  select(
+    plot_ID,
+    INVYR,
+    EVALID,
+    # EVAL_GRP_CN,
+    START_INVYR,
+    END_INVYR,
+    EXPCURR,
+    EXPVOL,
+    EVAL_TYPs,
+    ESTN_UNIT,
+    STRATUMCD,
+    ESTN_UNIT_DESCR,
+    STRATUM_DESCR,
+    P1PNTCNT_EU,
+    P1POINTCNT,
+    AREA_USED
+  ) |>
+  arrange(plot_ID, INVYR, START_INVYR) |>
+  group_by(plot_ID)
+
+yrs <- 2005:2007
+sample_plots <- table_df |>
+  filter(INVYR %in% yrs) |>
+  pull(plot_ID) |>
+  unique() |>
+  sample(3)
+
+table_df |>
+  filter(INVYR %in% yrs, plot_ID %in% sample_plots) |>
+  filter(EXPCURR | EXPVOL) |>
+  select(-EXPCURR, -EXPVOL) |>
+  gt() |>
+  data_color(
+    columns = EVALID,
+    domain = levels(table_df$EVALID),
+    method = "factor"
+  )
+```
+
+In this small example, there are only two `EVALID`s that all three plots belong to: 440701 and 440801.  I suspect that it is possible that even in a given `INVYR` there could be no `EVALID` that all the plots belong to.
+
+```{r}
+plot_nums <- table_df |>
+  filter(INVYR >= 2000) |>
+  group_by(INVYR) |>
+  mutate(n_plots_invyr = length(unique(plot_ID)), .after = INVYR) |>
+  group_by(INVYR, EVALID) |>
+  summarize(
+    n_plots_invyr = unique(n_plots_invyr),
+    n_plots_evalid = length(unique(plot_ID))
+  ) |>
+  mutate(all_plots_in_evalid = n_plots_evalid == n_plots_invyr)
+
+# Are there any years where no EVALID contains all the plots in the year?
+plot_nums |>
+  group_by(INVYR) |>
+  summarize(any_evalids_with_all_plots = any(all_plots_in_evalid)) |>
+  count(any_evalids_with_all_plots)
+
+plot_nums |>
+  group_by(INVYR) |>
+  filter(!any(all_plots_in_evalid)) |>
+  arrange(desc(n_plots_evalid))
+```
+
+That is correct. 
+Even in the raw data (i.e. not considering the complications introduced by interpolating plots between inventory years), there is at least one year (2006) in RI where you could not choose a single EVALID that contains all plots that were inventoried in that year. 
+There are three EVALIDs that are only one plot short.
+
+
+Another way to visualize this is to pick one plot and look at the full timeseries with all the EVALIDs
+
+::: callout-important
+
+This time we are seeing ***all*** EVALIDs, not just the ones with EXPCURR or EXPVOL types!  I've highlighted the rows with EXPCURR & EXPVOL types in light green.
+
+:::
+
+```{r}
+#| column: screen-inset
+table_df |>
+  filter(plot_ID == "1_44_3_158") |>
+  select(-EXPVOL, -EXPCURR) |>
+  gt() |>
+  data_color(
+    columns = EVALID,
+    domain = levels(table_df$EVALID),
+    method = "factor"
+  ) |>
+  data_color(
+    columns = EVAL_TYPs,
+    rows = str_detect(EVAL_TYPs, "(EXPCURR|EXPVOL)"),
+    palette = "green"
+  )
+```
+
+Some important things to note about this plot:
+
+1. In the 2012 inventory, this plot did ***not*** belong to any EVALIDs with the EXPCURR or EXPVOL types.
+2. In 2007 and 2019, the plot belonged to an entirely different set of EVALIDs with the EXPCURR or EXPVOL types.
+3. While the `ESTN_UNIT` is 2 and the `STRATUMCD` is 4 for some EVALIDs in both 2007 and 2019, they have different numbers for `P1PNTCNT_EU`, `P1POINTCNT`, and `AREA_USED`.
+4. You **cannot** choose a set of `EVALID`s with EXPCURR and EXPVOL whose start and end years match up with no gaps.  E.g. 441101 goes from 2007--2011 and 441901 goes from 2013--2019.  **We will need to decide which years this plot should be used for area and volume estimation in the interpolated data.**
+
+In 2019 the plot was included in both "Canopy cover 6--50" *and* "Canopy cover 66--80" depending on the `START_INVYR` or `END_INVYR`.  I still don't think we know whether the stratification is established at the start or end of an evaluation, so it is hard to say which is most "accurate" for this plot's canopy cover in 2019. If plots are assigned to strata at the beginning of an evaluation, then the `EVALID` with the `START_INVYR` cloest to the `INVYR` is most accurate. That is, in 2019 the plot was probably closer to 6--50% canopy cover because that's the stratum it was assigned to in 2018 when evaluation 442401 started. If the stratification is done at the end of an evaluation, then the `EVALID` with the `END_INVYR` closest to the `INVYR` is the one to use.
+
+### What happened in 2012?
+
+```{r}
+#| output: false
+#| code-fold: true
+data_tidy <- fia_tidy(db)
+data_annualized <- fia_annualize(data_tidy)
+```
+
+```{r}
+#| code-fold: true
+
+db$COND |>
+  fia_add_composite_ids() |>
+  filter(plot_ID == "1_44_3_158") |>
+  select(plot_ID, INVYR, CONDID, COND_STATUS_CD, COND_NONSAMPLE_REASN_CD)
+
+
+data_tidy |>
+  filter(plot_ID == "1_44_3_158") |>
+  filter(!is.na(tree_ID)) |> # TODO: figure out why there is a row with NA for tree_ID in 2019--open an issue.
+  arrange(INVYR, desc(STATUSCD), tree_ID) |>
+  mutate(
+    # tree_ID = fct_reorder(tree_ID, INVYR, .fun = min, na.rm = TRUE),
+    tree_ID = fct_inorder(tree_ID),
+    STATUSCD = case_match(
+      STATUSCD,
+      0 ~ "0 (Not in sample)",
+      1 ~ "1 (Live)",
+      2 ~ "2 (Dead)"
+    )
+  ) |>
+  ggplot(aes(
+    x = INVYR,
+    y = tree_ID,
+    group = tree_ID,
+    color = as.factor(STATUSCD)
+  )) +
+  geom_line(color = "black", linetype = "dotted") +
+  geom_point() +
+  scale_x_continuous(breaks = c(2007, 2012, 2019)) +
+  labs(title = "Plot 1_44_3_158", color = "STATUSCD") +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank())
+
+```
+
+This is another example where a plot was not sampled due to denied access in an inventory (COND_NONSAMPLE_REASN_CD 02) and then an ***entirely different set of trees*** appears to be measured in the next inventory.  So, there is a **reason** this plot should not be included in AGB estimates in 2012---there are trees there, we just don't know how big they are.
+
+As a reminder, our annualized data handles this by switching the `STATUSCD` of trees at the midpoint (except when that change is from 1 to 2, there is a recorded `MORTYR` for the tree, and `mortyr = TRUE`). Therefore, this plot should probably change EVALIDs such that it is excluded from volume estimation at the midpoint also to avoid having plots with `NA`s for all tree measurements (due to `STATUSCD` 0) used for AGB estimation.
+
+
+```{r}
+#| code-fold: true
+data_annualized |>
+  filter(plot_ID == "1_44_3_158") |>
+  filter(!is.na(tree_ID)) |> # TODO: figure out why there is a row with NA for tree_ID in 2019--open an issue.
+  arrange(YEAR, desc(STATUSCD), tree_ID) |>
+  mutate(
+    # tree_ID = fct_reorder(tree_ID, INVYR, .fun = min, na.rm = TRUE),
+    tree_ID = fct_inorder(tree_ID),
+    STATUSCD = case_match(
+      STATUSCD,
+      0 ~ "0 (Not in sample)",
+      1 ~ "1 (Live)",
+      2 ~ "2 (Dead)"
+    )
+  ) |>
+  ggplot(aes(
+    x = YEAR,
+    y = tree_ID,
+    group = tree_ID,
+    color = as.factor(STATUSCD)
+  )) +
+  geom_line(color = "black", linetype = "dotted") +
+  geom_point() +
+  scale_x_continuous(breaks = 2007:2019) +
+  labs(title = "Plot 1_44_3_158 (annualized)", color = "STATUSCD") +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank())
+```
+
+There are a handfull of trees that were sampled in 2007 and just plain **not in the 2012 inventory** while most of the trees from 2007 were at least marked with STATUSCD 0 (No status) in that inventory 🤷‍♂️.  These don't get interpolated to the midpoint since 2007 is their first, last, and only inventory on the record.  I don't know how widespread this issue is, but it could cause carbon estimates to be too low in interpolated years for plots with trees like this.
+
+## Conclusion
+
+Even with the above example of one plot with three inventories, I can't think of a "rule" to choose values for `ESNT_UNIT`, `STRATUMCD`, `P1PNTCNT_EU`, `P1POINTCNT`, and `AREA_USED` for all years from 2007 to 2019.  If you could, using the example plots below, choose values for all plots and all years and explain your choices, we could operationalize those choices into rules and turn rules into code.  Without some "rules", **I can't move forward on the task of annualizing the variables needed for yearly, population-level carbon and biomass estimation** other than by doing additional data exploration exercises that could help inform those choices.
+
+
+```{r}
+#| column: screen-inset
+table_df |>
+  filter(plot_ID %in% c("1_44_3_158", "1_44_5_348", "1_44_9_132")) |>
+  gt() |>
+  data_color(
+    columns = EVALID,
+    domain = levels(table_df$EVALID),
+    method = "factor"
+  )
+```
+
+Basically, if we can fill this out by hand (`NA`s allowed where appropriate) and discuss what choices were made, we can come up with some rules to turn into code.
+
+```{r}
+#| echo: false
+#| column: page-inset
+tibble(
+  plot_ID = c(
+    rep("1_44_3_158", length(2007:2019)),
+    rep("1_44_5_348", length(2005:2022)),
+    rep("1_44_9_132", length(2006:2023))
+  ),
+  YEAR = c(2007:2019, 2005:2022, 2006:2023)
+) |>
+  mutate(
+    EVALID = NA,
+    ESTN_UNIT = NA,
+    STRATUMCD = NA,
+    P1PNTCNT_EU = NA,
+    P1POINTCNT = NA,
+    AREA_USED = NA
+  ) |>
+  mutate(
+    notes = case_when(
+      plot_ID == "1_44_3_158" &
+        YEAR %in%
+          c(
+            2010:2012
+          ) ~ "All trees given STATUSCD 0 and NAs for all measurements"
+    )
+  ) |>
+  arrange(YEAR) |>
+  gt() |>
+  sub_missing(missing_text = "_____")
+```
+
