@@ -58,9 +58,17 @@ fia_assign_strata <- function(data_annualized, db) {
     tidyr::fill(colnames(chosen_evals), .direction = "downup") |>
     dplyr::ungroup()
 
-  data_eval
-
-  # TODO calculate EXPNS
+  data_expns <- data_eval |>
+    # Calculate P2POINTCNT ("The number of field plots that are within the stratum")
+    dplyr::mutate(
+      .by = c(EVALID, ESTN_UNIT_CN, STRATUM_CN, YEAR),
+      P2POINTCNT = ifelse(!is.na(EVALID), length(unique(plot_ID)), NA)
+    ) |>
+    # Calculate EXPNS
+    dplyr::mutate(
+      EXPNS = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT
+    )
+  data_expns
 }
 
 
