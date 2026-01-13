@@ -5,8 +5,9 @@
 #' Demystified](https://doserlab.com/files/rfia/articles/fiademystified#with-sampling-errors)).
 #' Each plot in each year is matched with an EVALID and it's associated data as such:
 #' 1. The EVALID must have both the `"EXPVOL"` and `"EXPCURR"` `EVAL_TYP`.
-#' 2. The EVALID's `END_INVYR` must match the `YEAR` in the annualized data for
-#'    that plot.
+#' 2. The year indicated by the middle two digits of the EVALID (usually, but
+#'    not always the `END_INVYR`) must match the `YEAR` in the annualized data
+#'    for that plot.
 #' 3. When there are gaps (e.g. because a plot was not sampled and not belong to
 #'    an EVALID with `"EXPVOL"` or `"EXPCURR"`) the EVALIDs are filled down,
 #'    then up.
@@ -37,6 +38,23 @@ fia_assign_strata <- function(data_annualized, db) {
   #     filter(INVYR == END_INVYR) |> # one per year per type
   #     count(plot_ID, INVYR, EVAL_TYPs) |> filter(n>1)
 
+  # Extract middle two digits of EVALID and convert to a year
+  pop_info <- pop_info |>
+    dplyr::mutate(
+      EVALID_YEAR = stringr::str_extract(
+        EVALID,
+        "\\d{2}(\\d{2})\\d{2}",
+        group = 1
+      ),
+      EVALID_YEAR = if_else(
+        as.numeric(EVALID_YEAR) > 30,
+        as.integer(paste0("19", EVALID_YEAR)),
+        as.integer(paste0("20", EVALID_YEAR))
+      ),
+
+      .after = EVALID
+    )
+
   chosen_evals <- pop_info |>
     dplyr::filter(EXPVOL & EXPCURR) |>
     dplyr::select(-INVYR)
@@ -44,8 +62,8 @@ fia_assign_strata <- function(data_annualized, db) {
   data_eval <- dplyr::left_join(
     data_annualized,
     chosen_evals,
-    by = dplyr::join_by(plot_ID, YEAR == END_INVYR),
-    keep = TRUE # to keep END_INVYR
+    by = dplyr::join_by(plot_ID, YEAR == EVALID_YEAR),
+    keep = TRUE # to keep EVALID_YEAR
   ) |>
     dplyr::select(plot_ID = plot_ID.x, dplyr::everything(), -plot_ID.y)
 

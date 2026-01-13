@@ -17,8 +17,9 @@ can be used for stratified estimation (see, for example, \href{https://doserlab.
 Each plot in each year is matched with an EVALID and it's associated data as such:
 \enumerate{
 \item The EVALID must have both the \code{"EXPVOL"} and \code{"EXPCURR"} \code{EVAL_TYP}.
-\item The EVALID's \code{END_INVYR} must match the \code{YEAR} in the annualized data for
-that plot.
+\item The year indicated by the middle two digits of the EVALID (usually, but
+not always the \code{END_INVYR}) must match the \code{YEAR} in the annualized data
+for that plot.
 \item When there are gaps (e.g. because a plot was not sampled and not belong to
 an EVALID with \code{"EXPVOL"} or \code{"EXPCURR"}) the EVALIDs are filled down,
 then up.
