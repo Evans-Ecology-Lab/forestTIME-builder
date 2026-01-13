@@ -8,8 +8,7 @@ This R package contains functions to create annualized versions of FIA
 data. It can download raw FIA data from DataMart, merge required tables,
 interpolate between surveys, and re-estimate biomass and carbon from
 interpolated values. The output is a single dataframe with values for
-every tree in every year rather than the original panel design. Only
-base-intensity plots (`INTENSITY == 1`) are included.
+every tree in every year rather than the original panel design.
 
 ## Installation
 
@@ -32,8 +31,7 @@ pak::pak("Evans-Ecology-Lab/forestTIME")
 
 If you just want to download annualized FIA tables produced by
 `forestTIME.builder`, head over to the most recent
-[release](https://github.com/Evans-Ecology-Lab/forestTIME-automation/releases/)
-on github.com/Evans-Ecology-Lab/forestTIME-automation to download
+[release](https://doi.org/10.5281/zenodo.17088642) on Zenodo to download
 parquet files. They can be read into R as dataframes with `nanoparquet`,
 for example.
 

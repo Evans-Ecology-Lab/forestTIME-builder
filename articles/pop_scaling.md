@@ -99,7 +99,7 @@ db <- fia_load(
 )
 data <- fia_tidy(db) #single tibble
 #> ℹ Wrangling data
-#> ✔ Wrangling data [591ms]
+#> ✔ Wrangling data [667ms]
 #> 
 
 # Expand to include all years between surveys and interpolate/extrapolate
@@ -111,25 +111,25 @@ data_midpt <- data |>
 #> ℹ Adjusting for mortality
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [5.6s]
+#> ✔ Expanding years between surveys [6.1s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [21.5s]
+✔ Interpolating between surveys [23.1s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [32.6s]
+✔ Adjusting for mortality [34.8s]
 #> 
 #> ℹ Prepping for estimating carbon
-✔ Prepping for estimating carbon [33s]
+✔ Prepping for estimating carbon [35.2s]
 #> 
 #> ⠙ Estimating carbon: prepping data
-#> ⠹ Estimating carbon: predicting total stem wood and bark volume
+#> ⠹ Estimating carbon: finding merchantable height
 #> ⠸ Estimating carbon: predicting merchantable stem wood volume
 #> ⠼ Estimating carbon: predicting stump wood and bark volume
 #> ⠴ Estimating carbon: predicting sawlog stem wood volume
 #> ⠦ Estimating carbon: predicting total biomass
-#> ⠧ Estimating carbon: harmonizing components
-#> ✔ Estimating carbon: harmonizing components [28.1s]
+#> ⠧ Estimating carbon: predicting foliage weight
+#> ✔ Estimating carbon: harmonizing components [29.8s]
 ```
 
 I’ll add domain indicator columns as is done in the `rFIA` demystified
