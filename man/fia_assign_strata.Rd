@@ -33,11 +33,16 @@ of the domain indicator to correctly exclude any non-sampled plots with no
 tree data!
 }
 \examples{
-\dontrun{
-
+# Load example data included in package
 db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+
+# Annualize data
 data_annualized <- db |> fia_tidy() |>
    fia_annualize(use_mortyr = FALSE)
+
+# Assign plots to strata, estimation units, and EVLIDs
 data_stratified <- fia_assign_strata(data_annualized, db)
 }
+\seealso{
+\code{\link[=fia_eval_info]{fia_eval_info()}} to see all possible EVALIDs associated with plots.
 }

@@ -20,16 +20,19 @@
 #' @param data_annualized Annualized data produced by [fia_annualize()].
 #' @param db The list of tables produced by [fia_load()].
 #' @examples
-#' \dontrun{
-#'
+#' # Load example data included in package
 #' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+#'
+#' # Annualize data
 #' data_annualized <- db |> fia_tidy() |>
 #'    fia_annualize(use_mortyr = FALSE)
+#'
+#' # Assign plots to strata, estimation units, and EVLIDs
 #' data_stratified <- fia_assign_strata(data_annualized, db)
-#' }
+#' @seealso [fia_eval_info()] to see all possible EVALIDs associated with plots.
 #' @export
 fia_assign_strata <- function(data_annualized, db) {
-  pop_info <- make_eval_info(db)
+  pop_info <- fia_eval_info(db)
 
   # # TODO need to collapse EVALIDs that are only EXPVOL or EXPCURR into a single
   # # row I think.  These *might* only exist pre-1999 though.
@@ -37,23 +40,6 @@ fia_assign_strata <- function(data_annualized, db) {
   #     filter(EXPVOL | EXPCURR) |>
   #     filter(INVYR == END_INVYR) |> # one per year per type
   #     count(plot_ID, INVYR, EVAL_TYPs) |> filter(n>1)
-
-  # Extract middle two digits of EVALID and convert to a year
-  pop_info <- pop_info |>
-    dplyr::mutate(
-      EVALID_YEAR = stringr::str_extract(
-        EVALID,
-        "\\d{2}(\\d{2})\\d{2}",
-        group = 1
-      ),
-      EVALID_YEAR = if_else(
-        as.numeric(EVALID_YEAR) > 30,
-        as.integer(paste0("19", EVALID_YEAR)),
-        as.integer(paste0("20", EVALID_YEAR))
-      ),
-
-      .after = EVALID
-    )
 
   chosen_evals <- pop_info |>
     dplyr::filter(EXPVOL & EXPCURR) |>
@@ -86,17 +72,31 @@ fia_assign_strata <- function(data_annualized, db) {
     dplyr::mutate(
       EXPNS = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT
     )
-  data_expns
+
+  # If a plot isn't assigned an EVALID, it's not EXPCURR or EXPVOL
+  data_out <- data_expns |>
+    dplyr::mutate(
+      EXPCURR = dplyr::if_else(is.na(EVALID), FALSE, EXPCURR),
+      EXPVOL = dplyr::if_else(is.na(EXPVOL), FALSE, EXPVOL)
+    )
+
+  data_out
 }
 
 
 #' Get EVALIDs and associated information for plots
 #'
-#' @param db A list of tibbles produced by [fia_load()].
-#' @returns A tibble with variables that can be used for stratified estimation
-#'   that can be joined to annualized data.
-#' @noRd
-make_eval_info <- function(db) {
+#' Get information about the EVALIDs associated with plots from the various
+#' `POP_*` tables.
+#'
+#' @param db A list of tibbles produced by [fia_load()]. @returns A tibble with
+#' variables that can be used for stratified estimation that can be joined to
+#'   annualized data. @examples db <- fia_load("RI", dir = system.file("exdata",
+#' package = "forestTIME")) fia_eval_info(db)
+#' @returns A tibble.
+#' @keywords internal
+#' @export
+fia_eval_info <- function(db) {
   # Matches plot_ID & INVYR to stratum code, estimation unit, and EVALID
   POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
     fia_add_composite_ids() |>
@@ -159,6 +159,23 @@ make_eval_info <- function(db) {
     ) |>
     dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
     dplyr::left_join(pop_eval_type, by = dplyr::join_by(EVALID))
+
+  # Extract middle two digits of EVALID and convert to a year
+  pop_info <- pop_info |>
+    dplyr::mutate(
+      EVALID_YEAR = stringr::str_extract(
+        EVALID,
+        "\\d{2}(\\d{2})\\d{2}",
+        group = 1
+      ),
+      EVALID_YEAR = dplyr::if_else(
+        as.numeric(EVALID_YEAR) > 30,
+        as.integer(paste0("19", EVALID_YEAR)),
+        as.integer(paste0("20", EVALID_YEAR))
+      ),
+
+      .after = EVALID
+    )
 
   pop_info
 }
