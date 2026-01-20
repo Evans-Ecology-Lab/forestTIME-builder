@@ -14,7 +14,16 @@ knitr:
   opts_chunk:
     collapse: true
     comment: '#>'
+execute: 
+  eval: false
 ---
+
+::: {.callout-caution}
+## 🚧 UNDER CONSTRUCTION 🚧
+
+This vignette currently doesn't work with the latest version of `forestTIME`!  We will fix it soon!
+
+:::
 
 ```{r}
 #| label: setup
@@ -125,6 +134,8 @@ data_midpt <-
     tDI = if_else(STATUSCD == 1, 1, 0) * aDI #live trees on forested land
   )
 ```
+
+
 
 ## Expansion factors
 

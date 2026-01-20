@@ -64,6 +64,8 @@ pop_info <- POP_PLOT_STRATUM_ASSGN |>
 
 This example plot has 4 inventory years.  In 2005 it belonged to 10 different EVALIDs, 4 ending in 01 ("EXPCURR"), one ending in 02 ("EXPVOL"), and the rest of other types.  In 2010 it **only belonged to EVALIDs ending in 00**, then in 2015 and 2022 it belonged to EVALIDs ending in 01, but **none ending in 02**.
 
+Looking at the TREE and PLOT tables for this plot, it is more clear what happened.  In 2005, a set of trees was inventoried.  In 2010, the plot was not inventoried because of denied access and the trees were all recorded with STATUSCD 0 (removed from inventory).  In 2015 and 2022, a *new* set of 6 trees was measured.
+
 ```{r}
 #| column: page-inset
 pop_info_plot <- pop_info |>
@@ -203,3 +205,23 @@ With the first option, the plot would not be used *at all* in carbon estimation 
 With the second option, the plot would be in the *denominator only* for carbon estimation from 2010--2022.
 
 You can't carry the EXPVOL EVALIDs forward to plots that are only associated with EXPCURR evals because the estimation units and stratum codes possibly won't match (getting these to match is the whole point).  This makes me think that option 1 above is "correct".
+
+::: callout-warning
+Both of these options have an issue: the switch from one EVALID to the next **does not match the way we annualize data** in ways that may cause problems.  For example, in the annualized data, there are carbon estimates for the first set of trees for 2005--**2007** (the midpoint, rounded-down, between inventories).  Option 1 would include this plot in estimates for carbon in 2008 and 2009 which would cause an **incorrect underestimate of carbon** because of the "missing" trees in those years (switch to STATUSCD 0 at the midpoint means no diameter, no height, no biomass or carbon!).
+
+Option 3: join `pop_info_wide` in before interpolation and treat all these new columns exactly the way we treat other categorical columns currently (i.e. switch them at the midpoint, rounded down) rather than carrying them forward all the way to the next inventory.
+:::
+
+
+```{r}
+data_annualized <- fia_annualize(data_tidy = fia_tidy(db))
+```
+
+
+```{r}
+data_annualized |> filter(plot_ID == "1_10_1_133") |> 
+  ggplot(aes(x = YEAR, y = tree_ID, color = tree_ID)) +
+  geom_point() +
+  geom_line()+
+  theme(legend.position = "none")
+```

@@ -25,12 +25,6 @@ for interpolation.
 (to handle trees that change \code{SPCD}).
 \item Fills a tree's \code{MORTYR} column so every row contains the recorded
 mortality year.
-\item Adds \code{EVALID}-related columns. \code{EVALID}s are merged such that each plot
-in each \code{INVYR} is associated with the \code{EVALID} of each type (last two
-digits) that has the greatest end year.  Then, logical indicator columns
-\code{EVAL_TYPE_EXPVOL} and \code{EVAL_TYPE_EXPCURR} are added along with other
-columns from various \verb{POP_*} tables suffixed with \verb{_EXPVOL} and
-\verb{_EXPCURR}.
 }
 }
 \seealso{

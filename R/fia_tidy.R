@@ -11,12 +11,6 @@
 #'   (to handle trees that change `SPCD`).
 #' 4. Fills a tree's `MORTYR` column so every row contains the recorded
 #'   mortality year.
-#' 5. Adds `EVALID`-related columns. `EVALID`s are merged such that each plot
-#'    in each `INVYR` is associated with the `EVALID` of each type (last two
-#'    digits) that has the greatest end year.  Then, logical indicator columns
-#'    `EVAL_TYPE_EXPVOL` and `EVAL_TYPE_EXPCURR` are added along with other
-#'    columns from various `POP_*` tables suffixed with `_EXPVOL` and
-#'    `_EXPCURR`.
 #'
 #' @param db a list of tables produced by [fia_load()]
 #' @export
@@ -40,7 +34,8 @@ fia_tidy <- function(db) {
       INVYR,
       MACRO_BREAKPOINT_DIA, #for assigning TPA_UNADJ
       INTENSITY,
-      SUBCYCLE
+      SUBCYCLE,
+      PLOT_STATUS_CD
     )
 
   COND <-
@@ -86,71 +81,6 @@ fia_tidy <- function(db) {
       DRYBIO_AG
     )
 
-  # POP table stuff
-  POP_PLOT_STRATUM_ASSGN <- db$POP_PLOT_STRATUM_ASSGN |>
-    fia_add_composite_ids() |>
-    dplyr::select(plot_ID, INVYR, EVALID, ESTN_UNIT, STRATUMCD) |>
-    dplyr::distinct()
-
-  POP_STRATUM <- db$POP_STRATUM |>
-    dplyr::select(EVALID, ESTN_UNIT, STRATUMCD, P1POINTCNT) |>
-    dplyr::distinct()
-
-  POP_ESTN_UNIT <- db$POP_ESTN_UNIT |>
-    dplyr::select(EVALID, ESTN_UNIT, P1PNTCNT_EU, AREA_USED)
-
-  POP_EVAL <- db$POP_EVAL |>
-    dplyr::select(EVALID, END_INVYR)
-
-  pop_info <- POP_PLOT_STRATUM_ASSGN |>
-    dplyr::left_join(
-      POP_STRATUM,
-      by = dplyr::join_by(EVALID, ESTN_UNIT, STRATUMCD)
-    ) |>
-    dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
-    dplyr::left_join(POP_EVAL, by = dplyr::join_by(EVALID)) |>
-    dplyr::mutate(
-      EVAL_TYP_CD = stringr::str_extract(EVALID, "(\\d{2})$", group = 1)
-    ) |>
-    # for every plot_ID, INVYR and eval type, only keep the EVALID that is the
-    # most recent one
-    dplyr::filter(
-      END_INVYR == max(END_INVYR),
-      .by = c(plot_ID, EVAL_TYP_CD, INVYR)
-    ) |>
-    dplyr::select(-END_INVYR) |>
-    # Keep only eval types 01 (EXPCURR) and 02 (EXPVOL)
-    dplyr::filter(EVAL_TYP_CD %in% c("01", "02")) |>
-    dplyr::arrange(plot_ID, INVYR, EVAL_TYP_CD) |>
-    # Create indicator columns for these eval types
-    dplyr::mutate(
-      .by = c(plot_ID, INVYR),
-      INVYR,
-      EVAL_TYPE_EXPCURR = any(EVAL_TYP_CD == "01"),
-      EVAL_TYPE_EXPVOL = any(EVAL_TYP_CD == "02")
-    ) |>
-    # Pivot wider to get separate columns for each eval type and just one row
-    # per plot x year
-    dplyr::mutate(
-      eval_type = dplyr::case_match(
-        EVAL_TYP_CD,
-        "01" ~ "EXPCURR",
-        "02" ~ "EXPVOL"
-      )
-    ) |>
-    dplyr::select(-EVAL_TYP_CD) |>
-    tidyr::pivot_wider(
-      names_from = eval_type,
-      values_from = c(
-        EVALID,
-        ESTN_UNIT,
-        STRATUMCD,
-        P1POINTCNT,
-        P1PNTCNT_EU,
-        AREA_USED
-      )
-    )
-
   # Join the tables
   data <-
     COND |>
@@ -160,24 +90,19 @@ fia_tidy <- function(db) {
       by = dplyr::join_by(plot_ID, PLT_CN, CONDID, INVYR)
     ) |>
     dplyr::left_join(PLOT, by = dplyr::join_by(plot_ID, PLT_CN, INVYR)) |>
-    dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN)) |>
-    dplyr::left_join(pop_info, by = dplyr::join_by(plot_ID, INVYR))
+    dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN))
 
-  # Use only base intensity plots "Subcycle is 0 for a periodic inventory.
-  # Subcycle 99 may be used for plots that are not included in the estimation
-  # process." --FIADB user guide. For *most* states, this effectively filters
-  # INVYR>= 2000, but in some southern states it appears all base-intenstiy
-  # plots were measured in 1999
-  # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/171)
-
+  # # Use only base intensity plots "Subcycle is 0 for a periodic inventory.
+  # # Subcycle 99 may be used for plots that are not included in the estimation
+  # # process." --FIADB user guide. For *most* states, this effectively filters
+  # # INVYR>= 2000, but in some southern states it appears all base-intenstiy
+  # # plots were measured in 1999
+  # # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/171)
   # data <- data |>
   #   dplyr::filter(INTENSITY == 1 & SUBCYCLE != 0 & SUBCYCLE != 99)
 
-  # Actually, maybe we want to keep intensification plots??  Just filter to
-  # INVYR>=2000 for now
-
-  data <- data |>
-    dplyr::filter(INVYR >= 2000)
+  # For now at least, just keep plots from 1999 or later
+  data <- data |> dplyr::filter(INVYR >= 1999)
 
   # fill MORTYR so it is a property of trees
   data <- data |>
@@ -210,24 +135,12 @@ fia_tidy <- function(db) {
         INVYR,
         MACRO_BREAKPOINT_DIA,
         INTENSITY,
-        SUBCYCLE
+        SUBCYCLE,
+        PLOT_STATUS_CD
       )
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
     dplyr::select(plot_ID, tree_ID, INVYR, everything())
-
-  # double-check that there is only a single row per tree x year, because if
-  # not, things will break downstream
-  dups <- data |>
-    dplyr::filter(!is.na(tree_ID)) |>
-    dplyr::count(tree_ID, INVYR) |>
-    dplyr::filter(n > 1)
-
-  # TODO: this is mostly for development.  Hopefully users never see this, but
-  # consider improving this error message.
-  if (nrow(dups) > 0) {
-    stop("There are trees with more than one row per year after tidying!")
-  }
 
   # return:
   data
