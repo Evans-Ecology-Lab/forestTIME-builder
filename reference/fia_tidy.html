@@ -10,12 +10,6 @@ Overwrites SPCD with whatever the last value of SPCD is for each tree
 (to handle trees that change SPCD).
 Fills a tree's MORTYR column so every row contains the recorded
 mortality year.
-Adds EVALID-related columns. EVALIDs are merged such that each plot
-in each INVYR is associated with the EVALID of each type (last two
-digits) that has the greatest end year.  Then, logical indicator columns
-EVAL_TYPE_EXPVOL and EVAL_TYPE_EXPCURR are added along with other
-columns from various POP_* tables suffixed with _EXPVOL and
-_EXPCURR.
 
 "><meta property="og:description" content="Reads in all the tables needed for carbon estimation and population scaling
 and joins them into a single table. Then, some additional data cleaning steps
@@ -28,12 +22,6 @@ Overwrites SPCD with whatever the last value of SPCD is for each tree
 (to handle trees that change SPCD).
 Fills a tree's MORTYR column so every row contains the recorded
 mortality year.
-Adds EVALID-related columns. EVALIDs are merged such that each plot
-in each INVYR is associated with the EVALID of each type (last two
-digits) that has the greatest end year.  Then, logical indicator columns
-EVAL_TYPE_EXPVOL and EVAL_TYPE_EXPCURR are added along with other
-columns from various POP_* tables suffixed with _EXPVOL and
-_EXPCURR.
 
 "></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -51,11 +39,11 @@ _EXPCURR.
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/forestTIME.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/forestTIME-builder.html">forestTIME</a></li>
-    <li><a class="dropdown-item" href="../articles/pop_scaling.html">Population scaling</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/pop_scaling.html">Population scaling</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -85,12 +73,6 @@ for interpolation.</p></li>
 (to handle trees that change <code>SPCD</code>).</p></li>
 <li><p>Fills a tree's <code>MORTYR</code> column so every row contains the recorded
 mortality year.</p></li>
-<li><p>Adds <code>EVALID</code>-related columns. <code>EVALID</code>s are merged such that each plot
-in each <code>INVYR</code> is associated with the <code>EVALID</code> of each type (last two
-digits) that has the greatest end year.  Then, logical indicator columns
-<code>EVAL_TYPE_EXPVOL</code> and <code>EVAL_TYPE_EXPCURR</code> are added along with other
-columns from various <code>POP_*</code> tables suffixed with <code>_EXPVOL</code> and
-<code>_EXPCURR</code>.</p></li>
 </ol></div>
 
     <div class="section level2">

@@ -2,6 +2,13 @@
 
 ## forestTIME (development version)
 
+- The internal function
+  [`fia_eval_info()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_eval_info.md)
+  was added.
+- [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md)
+  was added to match plots in each year of the annualized data to an
+  EVALID, estimation unit, and stratum along with associated values
+  necessary for population level estimation with variance calculations.
 - [`fia_tidy()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_tidy.md)
   now adds several columns from the POP\_\* tables relating to EVALIDs.
   Each plot in each INVYR is matched to the EVALID of each type that has
@@ -43,9 +50,6 @@
     woodland species).
 - The calculation of the `EXPNS` column no longer occurs as part of
   [`interpolate_data()`](https://evans-ecology-lab.github.io/forestTIME/reference/interpolate_data.md).
-- Added a utility function,
-  [`fia_calc_expns()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_calc_expns.md)
-  to calculate and add an `EXPNS` column.
 
 ## forestTIME 2.1.0
 

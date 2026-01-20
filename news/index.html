@@ -15,11 +15,11 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/forestTIME.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/forestTIME-builder.html">forestTIME</a></li>
-    <li><a class="dropdown-item" href="../articles/pop_scaling.html">Population scaling</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/pop_scaling.html">Population scaling</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -39,7 +39,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="foresttime-development-version">forestTIME (development version)<a class="anchor" aria-label="anchor" href="#foresttime-development-version"></a></h2>
-<ul><li>
+<ul><li>The internal function <code><a href="../reference/fia_eval_info.html">fia_eval_info()</a></code> was added.</li>
+<li>
+<code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code> was added to match plots in each year of the annualized data to an EVALID, estimation unit, and stratum along with associated values necessary for population level estimation with variance calculations.</li>
+<li>
 <code><a href="../reference/fia_tidy.html">fia_tidy()</a></code> now adds several columns from the POP_* tables relating to EVALIDs. Each plot in each INVYR is matched to the EVALID of each type that has the latest end year. Then, for EVALIDs ending in 01 and 02 (“EXPCURR” and “EXPVOL”, respectively), two columns are created for each of EVALID, ESTN_UNIT, STRATUMCD, P1POINTCNT, P1PNTCNT_EU, and AREA_USED suffixed with _EXPVOL or _EXPCURR. There are also two logical columns EVAL_TYPE_EXPCURR and EVAL_TYPE_EXPVOL. These get filled down and switch at the next inventory (rather than at the midpoint like everything else) (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/192" class="external-link">#192</a>).</li>
 <li>
 <code><a href="../reference/fia_tidy.html">fia_tidy()</a></code> no longer filters to base intensity plots and reverts to just filtering to <code>INVYR≥2000</code>.</li>
@@ -55,7 +58,6 @@
 <code><a href="../reference/fia_estimate.html">fia_estimate()</a></code> now overwrites <code>CARBON_AG</code> and <code>DRYBIO_AG</code> columns in the input unless the result of carbon estimation is <code>NA</code> (as is the case with woodland species).</li>
 </ul></li>
 <li>The calculation of the <code>EXPNS</code> column no longer occurs as part of <code><a href="../reference/interpolate_data.html">interpolate_data()</a></code>.</li>
-<li>Added a utility function, <code><a href="../reference/fia_calc_expns.html">fia_calc_expns()</a></code> to calculate and add an <code>EXPNS</code> column.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.0" id="foresttime-210">forestTIME 2.1.0<a class="anchor" aria-label="anchor" href="#foresttime-210"></a></h2>

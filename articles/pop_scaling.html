@@ -32,12 +32,12 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/forestTIME.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/forestTIME-builder.html">forestTIME</a></li>
-    <li><a class="dropdown-item" href="../articles/pop_scaling.html">Population scaling</a></li>
+<li><a class="dropdown-item" href="../articles/pop_scaling.html">Population scaling</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -70,22 +70,16 @@
 
 
 
-    <div class="cell">
+    <div>
+<blockquote>
+<p><strong>🚧 UNDER CONSTRUCTION 🚧</strong></p>
+<p>This vignette currently doesn’t work with the latest version of <code>forestTIME</code>! We will fix it soon!</p>
+</blockquote>
+</div>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Evans-Ecology-Lab/forestTIME" class="external-link">forestTIME</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; ! forestTIME is an experimental package and currently a work-in-progress. It is</span></span>
-<span><span class="co">#&gt;   not an official product of the US Forest Service.</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/doserjef/rFIA" class="external-link">rFIA</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -126,9 +120,6 @@
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rFIA annual"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">method</span>, <span class="va">YEAR</span>, carbon_ton_acre <span class="op">=</span> <span class="va">CARB_ACRE</span>, carbon_total <span class="op">=</span> <span class="va">CARB_TOTAL</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: The `.dots` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span></span>
-<span><span class="co">#&gt; ℹ The deprecated feature was likely used in the dplyr package.</span></span>
-<span><span class="co">#&gt;   Please report the issue at &lt;https://github.com/tidyverse/dplyr/issues&gt;.</span></span>
 <span></span>
 <span><span class="va">agc_rfia_ti</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://www.doserlab.com/files/rFIA/reference/biomass.html" class="external-link">biomass</a></span><span class="op">(</span></span>
@@ -144,52 +135,25 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">method</span>, <span class="va">YEAR</span>, carbon_ton_acre <span class="op">=</span> <span class="va">CARB_ACRE</span>, carbon_total <span class="op">=</span> <span class="va">CARB_TOTAL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">agc_rfia_annual</span><span class="op">$</span><span class="va">carbon_ton_acre</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 34.03135</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">agc_rfia_ti</span><span class="op">$</span><span class="va">carbon_ton_acre</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 34.01003</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">agc_rfia_ti</span><span class="op">$</span><span class="va">carbon_ton_acre</span><span class="op">)</span></span></code></pre></div>
 </div>
 </blockquote>
 </div>
 <p>We’ll use the standard basic workflow to get estimated aboveground carbon for each tree in each year.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data prep</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>db <span class="ot">&lt;-</span> <span class="fu">fia_load</span>(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"RI"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dir =</span> <span class="fu">system.file</span>(<span class="st">"exdata"</span>, <span class="at">package =</span> <span class="st">"forestTIME"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">fia_tidy</span>(db) <span class="co">#single tibble</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Wrangling data</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Wrangling data [667ms]</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Expand to include all years between surveys and interpolate/extrapolate</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjust for mortality and estimate carbon.</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>data_midpt <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fia_annualize</span>(<span class="at">use_mortyr =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fia_estimate</span>()</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Prepping for estimating carbon</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Adjusting for mortality</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Interpolating between surveys</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Expanding years between surveys</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Expanding years between surveys [6.1s]</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Interpolating between surveys</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>✔ Interpolating between surveys [<span class="fl">23.1</span>s]</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Adjusting for mortality</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>✔ Adjusting <span class="cf">for</span> mortality [<span class="fl">34.8</span>s]</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ℹ Prepping for estimating carbon</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>✔ Prepping <span class="cf">for</span> estimating carbon [<span class="fl">35.2</span>s]</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠙ Estimating carbon: prepping data</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠹ Estimating carbon: finding merchantable height</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠸ Estimating carbon: predicting merchantable stem wood volume</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠼ Estimating carbon: predicting stump wood and bark volume</span></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠴ Estimating carbon: predicting sawlog stem wood volume</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠦ Estimating carbon: predicting total biomass</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ⠧ Estimating carbon: predicting foliage weight</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Estimating carbon: harmonizing components [29.8s]</span></span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Data prep</span></span>
+<span><span class="va">db</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fia_load.html">fia_load</a></span><span class="op">(</span></span>
+<span>  <span class="st">"RI"</span>,</span>
+<span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"exdata"</span>, package <span class="op">=</span> <span class="st">"forestTIME"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fia_tidy.html">fia_tidy</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="co">#single tibble</span></span>
+<span></span>
+<span><span class="co"># Expand to include all years between surveys and interpolate/extrapolate</span></span>
+<span><span class="co"># Adjust for mortality and estimate carbon.</span></span>
+<span><span class="va">data_midpt</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/fia_annualize.html">fia_annualize</a></span><span class="op">(</span>use_mortyr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/fia_estimate.html">fia_estimate</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>I’ll add domain indicator columns as is done in the <code>rFIA</code> demystified vignette so we calculate carbon in live trees per area of forested land using base intensity plots only. Reason:</p>
 <blockquote>
@@ -207,11 +171,11 @@
 </div>
 </section><section class="level2"><h2 id="expansion-factors">Expansion factors<a class="anchor" aria-label="anchor" href="#expansion-factors"></a>
 </h2>
-<p>There are two issues in using the <code>EXPNS</code> provided in the FIA data with our annualized data: 1) it is not straightforward to join the tables in to get the <code>EXPNS</code> column, and 2) there are now many more plots in each year, so the <code>EXPNS</code> column is no longer accurate (it is the acres of the entire state represented by each plot). Therefore, <code><a href="../reference/fia_calc_expns.html">fia_calc_expns()</a></code> calculates the <code>EXPNS</code> column as the total land area of the state divided by the number of plots in the interpolated data for that state in each year.<br>
+<p>There are two issues in using the <code>EXPNS</code> provided in the FIA data with our annualized data: 1) it is not straightforward to join the tables in to get the <code>EXPNS</code> column, and 2) there are now many more plots in each year, so the <code>EXPNS</code> column is no longer accurate (it is the acres of the entire state represented by each plot). Therefore, <code>fia_calc_expns()</code> calculates the <code>EXPNS</code> column as the total land area of the state divided by the number of plots in the interpolated data for that state in each year.<br>
 We think these <code>EXPNS</code> values can be used much in the same way as the ones in the “raw” FIA database.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_midpt</span> <span class="op">&lt;-</span> <span class="va">data_midpt</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/fia_calc_expns.html">fia_calc_expns</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">data_midpt</span> <span class="op">&lt;-</span> <span class="va">data_midpt</span> <span class="op">|&gt;</span> <span class="fu">fia_calc_expns</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">data_midpt</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">YEAR</span>, <span class="va">EXPNS</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -219,12 +183,6 @@ We think these <code>EXPNS</code> values can be used much in the same way as the
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>EXPNS <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">EXPNS</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">EXPNS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure><p><img src="pop_scaling_files/figure-html/expns-1.png" width="672"></p>
-</figure>
-</div>
-</div>
 </div>
 <p>You’ll notice that the calculated <code>EXPNS</code> follow a “U” shape rather than being constant. That is because in our interpolated data, there are fewer plots in the beginning and end of the timeseries because we do not extrapolate beyond a panel’s first and last inventory.</p>
 <p>Using these expansion factors, we can follow the methods in the <a href="https://doserlab.com/files/rfia/articles/fiademystified#without-sampling-errors" class="external-link">FIA demystified vignette</a>.</p>
@@ -236,8 +194,6 @@ We think these <code>EXPNS</code> values can be used much in the same way as the
 <span>    <span class="co"># purposefully omits ajustment factor `aAdj` because it is assumed to be 1</span></span>
 <span>    carbPlot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">CARBON_AG</span> <span class="op">*</span> <span class="va">TPA_UNADJ</span> <span class="op">*</span> <span class="va">EXPNS</span> <span class="op">*</span> <span class="va">tDI</span> <span class="op">/</span> <span class="fl">2000</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="co">#tons/plot</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'plot_ID'. You can override using the</span></span>
-<span><span class="co">#&gt; `.groups` argument.</span></span>
 <span></span>
 <span><span class="va">area_totals</span> <span class="op">&lt;-</span> <span class="va">data_midpt</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">plot_ID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -247,8 +203,6 @@ We think these <code>EXPNS</code> values can be used much in the same way as the
 <span>    <span class="co"># purposefully omits ajustment factor `aAdj` because it is assumed to be 1</span></span>
 <span>    forArea <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">CONDPROP_UNADJ</span> <span class="op">*</span> <span class="va">EXPNS</span> <span class="op">*</span> <span class="va">aDI</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co">#acres/plot</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; `summarise()` has grouped output by 'plot_ID'. You can override using the</span></span>
-<span><span class="co">#&gt; `.groups` argument.</span></span>
 <span></span>
 <span><span class="va">agc_pop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">tree_totals</span>, <span class="va">area_totals</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -265,15 +219,7 @@ We think these <code>EXPNS</code> values can be used much in the same way as the
 <span>    carbon_total <span class="op">=</span> <span class="va">CARB_AG_TOTAL</span>,</span>
 <span>    <span class="va">AREA_TOTAL</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(plot_ID, YEAR)`</span></span>
 <span><span class="va">agc_pop</span></span></code></pre></div>
-<div class="cell-output-display">
-<div data-pagedtable="false">
-  <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["method"],"name":[1],"type":["chr"],"align":["left"]},{"label":["YEAR"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["carbon_ton_acre"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["carbon_total"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["AREA_TOTAL"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"forestTIME","2":"2003","3":"34.53734","4":"240322333","5":"6958333"},{"1":"forestTIME","2":"2004","3":"34.23811","4":"266605967","5":"7786820"},{"1":"forestTIME","2":"2005","3":"33.00830","4":"246131079","5":"7456643"},{"1":"forestTIME","2":"2006","3":"31.02213","4":"208932373","5":"6734945"},{"1":"forestTIME","2":"2007","3":"30.91286","4":"197760178","5":"6397343"},{"1":"forestTIME","2":"2008","3":"31.29413","4":"202254326","5":"6463011"},{"1":"forestTIME","2":"2009","3":"32.45930","4":"200381844","5":"6173327"},{"1":"forestTIME","2":"2010","3":"32.75127","4":"213879523","5":"6530419"},{"1":"forestTIME","2":"2011","3":"33.15911","4":"219265373","5":"6612523"},{"1":"forestTIME","2":"2012","3":"34.39447","4":"221706486","5":"6445992"},{"1":"forestTIME","2":"2013","3":"34.75746","4":"218734132","5":"6293157"},{"1":"forestTIME","2":"2014","3":"34.96977","4":"219345377","5":"6272427"},{"1":"forestTIME","2":"2015","3":"34.92346","4":"220334731","5":"6309074"},{"1":"forestTIME","2":"2016","3":"35.08612","4":"224035541","5":"6385304"},{"1":"forestTIME","2":"2017","3":"33.65840","4":"210099420","5":"6242110"},{"1":"forestTIME","2":"2018","3":"33.54516","4":"192946728","5":"5751851"},{"1":"forestTIME","2":"2019","3":"34.72410","4":"205514999","5":"5918512"},{"1":"forestTIME","2":"2020","3":"34.86392","4":"204096141","5":"5854079"},{"1":"forestTIME","2":"2021","3":"33.61993","4":"196480647","5":"5844172"},{"1":"forestTIME","2":"2022","3":"36.83680","4":"273879168","5":"7434933"},{"1":"forestTIME","2":"2023","3":"38.07459","4":"303094342","5":"7960542"},{"1":"forestTIME","2":"2024","3":"42.04380","4":"299392824","5":"7120974"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-</div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
@@ -281,24 +227,11 @@ We think these <code>EXPNS</code> values can be used much in the same way as the
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">all</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">carbon_total</span>, color <span class="op">=</span> <span class="va">method</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Total Carbon (tons)"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure><p><img src="pop_scaling_files/figure-html/plot-results-1.png" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Total Carbon (tons)"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">all</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">carbon_ton_acre</span>, color <span class="op">=</span> <span class="va">method</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Mean Carbon/Acre (tons/acre)"</span><span class="op">)</span></span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure><p><img src="pop_scaling_files/figure-html/plot-results-2.png" width="672"></p>
-</figure>
-</div>
-</div>
 </div>
 <p>We have some ballbark similar estimates to the ones <code>rFIA</code> produces.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
