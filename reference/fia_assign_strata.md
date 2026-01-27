@@ -61,16 +61,16 @@ data_annualized <- db |> fia_tidy() |>
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
 #> ℹ Wrangling data
-#> ✔ Wrangling data [479ms]
+#> ✔ Wrangling data [494ms]
 #> 
 #> ℹ Expanding years between surveys
 #> ✔ Expanding years between surveys [4.7s]
 #> 
 #> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [23.1s]
+#> ✔ Interpolating between surveys [23.2s]
 #> 
 #> ℹ Adjusting for mortality
-#> ✔ Adjusting for mortality [34.7s]
+#> ✔ Adjusting for mortality [34.9s]
 #> 
 
 # Assign plots to strata, estimation units, and EVLIDs
