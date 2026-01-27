@@ -50,3 +50,21 @@ test_that("estimates match those in raw data", {
   expect_equal(test$CARBON_AG_est, test$CARBON_AG_orig, tolerance = 1e-3)
   expect_equal(test$DRYBIO_AG_est, test$DRYBIO_AG_orig, tolerance = 1e-3)
 })
+
+test_that("no carbon or biomass estimates for fallen dead trees", {
+  db <- fia_load(
+    "RI",
+    dir = system.file("exdata", package = "forestTIME")
+  )
+  data_tidy <- fia_tidy(db)
+  test_tree <- "1_44_9_5416_2_15"
+  test_val <- data_tidy |>
+    filter(tree_ID == test_tree) |>
+    fia_annualize() |>
+    fia_estimate() |>
+    filter(YEAR > 2020) |>
+    pull(CARBON_AG) |>
+    is.na() |>
+    all()
+  expect_true(test_val)
+})
