@@ -128,7 +128,7 @@ estimate_carbon <- function(data_prepped) {
     # TODO: eventually remove this
     # JENKINS_SPGRPCD == 10
     dplyr::mutate(
-      DRYBIO_AG = if_else(
+      DRYBIO_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
         dplyr::coalesce(
           DRYBIO_AG_recalculated,
@@ -136,7 +136,7 @@ estimate_carbon <- function(data_prepped) {
         ),
         DRYBIO_AG_recalculated
       ),
-      CARBON_AG = if_else(
+      CARBON_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
         dplyr::coalesce(
           CARBON_AG_recalculated,
