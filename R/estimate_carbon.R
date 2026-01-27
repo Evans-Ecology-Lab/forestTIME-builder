@@ -126,15 +126,24 @@ estimate_carbon <- function(data_prepped) {
     # through interpolation rather than re-calculating.  The `coalesce()` fills
     # in any NAs for the re-calculated values with interpolated values
     # TODO: eventually remove this
+    # JENKINS_SPGRPCD == 10
     dplyr::mutate(
-      DRYBIO_AG = dplyr::coalesce(
-        DRYBIO_AG_recalculated,
-        DRYBIO_AG_interpolated
+      DRYBIO_AG = dplyr::if_else(
+        JENKINS_SPGRPCD == 10,
+        dplyr::coalesce(
+          DRYBIO_AG_recalculated,
+          DRYBIO_AG_interpolated
+        ),
+        DRYBIO_AG_recalculated
       ),
-      CARBON_AG = dplyr::coalesce(
-        CARBON_AG_recalculated,
-        DRYBIO_AG_interpolated
-      ),
-      .keep = "unused"
-    )
+      CARBON_AG = dplyr::if_else(
+        JENKINS_SPGRPCD == 10,
+        dplyr::coalesce(
+          CARBON_AG_recalculated,
+          DRYBIO_AG_interpolated
+        ),
+        CARBON_AG_recalculated
+      )
+    ) |>
+    dplyr::select(-CARBON_AG_recalculated, -DRYBIO_AG_recalculated)
 }

@@ -161,22 +161,6 @@ interpolate_data <- function(data_expanded) {
 
   # merge in land areas and calculate EXPNS
   out <- data_adjusted_cond |>
-    # dplyr::mutate(
-    #   #get STATECD out of plot_ID
-    #   STATECD = as.numeric(stringr::str_extract(plot_ID, "\\d+(?=_)")),
-    #   # .before = plot_ID
-    # ) |>
-    # dplyr::left_join(
-    #   state_areas |> dplyr::select(STATECD, state_land_area),
-    #   by = dplyr::join_by(STATECD)
-    # ) |>
-    # dplyr::group_by(YEAR, STATECD) |>
-    # dplyr::mutate(
-    #   EXPNS = state_land_area / length(unique(plot_ID))
-    # ) |>
-    # dplyr::ungroup() |>
-    # dplyr::select(-STATECD, -state_land_area) |>
-    # Switch tree_ID for empty conditions back to NA
     dplyr::mutate(
       tree_ID = dplyr::if_else(stringr::str_starts(tree_ID, "NA_"), NA, tree_ID)
     ) |>
