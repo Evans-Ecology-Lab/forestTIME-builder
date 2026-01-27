@@ -5,8 +5,8 @@ CO_interpolated <- CO_data |>
   filter(
     tree_ID %in%
       c(
-        "8_1_119_80086_3_12", # alive in MORTYR
-        "8_1_119_85646_4_1" # dead in MORTYR
+        "1_8_119_80086_3_12", # alive in MORTYR
+        "1_8_119_85646_4_1" # dead in MORTYR
       )
   ) |>
   expand_data() |>
@@ -28,7 +28,10 @@ CO_subset <-
     STANDING_DEAD_CD,
     DECAYCD,
     RECONCILECD,
-    COND_STATUS_CD
+    COND_STATUS_CD,
+    CARBON_AG,
+    DRYBIO_AG,
+    SPCD
   )
 
 saveRDS(CO_subset, testthat::test_path("testdata/CO_MORTYR.rds"))

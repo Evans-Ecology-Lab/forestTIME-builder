@@ -26,7 +26,9 @@ test_that("fallen dead trees get NAs correctly", {
       PROP_BASIS,
       MACRO_BREAKPOINT_DIA,
       COND_STATUS_CD,
-      RECONCILECD
+      RECONCILECD,
+      CARBON_AG,
+      DRYBIO_AG
     )
   data_interpolated <- data |>
     expand_data() |>
@@ -67,7 +69,9 @@ test_that("trees moving to non-sampled conditions have NAs", {
       PROP_BASIS,
       MACRO_BREAKPOINT_DIA,
       COND_STATUS_CD,
-      RECONCILECD
+      RECONCILECD,
+      CARBON_AG,
+      DRYBIO_AG
     )
   data_interpolated <- data |>
     expand_data() |>
@@ -108,7 +112,9 @@ test_that("method doesn't matter for DE", {
       PROP_BASIS,
       MACRO_BREAKPOINT_DIA,
       COND_STATUS_CD,
-      RECONCILECD
+      RECONCILECD,
+      CARBON_AG,
+      DRYBIO_AG
     )
   data_interpolated <- data |>
     expand_data() |>
@@ -150,7 +156,9 @@ test_that("No values below thresholds for measurement", {
       RECONCILECD,
       COND_STATUS_CD,
       PROP_BASIS,
-      MACRO_BREAKPOINT_DIA
+      MACRO_BREAKPOINT_DIA,
+      CARBON_AG,
+      DRYBIO_AG
     )
   data_adj <- data |>
     expand_data() |>
@@ -171,7 +179,7 @@ test_that("MORTYR gets nudged to next year if tree is alive", {
   expect_equal(
     data_adj |>
       filter(
-        tree_ID == "8_1_119_80086_3_12", #alive in MORTYR
+        tree_ID == "1_8_119_80086_3_12", #alive in MORTYR
         YEAR == MORTYR
       ) |>
       pull(STATUSCD),
@@ -180,7 +188,7 @@ test_that("MORTYR gets nudged to next year if tree is alive", {
   expect_equal(
     data_adj |>
       filter(
-        tree_ID == "8_1_119_80086_3_12", # alive in MORTYR
+        tree_ID == "1_8_119_80086_3_12", # alive in MORTYR
         YEAR == MORTYR + 1
       ) |>
       pull(STATUSCD),
@@ -189,7 +197,7 @@ test_that("MORTYR gets nudged to next year if tree is alive", {
   expect_equal(
     data_adj |>
       filter(
-        tree_ID == "8_1_119_85646_4_1", # dead in MORTYR
+        tree_ID == "1_8_119_85646_4_1", # dead in MORTYR
         YEAR == MORTYR
       ) |>
       pull(STATUSCD),
@@ -521,7 +529,8 @@ test_that("Negative numbers are dealt with", {
       ),
       row.names = c(NA, -16L),
       class = c("tbl_df", "tbl", "data.frame")
-    )
+    ) |>
+    mutate(CARBON_AG = NA, DRYBIO_AG = NA)
 
   data_adj <- adjust_mortality(data_interpolated, use_mortyr = TRUE)
 

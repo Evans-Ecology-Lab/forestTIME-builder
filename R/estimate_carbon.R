@@ -143,7 +143,7 @@ estimate_carbon <- function(data_prepped) {
           DRYBIO_AG_interpolated
         ),
         CARBON_AG_recalculated
-      ),
-      .keep = "unused"
-    )
+      )
+    ) |>
+    dplyr::select(-CARBON_AG_recalculated, -DRYBIO_AG_recalculated)
 }
