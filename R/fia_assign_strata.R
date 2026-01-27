@@ -165,7 +165,9 @@ fia_eval_info <- function(db) {
     dplyr::mutate(
       EVALID_YEAR = stringr::str_extract(
         EVALID,
-        "\\d{2}(\\d{2})\\d{2}",
+        # the first 1 *or 2* digits are state code (leading zero may not be
+        # there)
+        "^\\d{1}\\d?(\\d{2})\\d{2}$",
         group = 1
       ),
       EVALID_YEAR = dplyr::if_else(
