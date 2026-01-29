@@ -41,7 +41,7 @@ Estimates From FIA Data.”
       year = {2025},
       url = {https://evans-ecology-lab.github.io/forestTIME/},
       keywords = {FIA,forest inventory analysis,carbon estimation,biomass estimation},
-      version = {2.1.0},
+      version = {2.2.0},
     }
 
 Westfall J, Coulston J, Gray A, Shaw J, Radtke P, Walker D, Weiskittel

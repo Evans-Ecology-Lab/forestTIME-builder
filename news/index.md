@@ -2,6 +2,8 @@
 
 ## forestTIME (development version)
 
+## forestTIME 2.2.0
+
 - The internal function
   [`fia_eval_info()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_eval_info.md)
   was added.
