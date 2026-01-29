@@ -1,5 +1,5 @@
 Package: forestTIME
-Title: Generate Annualized Carbon and Biomass Estimates From FIA Data
+Title: Generate Annualized Carbon and Biomass Estimates from FIA Data
 Version: 2.1.0.9000
 Authors@R: c(
     person("Eric R.", "Scott", , "ericrscott@arizona.edu", role = c("aut", "cre"),
@@ -23,7 +23,7 @@ Description: Uses interpolation and extrapolation to create annualized
 License: GPL (>= 3) + file LICENSE
 URL: https://github.com/Evans-Ecology-Lab/forestTIME
     https://cct-datascience.r-universe.dev/forestTIME,
-    https://evans-ecology-lab.github.io/forestTIME
+    https://evans-ecology-lab.github.io/forestTIME/
 BugReports: https://github.com/Evans-Ecology-Lab/forestTIME/issues
 Depends: 
     R (>= 4.2.0)
