@@ -18,7 +18,7 @@ a list of data frames
 Wrapper for \link[rFIA:readFIA]{rFIA::readFIA} that reads in the necessary tables
 }
 \examples{
-/dontrun{
+\dontrun{
 fia_download(states = "RI")
 RI_db <- fia_load("RI")
 }

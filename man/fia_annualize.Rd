@@ -36,7 +36,7 @@ generating interpolated data with and without using \code{MORTYR} as
 \code{interpolate_data()} is the slowest step.
 }
 \examples{
-/dontrun{
+\dontrun{
 db <- db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 data_tidy <- fia_tidy(db)
 data_annualized <- fia_annualize(data_tidy)

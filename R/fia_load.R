@@ -6,7 +6,7 @@
 #' @export
 #' @returns a list of data frames
 #' @examples
-#' /dontrun{
+#' \dontrun{
 #' fia_download(states = "RI")
 #' RI_db <- fia_load("RI")
 #' }
