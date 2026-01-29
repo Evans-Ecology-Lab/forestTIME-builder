@@ -27,6 +27,10 @@ for interpolation.
 mortality year.
 }
 }
+\examples{
+db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+data_tidy <- fia_tidy(db)
+}
 \seealso{
 \code{\link[=fia_add_composite_ids]{fia_add_composite_ids()}}
 }

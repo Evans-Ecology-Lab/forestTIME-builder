@@ -35,6 +35,14 @@ However, one reason to use the stepwise workflow would be to save time when
 generating interpolated data with and without using \code{MORTYR} as
 \code{interpolate_data()} is the slowest step.
 }
+\examples{
+/dontrun{
+db <- db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+data_tidy <- fia_tidy(db)
+data_annualized <- fia_annualize(data_tidy)
+}
+
+}
 \seealso{
 For more details on each step, see: \code{\link[=expand_data]{expand_data()}},
 \code{\link[=interpolate_data]{interpolate_data()}}, \code{\link[=adjust_mortality]{adjust_mortality()}}

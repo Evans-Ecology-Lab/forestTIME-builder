@@ -17,3 +17,10 @@ a list of data frames
 \description{
 Wrapper for \link[rFIA:readFIA]{rFIA::readFIA} that reads in the necessary tables
 }
+\examples{
+/dontrun{
+fia_download(states = "RI")
+RI_db <- fia_load("RI")
+}
+
+}

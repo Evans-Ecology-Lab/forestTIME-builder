@@ -20,6 +20,11 @@ plot identifiers, respectively.  These are created by pasting together the
 values for \code{UNITCD}, \code{STATECD}, \code{COUNTYCD}, \code{PLOT} and in the case of trees
 \code{SUBP} and \code{TREE}.
 }
+\examples{
+db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+fia_add_composite_ids(db$TREE)
+
+}
 \seealso{
 See \code{\link[=fia_split_composite_ids]{fia_split_composite_ids()}} for "undoing" this.
 }

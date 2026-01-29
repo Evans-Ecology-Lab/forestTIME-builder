@@ -16,6 +16,9 @@
 #' @export
 #' @seealso [fia_add_composite_ids()]
 #' @returns a tibble
+#' @examples
+#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+#' data_tidy <- fia_tidy(db)
 fia_tidy <- function(db) {
   # Select only the columns we need from each table, to keep things slim
   cli::cli_progress_step("Wrangling data")

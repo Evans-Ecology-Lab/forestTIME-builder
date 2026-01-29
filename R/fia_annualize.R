@@ -26,6 +26,13 @@
 #' @param use_mortyr logical; Use `MORTYR` (if recorded) as the first year a
 #'   tree was dead? Passed to [adjust_mortality()].
 #' @export
+#' @examples
+#' /dontrun{
+#' db <- db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+#' data_tidy <- fia_tidy(db)
+#' data_annualized <- fia_annualize(data_tidy)
+#' }
+#' 
 fia_annualize <- function(data_tidy, use_mortyr = TRUE) {
   data_tidy |>
     expand_data() |>

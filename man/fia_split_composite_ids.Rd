@@ -17,6 +17,11 @@ The input tibble with additional columns \code{UNITCD}, \code{STATECD},
 Splits the composite ID columns \code{tree_ID} and/or \code{plot_ID} into their
 original component columns
 }
+\examples{
+db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+data_tidy <- fia_tidy(db)
+fia_split_composite_ids(data_tidy)
+}
 \seealso{
 \code{\link[=fia_add_composite_ids]{fia_add_composite_ids()}}
 }

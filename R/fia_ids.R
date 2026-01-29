@@ -12,6 +12,10 @@
 #' @returns The input tibble with a `plot_ID` and possibly also a `tree_ID`
 #'   column added
 #' @export
+#' @examples
+#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+#' fia_add_composite_ids(db$TREE)
+#' 
 fia_add_composite_ids <- function(data) {
   cols <- colnames(data)
   if (
@@ -47,6 +51,10 @@ fia_add_composite_ids <- function(data) {
 #'   `COUNTYCD`, `PLOT` and possibly `SUBP` and `TREE`.
 #' @seealso [fia_add_composite_ids()]
 #' @export
+#' @examples
+#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+#' data_tidy <- fia_tidy(db)
+#' fia_split_composite_ids(data_tidy)
 fia_split_composite_ids <- function(data) {
   cols <- colnames(data)
   if (!any(c("plot_ID", "tree_ID") %in% cols)) {
