@@ -28,3 +28,12 @@ fia_load(states, dir = "fia")
 ## Value
 
 a list of data frames
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+fia_download(states = "RI")
+RI_db <- fia_load("RI")
+} # }
+```

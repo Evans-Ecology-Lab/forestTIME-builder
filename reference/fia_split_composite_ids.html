@@ -68,6 +68,36 @@ original component columns</p>
     <div class="dont-index"><p><code><a href="fia_add_composite_ids.html">fia_add_composite_ids()</a></code></p></div>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">db</span> <span class="op">&lt;-</span> <span class="fu"><a href="fia_load.html">fia_load</a></span><span class="op">(</span><span class="st">"RI"</span>, dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"exdata"</span>, package <span class="op">=</span> <span class="st">"forestTIME"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data_tidy</span> <span class="op">&lt;-</span> <span class="fu"><a href="fia_tidy.html">fia_tidy</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Wrangling data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Wrangling data <span style="color: #B2B2B2;">[246ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">fia_split_composite_ids</span><span class="op">(</span><span class="va">data_tidy</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 15,890 × 33</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    UNITCD STATECD COUNTYCD PLOT  plot_ID SUBP  TREE  tree_ID INVYR PLT_CN CONDID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 1      44      1        155   1_44_1… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="text-decoration: underline;">2</span>005 62270…      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1      44      1        155   1_44_1… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="text-decoration: underline;">2</span>009 14500…      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 1      44      1        155   1_44_1… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="text-decoration: underline;">2</span>014 16826…      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 1      44      1        155   1_44_1… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="text-decoration: underline;">2</span>021 71991…      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 1      44      1        228   1_44_1… 1     1     1_44_1…  <span style="text-decoration: underline;">2</span>004 55944…      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 1      44      1        228   1_44_1… 1     1     1_44_1…  <span style="text-decoration: underline;">2</span>008 12004…      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 1      44      1        228   1_44_1… 1     1     1_44_1…  <span style="text-decoration: underline;">2</span>013 14527…      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 1      44      1        228   1_44_1… 1     1     1_44_1…  <span style="text-decoration: underline;">2</span>020 60259…      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1      44      1        228   1_44_1… 1     2     1_44_1…  <span style="text-decoration: underline;">2</span>004 55944…      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1      44      1        228   1_44_1… 1     2     1_44_1…  <span style="text-decoration: underline;">2</span>008 12004…      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15,880 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more variables: CONDPROP_UNADJ &lt;dbl&gt;, PROP_BASIS &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   COND_STATUS_CD &lt;int&gt;, STDORGCD &lt;int&gt;, MORTYR &lt;lgl&gt;, STATUSCD &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   RECONCILECD &lt;int&gt;, DECAYCD &lt;int&gt;, STANDING_DEAD_CD &lt;int&gt;, DIA &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CR &lt;int&gt;, HT &lt;int&gt;, ACTUALHT &lt;int&gt;, CULL &lt;int&gt;, SPCD &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   CARBON_AG &lt;dbl&gt;, DRYBIO_AG &lt;dbl&gt;, MACRO_BREAKPOINT_DIA &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   INTENSITY &lt;int&gt;, SUBCYCLE &lt;int&gt;, PLOT_STATUS_CD &lt;int&gt;, ECOSUBCD &lt;chr&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

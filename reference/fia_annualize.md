@@ -55,3 +55,13 @@ For more details on each step, see:
 [`expand_data()`](https://evans-ecology-lab.github.io/forestTIME/reference/expand_data.md),
 [`interpolate_data()`](https://evans-ecology-lab.github.io/forestTIME/reference/interpolate_data.md),
 [`adjust_mortality()`](https://evans-ecology-lab.github.io/forestTIME/reference/adjust_mortality.md)
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+db <- db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+data_tidy <- fia_tidy(db)
+data_annualized <- fia_annualize(data_tidy)
+} # }
+```

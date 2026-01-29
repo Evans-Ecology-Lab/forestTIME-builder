@@ -36,3 +36,13 @@ a tibble
 ## See also
 
 [`fia_add_composite_ids()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_add_composite_ids.md)
+
+## Examples
+
+``` r
+db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
+data_tidy <- fia_tidy(db)
+#> ℹ Wrangling data
+#> ✔ Wrangling data [447ms]
+#> 
+```
