@@ -1,4 +1,4 @@
-# forestTIME (development version)
+# forestTIME 2.2.0
 
 - The internal function `fia_eval_info()` was added.
 - `fia_assign_strata()` was added to match plots in each year of the annualized data to an EVALID, estimation unit, and stratum along with associated values necessary for population level estimation with variance calculations.
