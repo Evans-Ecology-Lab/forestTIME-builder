@@ -58,7 +58,7 @@ plot and tree IDS, `plot_ID` and `tree_ID`.
 ``` r
 data <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [604ms]
+#> ✔ Wrangling data [584ms]
 #> 
 data
 ```
@@ -100,10 +100,10 @@ data_midpt <- fia_annualize(data, use_mortyr = FALSE)
 #> ✔ Expanding years between surveys [7.8s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [28.5s]
+✔ Interpolating between surveys [28.6s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [33.3s]
+✔ Adjusting for mortality [33.4s]
 ```
 
 ``` r
@@ -117,10 +117,10 @@ data_midpt_stepwise <- data |>
 #> ✔ Expanding years between surveys [7.9s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [28.1s]
+✔ Interpolating between surveys [28.3s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [32.8s]
+✔ Adjusting for mortality [33s]
 ```
 
 ``` r
@@ -163,7 +163,7 @@ species), they are assumed to be fallen dead and have `STATUSCD` set to
 ``` r
 data_interpolated <- interpolate_data(data_expanded)
 #> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [20s]
+#> ✔ Interpolating between surveys [20.3s]
 #> 
 data_interpolated
 ```
@@ -184,7 +184,7 @@ data_mortyr <- adjust_mortality(data_interpolated, use_mortyr = TRUE)
 #> 
 data_midpt <- adjust_mortality(data_interpolated, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
-#> ✔ Adjusting for mortality [4.6s]
+#> ✔ Adjusting for mortality [4.7s]
 #> 
 all.equal(data_mortyr, data_midpt)
 #> [1] TRUE
@@ -204,7 +204,7 @@ variables using the National Scale Volume and Biomass estimators (NSVB)
 ``` r
 data_midpt_carbon <- fia_estimate(data_midpt)
 #> ℹ Prepping for estimating carbon
-#> ✔ Prepping for estimating carbon [383ms]
+#> ✔ Prepping for estimating carbon [380ms]
 #> 
 #> ⠙ Estimating carbon: prepping data
 #> ⠹ Estimating carbon: predicting total stem wood and bark volume
@@ -213,7 +213,7 @@ data_midpt_carbon <- fia_estimate(data_midpt)
 #> ⠴ Estimating carbon: predicting sawlog stem wood volume
 #> ⠦ Estimating carbon: predicting total biomass
 #> ⠧ Estimating carbon: predicting total branch weight
-#> ✔ Estimating carbon: harmonizing components [31s]
+#> ✔ Estimating carbon: harmonizing components [29.8s]
 #> 
 data_midpt_carbon
 ```
