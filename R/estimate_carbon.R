@@ -5,7 +5,7 @@
 #'
 #' @param data_prepped tibble produced by [prep_carbon()].
 #' @author David Walker
-#' @keywords internal
+#' @noRd
 #' @returns a tibble
 estimate_carbon <- function(data_prepped) {
   med_cr_prop <-
