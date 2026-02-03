@@ -7,16 +7,18 @@
 fia_eval_info(db)
 }
 \arguments{
-\item{db}{A list of tibbles produced by \code{\link[=fia_load]{fia_load()}}. @returns A tibble with
-variables that can be used for stratified estimation that can be joined to
-annualized data. @examples db <- fia_load("RI", dir = system.file("exdata",
-package = "forestTIME")) fia_eval_info(db)}
+\item{db}{A list of tibbles produced by \code{\link[=fia_load]{fia_load()}}.}
 }
 \value{
-A tibble.
+A tibble with variables that can be used for stratified estimation
+that can be joined to annualized data.
 }
 \description{
 Get information about the EVALIDs associated with plots from the various
 \verb{POP_*} tables.
+}
+\examples{
+db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME")) 
+fia_eval_info(db)
 }
 \keyword{internal}

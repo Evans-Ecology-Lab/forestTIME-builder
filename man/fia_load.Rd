@@ -12,10 +12,10 @@ fia_load(states, dir = "fia")
 \item{dir}{directory where .csv files of FIA tables are stored.}
 }
 \value{
-a list of data frames
+A list of data frames
 }
 \description{
-Wrapper for \link[rFIA:readFIA]{rFIA::readFIA} that reads in the necessary tables
+Wrapper for \code{\link[rFIA:readFIA]{rFIA::readFIA()}} that reads in the necessary tables
 }
 \examples{
 \dontrun{

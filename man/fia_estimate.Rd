@@ -7,10 +7,10 @@
 fia_estimate(data)
 }
 \arguments{
-\item{data}{a data frame or tibble; generally the output of \code{\link[=fia_annualize]{fia_annualize()}}.}
+\item{data}{A data frame or tibble; generally the output of \code{\link[=fia_annualize]{fia_annualize()}}.}
 }
 \value{
-a tibble with the additional columns \code{DRYBIO_AG} and \code{CARBON_AG}
+A tibble with the additional columns \code{DRYBIO_AG} and \code{CARBON_AG}
 that correspond to the FIAdb definitions of those variables.
 }
 \description{

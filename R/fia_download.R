@@ -38,18 +38,18 @@ tables_rfia <- c(
 #'
 #' The zip files are smaller than just the *_TREE.csv, so this just downloads
 #' the whole zip and extracts the required CSV files. Uses
-#' `curl::multi_download()` which resumes and skips partial and incomplete
-#' downloads, respectively, when run subsequent times.
-#' @param states vector of state abbreviations; for all states use `state.abb`.
-#' @param download_dir where to save the zip files.
-#' @param extract which files to extract from the downloaded zip file—those
+#' `curl::multi_download()` which resumes partial skips already completed
+#' downloads when run subsequent times.
+#' @param states Vector of state abbreviations; for all states use `state.abb`.
+#' @param download_dir Where to save the zip files.
+#' @param extract Which files to extract from the downloaded zip file—those
 #'   needed by `forestTIME`, those needed by `rFIA` (in addition to all
 #'   the tables `forestTIME` needs), all the files, or none.
-#' @param keep_zip logical; keep the .zip file after CSVs are extracted?
+#' @param keep_zip Logical; keep the .zip file after CSVs are extracted?
 #' Defaults to `TRUE`.
 #'
 #' @export
-#' @returns returns nothing
+#' @returns Returns nothing.
 #' @examples
 #' \dontrun{
 #' # "Standard" download

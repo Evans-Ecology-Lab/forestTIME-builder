@@ -26,11 +26,10 @@ then up.
 }
 }
 \details{
-This means that the EVALID-associated data added by this function \strong{may be in
-conflict with the results of interpolation by \code{fia_annualize()}!} When using
-this function to do stratified estimation, use the \code{PLOT_STATUS_CD} as part
-of the domain indicator to correctly exclude any non-sampled plots with no
-tree data!
+EVALID-associated data added by this function \strong{may be in conflict with the
+results of interpolation by \code{fia_annualize()}!} When using this function to
+do stratified estimation, use the \code{PLOT_STATUS_CD} as part of the domain
+indicator to correctly exclude any non-sampled plots with no tree data!
 }
 \examples{
 \dontrun{

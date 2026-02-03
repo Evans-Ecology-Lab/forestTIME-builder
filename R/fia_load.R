@@ -1,10 +1,10 @@
 #' Read in needed tables
 #'
-#' Wrapper for [rFIA::readFIA] that reads in the necessary tables
+#' Wrapper for [rFIA::readFIA()] that reads in the necessary tables
 #' @inheritParams rFIA::readFIA
 #'
 #' @export
-#' @returns a list of data frames
+#' @returns A list of data frames
 #' @examples
 #' \dontrun{
 #' fia_download(states = "RI")

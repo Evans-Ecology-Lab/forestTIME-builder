@@ -12,25 +12,25 @@ fia_download(
 )
 }
 \arguments{
-\item{states}{vector of state abbreviations; for all states use \code{state.abb}.}
+\item{states}{Vector of state abbreviations; for all states use \code{state.abb}.}
 
-\item{download_dir}{where to save the zip files.}
+\item{download_dir}{Where to save the zip files.}
 
-\item{extract}{which files to extract from the downloaded zip file—those
+\item{extract}{Which files to extract from the downloaded zip file—those
 needed by \code{forestTIME}, those needed by \code{rFIA} (in addition to all
 the tables \code{forestTIME} needs), all the files, or none.}
 
-\item{keep_zip}{logical; keep the .zip file after CSVs are extracted?
+\item{keep_zip}{Logical; keep the .zip file after CSVs are extracted?
 Defaults to \code{TRUE}.}
 }
 \value{
-returns nothing
+Returns nothing.
 }
 \description{
 The zip files are smaller than just the *_TREE.csv, so this just downloads
 the whole zip and extracts the required CSV files. Uses
-\code{curl::multi_download()} which resumes and skips partial and incomplete
-downloads, respectively, when run subsequent times.
+\code{curl::multi_download()} which resumes partial skips already completed
+downloads when run subsequent times.
 }
 \examples{
 \dontrun{

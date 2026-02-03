@@ -7,10 +7,10 @@
 fia_tidy(db)
 }
 \arguments{
-\item{db}{a list of tables produced by \code{\link[=fia_load]{fia_load()}}}
+\item{db}{A list of tables produced by \code{\link[=fia_load]{fia_load()}}.}
 }
 \value{
-a tibble
+A tibble.
 }
 \description{
 Reads in all the tables needed for carbon estimation and population scaling

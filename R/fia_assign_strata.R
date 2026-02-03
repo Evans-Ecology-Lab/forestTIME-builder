@@ -11,12 +11,12 @@
 #' 3. When there are gaps (e.g. because a plot was not sampled and not belong to
 #'    an EVALID with `"EXPVOL"` or `"EXPCURR"`) the EVALIDs are filled down,
 #'    then up.
-#'
-#' This means that the EVALID-associated data added by this function **may be in
-#' conflict with the results of interpolation by `fia_annualize()`!** When using
-#' this function to do stratified estimation, use the `PLOT_STATUS_CD` as part
-#' of the domain indicator to correctly exclude any non-sampled plots with no
-#' tree data!
+#' 
+#' EVALID-associated data added by this function **may be in conflict with the
+#' results of interpolation by `fia_annualize()`!** When using this function to
+#' do stratified estimation, use the `PLOT_STATUS_CD` as part of the domain
+#' indicator to correctly exclude any non-sampled plots with no tree data!
+#' 
 #' @param data_annualized Annualized data produced by [fia_annualize()].
 #' @param db The list of tables produced by [fia_load()].
 #' @examples
@@ -91,11 +91,12 @@ fia_assign_strata <- function(data_annualized, db) {
 #' Get information about the EVALIDs associated with plots from the various
 #' `POP_*` tables.
 #'
-#' @param db A list of tibbles produced by [fia_load()]. @returns A tibble with
-#' variables that can be used for stratified estimation that can be joined to
-#'   annualized data. @examples db <- fia_load("RI", dir = system.file("exdata",
-#' package = "forestTIME")) fia_eval_info(db)
-#' @returns A tibble.
+#' @param db A list of tibbles produced by [fia_load()]. 
+#' @returns A tibble with variables that can be used for stratified estimation
+#' that can be joined to annualized data. 
+#' @examples 
+#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME")) 
+#' fia_eval_info(db)
 #' @keywords internal
 #' @export
 fia_eval_info <- function(db) {

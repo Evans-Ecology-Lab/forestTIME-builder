@@ -12,10 +12,10 @@
 #' 4. Fills a tree's `MORTYR` column so every row contains the recorded
 #'   mortality year.
 #'
-#' @param db a list of tables produced by [fia_load()]
+#' @param db A list of tables produced by [fia_load()].
 #' @export
 #' @seealso [fia_add_composite_ids()]
-#' @returns a tibble
+#' @returns A tibble.
 #' @examples
 #' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 #' data_tidy <- fia_tidy(db)
