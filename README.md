@@ -3,7 +3,6 @@
 <!-- badges: start -->
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![run_workflow.yml](https://github.com/Evans-Ecology-Lab/forestTIME/actions/workflows/run_workflow.yml/badge.svg?branch=main)](https://github.com/Evans-Ecology-Lab/forestTIME/actions/workflows/run_workflow.yml)
 [![R-CMD-check](https://github.com/Evans-Ecology-Lab/forestTIME/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Evans-Ecology-Lab/forestTIME/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17088598.svg)](https://doi.org/10.5281/zenodo.17088598)
 
