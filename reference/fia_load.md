@@ -1,7 +1,7 @@
 # Read in needed tables
 
 Wrapper for
-[rFIA::readFIA](https://www.doserlab.com/files/rFIA/reference/readFIA.html)
+[`rFIA::readFIA()`](https://www.doserlab.com/files/rFIA/reference/readFIA.html)
 that reads in the necessary tables
 
 ## Usage
@@ -27,7 +27,7 @@ fia_load(states, dir = "fia")
 
 ## Value
 
-a list of data frames
+A list of data frames
 
 ## Examples
 

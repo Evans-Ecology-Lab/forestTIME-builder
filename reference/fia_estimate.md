@@ -13,12 +13,12 @@ fia_estimate(data)
 
 - data:
 
-  a data frame or tibble; generally the output of
+  A data frame or tibble; generally the output of
   [`fia_annualize()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_annualize.md).
 
 ## Value
 
-a tibble with the additional columns `DRYBIO_AG` and `CARBON_AG` that
+A tibble with the additional columns `DRYBIO_AG` and `CARBON_AG` that
 correspond to the FIAdb definitions of those variables.
 
 ## References

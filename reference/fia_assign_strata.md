@@ -36,8 +36,8 @@ fia_assign_strata(data_annualized, db)
 
 ## Details
 
-This means that the EVALID-associated data added by this function **may
-be in conflict with the results of interpolation by
+EVALID-associated data added by this function **may be in conflict with
+the results of interpolation by
 [`fia_annualize()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_annualize.md)!**
 When using this function to do stratified estimation, use the
 `PLOT_STATUS_CD` as part of the domain indicator to correctly exclude

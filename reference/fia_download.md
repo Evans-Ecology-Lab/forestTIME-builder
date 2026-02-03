@@ -3,8 +3,8 @@
 The zip files are smaller than just the \*\_TREE.csv, so this just
 downloads the whole zip and extracts the required CSV files. Uses
 [`curl::multi_download()`](https://jeroen.r-universe.dev/curl/reference/multi_download.html)
-which resumes and skips partial and incomplete downloads, respectively,
-when run subsequent times.
+which resumes partial skips already completed downloads when run
+subsequent times.
 
 ## Usage
 
@@ -21,26 +21,26 @@ fia_download(
 
 - states:
 
-  vector of state abbreviations; for all states use `state.abb`.
+  Vector of state abbreviations; for all states use `state.abb`.
 
 - download_dir:
 
-  where to save the zip files.
+  Where to save the zip files.
 
 - extract:
 
-  which files to extract from the downloaded zip file—those needed by
+  Which files to extract from the downloaded zip file—those needed by
   `forestTIME`, those needed by `rFIA` (in addition to all the tables
   `forestTIME` needs), all the files, or none.
 
 - keep_zip:
 
-  logical; keep the .zip file after CSVs are extracted? Defaults to
+  Logical; keep the .zip file after CSVs are extracted? Defaults to
   `TRUE`.
 
 ## Value
 
-returns nothing
+Returns nothing.
 
 ## Examples
 

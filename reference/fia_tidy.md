@@ -26,12 +26,12 @@ fia_tidy(db)
 
 - db:
 
-  a list of tables produced by
-  [`fia_load()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_load.md)
+  A list of tables produced by
+  [`fia_load()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_load.md).
 
 ## Value
 
-a tibble
+A tibble.
 
 ## See also
 

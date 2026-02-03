@@ -55,17 +55,39 @@ POP_* tables."></head><body>
 
 
 <dl><dt id="arg-db">db<a class="anchor" aria-label="anchor" href="#arg-db"></a></dt>
-<dd><p>A list of tibbles produced by <code><a href="fia_load.html">fia_load()</a></code>. @returns A tibble with
-variables that can be used for stratified estimation that can be joined to
-annualized data. @examples db &lt;- fia_load("RI", dir = system.file("exdata",
-package = "forestTIME")) fia_eval_info(db)</p></dd>
+<dd><p>A list of tibbles produced by <code><a href="fia_load.html">fia_load()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble.</p>
+    <p>A tibble with variables that can be used for stratified estimation
+that can be joined to annualized data.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">db</span> <span class="op">&lt;-</span> <span class="fu"><a href="fia_load.html">fia_load</a></span><span class="op">(</span><span class="st">"RI"</span>, dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"exdata"</span>, package <span class="op">=</span> <span class="st">"forestTIME"</span><span class="op">)</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="fu">fia_eval_info</span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 14,396 × 21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    plot_ID  INVYR EVALID EVALID_YEAR ESTN_UNIT STRATUMCD STRATUM_CN ESTN_UNIT_CN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 1_44_1_…  <span style="text-decoration: underline;">2</span>005 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         1 747529080… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1_44_1_…  <span style="text-decoration: underline;">2</span>004 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         5 747529120… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 1_44_1_…  <span style="text-decoration: underline;">2</span>006 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         1 747529080… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 1_44_3_9  <span style="text-decoration: underline;">2</span>006 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         1 747529080… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 1_44_3_…  <span style="text-decoration: underline;">2</span>006 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         5 747529120… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 1_44_3_…  <span style="text-decoration: underline;">2</span>005 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         2     <span style="text-decoration: underline;">12</span>345 747529130… 19783603901…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 1_44_3_…  <span style="text-decoration: underline;">2</span>004 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         5 747529120… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 1_44_3_…  <span style="text-decoration: underline;">2</span>004 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         1 747529080… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 1_44_3_…  <span style="text-decoration: underline;">2</span>003 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         5 747529120… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 1_44_3_…  <span style="text-decoration: underline;">2</span>006 <span style="text-decoration: underline;">440</span>600        <span style="text-decoration: underline;">2</span>006         1         5 747529120… 19783603501…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 14,386 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 13 more variables: STRATUM_DESCR &lt;chr&gt;, P1POINTCNT &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ESTN_UNIT_DESCR &lt;chr&gt;, P1PNTCNT_EU &lt;int&gt;, AREA_USED &lt;dbl&gt;, EVAL_CN &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   EVAL_GRP_CN &lt;chr&gt;, START_INVYR &lt;int&gt;, END_INVYR &lt;dbl&gt;, ESTN_METHOD &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   EVAL_TYPs &lt;chr&gt;, EXPCURR &lt;lgl&gt;, EXPVOL &lt;lgl&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
