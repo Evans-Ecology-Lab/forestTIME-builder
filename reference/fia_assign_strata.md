@@ -51,28 +51,15 @@ to see all possible EVALIDs associated with plots.
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 # Load example data included in package
 db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 
 # Annualize data
 data_annualized <- db |> fia_tidy() |>
    fia_annualize(use_mortyr = FALSE)
-#> ℹ Adjusting for mortality
-#> ℹ Interpolating between surveys
-#> ℹ Expanding years between surveys
-#> ℹ Wrangling data
-#> ✔ Wrangling data [456ms]
-#> 
-#> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [4.6s]
-#> 
-#> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [16s]
-#> 
-#> ℹ Adjusting for mortality
-#> ✔ Adjusting for mortality [18.5s]
-#> 
 
 # Assign plots to strata, estimation units, and EVLIDs
 data_stratified <- fia_assign_strata(data_annualized, db)
+} # }
 ```
