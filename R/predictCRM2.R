@@ -653,7 +653,7 @@ applyAllLevels <- function(data, level, coefs, lhs, forms) {
     return(x)
   }
 
-  if (class(coefs) == 'list') {
+  if (inherits(coefs, 'list')) {
     the_coefs <- lapply(coefs, getLevel)
 
     the_coefs <- Reduce(myMerge, the_coefs)
