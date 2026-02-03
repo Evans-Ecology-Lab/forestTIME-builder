@@ -58,7 +58,7 @@ plot and tree IDS, `plot_ID` and `tree_ID`.
 ``` r
 data <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [584ms]
+#> ✔ Wrangling data [590ms]
 #> 
 data
 ```
@@ -97,13 +97,13 @@ data_midpt <- fia_annualize(data, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [7.8s]
+#> ✔ Expanding years between surveys [7.9s]
 #> 
 #> ℹ Interpolating between surveys
 ✔ Interpolating between surveys [28.6s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [33.4s]
+✔ Adjusting for mortality [33.3s]
 ```
 
 ``` r
@@ -117,10 +117,10 @@ data_midpt_stepwise <- data |>
 #> ✔ Expanding years between surveys [7.9s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [28.3s]
+✔ Interpolating between surveys [27.9s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [33s]
+✔ Adjusting for mortality [32.7s]
 ```
 
 ``` r
@@ -163,7 +163,7 @@ species), they are assumed to be fallen dead and have `STATUSCD` set to
 ``` r
 data_interpolated <- interpolate_data(data_expanded)
 #> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [20.3s]
+#> ✔ Interpolating between surveys [20s]
 #> 
 data_interpolated
 ```
@@ -204,7 +204,7 @@ variables using the National Scale Volume and Biomass estimators (NSVB)
 ``` r
 data_midpt_carbon <- fia_estimate(data_midpt)
 #> ℹ Prepping for estimating carbon
-#> ✔ Prepping for estimating carbon [380ms]
+#> ✔ Prepping for estimating carbon [397ms]
 #> 
 #> ⠙ Estimating carbon: prepping data
 #> ⠹ Estimating carbon: predicting total stem wood and bark volume
@@ -213,7 +213,10 @@ data_midpt_carbon <- fia_estimate(data_midpt)
 #> ⠴ Estimating carbon: predicting sawlog stem wood volume
 #> ⠦ Estimating carbon: predicting total biomass
 #> ⠧ Estimating carbon: predicting total branch weight
-#> ✔ Estimating carbon: harmonizing components [29.8s]
+#> ✔ Estimating carbon: harmonizing components [30.5s]
+#> 
+#> ℹ Joining carbon estimation results
+#> ✔ Joining carbon estimation results [33ms]
 #> 
 data_midpt_carbon
 ```

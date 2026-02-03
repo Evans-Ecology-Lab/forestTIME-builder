@@ -34,3 +34,16 @@ Department of Agriculture, Forest Service.
 ## Author
 
 David Walker
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+library(forestTIME)
+db <- fia_load("RI")
+data_tidy <- fia_tidy(db)
+data_annualized <- fia_annualize(data_tidy)
+data_carbon <- fia_estimate(data_annualized)
+} # }
+
+```
