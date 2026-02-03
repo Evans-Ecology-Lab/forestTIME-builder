@@ -16,6 +16,16 @@
 #' @returns A tibble with the additional columns `DRYBIO_AG` and `CARBON_AG`
 #' that correspond to the FIAdb definitions of those variables.
 #' 
+#' @examples
+#' \dontrun{
+#' library(forestTIME)
+#' db <- fia_load("RI")
+#' data_tidy <- fia_tidy(db)
+#' data_annualized <- fia_annualize(data_tidy)
+#' data_carbon <- fia_estimate(data_annualized)
+#' }
+#' 
+#' 
 #' @export
 fia_estimate <- function(data) {
   data |>

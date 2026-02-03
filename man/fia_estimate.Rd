@@ -17,6 +17,17 @@ that correspond to the FIAdb definitions of those variables.
 Estimates biomass and carbon variables using the National Scale Volume and
 Biomass estimators (NSVB).
 }
+\examples{
+\dontrun{
+library(forestTIME)
+db <- fia_load("RI")
+data_tidy <- fia_tidy(db)
+data_annualized <- fia_annualize(data_tidy)
+data_carbon <- fia_estimate(data_annualized)
+}
+
+
+}
 \references{
 Westfall, J.A., Coulston, J.W., Gray, A.N., Shaw, J.D., Radtke,
 P.J., Walker, D.M., Weiskittel, A.R., MacFarlane, D.W., Affleck, D.L.R.,

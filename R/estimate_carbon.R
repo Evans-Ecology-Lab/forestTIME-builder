@@ -115,8 +115,8 @@ estimate_carbon <- function(data_prepped) {
       ))
     )
 
-  #return
-  dplyr::left_join(
+  cli::cli_progress_step("Joining carbon estimation results")
+  carbon_joined <- dplyr::left_join(
     data_prepped, # input
     fiadb2, # carbon estimates
     by = dplyr::join_by(plot_ID, tree_ID, YEAR),
@@ -126,7 +126,6 @@ estimate_carbon <- function(data_prepped) {
     # through interpolation rather than re-calculating.  The `coalesce()` fills
     # in any NAs for the re-calculated values with interpolated values
     # TODO: eventually remove this
-    # JENKINS_SPGRPCD == 10
     dplyr::mutate(
       DRYBIO_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
@@ -146,4 +145,6 @@ estimate_carbon <- function(data_prepped) {
       )
     ) |>
     dplyr::select(-CARBON_AG_recalculated, -DRYBIO_AG_recalculated)
+
+  carbon_joined
 }
