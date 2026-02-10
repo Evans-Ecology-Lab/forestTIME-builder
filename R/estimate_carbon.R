@@ -139,7 +139,7 @@ estimate_carbon <- function(data_prepped) {
         JENKINS_SPGRPCD == 10,
         dplyr::coalesce(
           CARBON_AG_recalculated,
-          DRYBIO_AG_interpolated
+          CARBON_AG_interpolated
         ),
         CARBON_AG_recalculated
       )
