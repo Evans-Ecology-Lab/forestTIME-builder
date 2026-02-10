@@ -129,17 +129,24 @@ estimate_carbon <- function(data_prepped) {
     dplyr::mutate(
       DRYBIO_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
-        dplyr::coalesce(
-          DRYBIO_AG_recalculated,
-          DRYBIO_AG_interpolated
+        pmax(
+          # set negative numbers to 0
+          dplyr::coalesce(
+            DRYBIO_AG_recalculated,
+            DRYBIO_AG_interpolated
+          ),
+          0
         ),
         DRYBIO_AG_recalculated
       ),
       CARBON_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
-        dplyr::coalesce(
-          CARBON_AG_recalculated,
-          CARBON_AG_interpolated
+        pmax(
+          dplyr::coalesce(
+            CARBON_AG_recalculated,
+            CARBON_AG_interpolated
+          ),
+          0
         ),
         CARBON_AG_recalculated
       )
