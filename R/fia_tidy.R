@@ -84,6 +84,27 @@ fia_tidy <- function(db) {
       DRYBIO_AG
     )
 
+  # Handle Texas.  Remove plots part of any EVALID associated with West/East
+  # Texas
+  if (48 %in% unique(db$COND$STATECD)) {
+    # fmt: table
+    bad_evalids <- c(
+      482320 , 482321 , 482323 , 482329 , 482327 , 481277 , 480320 , 480321 ,
+      480329 , 481223 , 481229 , 480323 , 480420 , 480421 , 480429 , 480520 ,
+      480521 , 480529 , 480620 , 480621 , 480623 , 480629 , 480723 , 480729 ,
+      480823 , 480829 , 480923 , 480929 , 481023 , 481029 , 481377 , 481323 ,
+      481329 , 481429 , 487503 , 488601 , 488602 , 488603 , 489201 , 489202 ,
+      489203 , 487501 , 481529 , 481177 , 481123 , 481129 , 487502
+    )
+
+    eval_info <- fia_eval_info(db)
+    bad_plots <- eval_info |>
+      dplyr::filter(.data$EVALID %in% bad_evalids) |>
+      dplyr::distinct(.data$plot_ID, .data$INVYR)
+
+    COND <- dplyr::anti_join(COND, bad_plots, by = c("plot_ID", "INVYR"))
+  }
+
   # Join the tables
   data <-
     COND |>
