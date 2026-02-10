@@ -1,5 +1,7 @@
 # forestTIME (development version)
 
+- Fixed a bug where for woodland species, carbon was being replaced with biomass.
+
 # forestTIME 2.2.0
 
 - The internal function `fia_eval_info()` was added.
