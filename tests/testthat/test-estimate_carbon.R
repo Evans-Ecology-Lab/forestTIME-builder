@@ -68,3 +68,30 @@ test_that("no carbon or biomass estimates for fallen dead trees", {
     all()
   expect_true(test_val)
 })
+
+test_that("no negative carbon or biomass", {
+  db <- fia_load(
+    "RI",
+    dir = system.file("exdata", package = "forestTIME")
+  )
+  data_tidy <- fia_tidy(db) |>
+    filter(plot_ID %in% c("1_44_3_129", "1_44_3_135", "1_44_3_211"))
+  data_estimated <- fia_annualize(data_tidy, use_mortyr = FALSE) |>
+    fia_estimate()
+  expect_equal(nrow(data_estimated |> filter(CARBON_AG < 0)), 0)
+  expect_equal(nrow(data_estimated |> filter(DRYBIO_AG < 0)), 0)
+
+  # The issue is really only with woodland species, but don't want to run AZ on
+  # GitHub actions
+  skip_on_ci()
+  az <- fia_load("AZ", dir = "../../fia")
+  az_example <- fia_tidy(az) |>
+    filter(plot_ID %in% c("1_4_11_1", "1_4_9_88113")) |>
+    fia_annualize() |>
+    prep_carbon() |> 
+    estimate_carbon()
+
+  expect_equal(nrow(az_example |> filter(CARBON_AG < 0)), 0)
+  expect_equal(nrow(az_example |> filter(DRYBIO_AG < 0)), 0)
+})
+
