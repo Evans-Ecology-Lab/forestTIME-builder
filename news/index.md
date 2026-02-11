@@ -2,6 +2,12 @@
 
 ## forestTIME (development version)
 
+- Fixed a bug where for woodland species, carbon was being replaced with
+  biomass.
+- As part of the workaround for woodland species
+  ([\#163](https://github.com/Evans-Ecology-Lab/forestTIME/issues/163)),
+  any negative interpolated carbon and biomass values were set to 0.
+
 ## forestTIME 2.2.0
 
 - The internal function
