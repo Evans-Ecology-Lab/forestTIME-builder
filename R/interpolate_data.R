@@ -164,7 +164,12 @@ interpolate_data <- function(data_expanded) {
     dplyr::mutate(
       tree_ID = dplyr::if_else(stringr::str_starts(tree_ID, "NA_"), NA, tree_ID)
     ) |>
-    dplyr::arrange(plot_ID, tree_ID, YEAR, CONDID)
+    dplyr::arrange(plot_ID, tree_ID, YEAR, CONDID) |>
+    # Rename CARBON_AG and DRYBIO_AG to avoid confusions
+    dplyr::rename(
+      CARBON_AG_interpolated = CARBON_AG,
+      DRYBIO_AG_interpolated = DRYBIO_AG
+    )
 
   # return:
   out

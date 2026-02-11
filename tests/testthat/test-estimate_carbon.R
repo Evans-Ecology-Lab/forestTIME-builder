@@ -11,12 +11,16 @@ test_that("estimates match those in raw data", {
       tree_ID,
       INVYR,
       TPA_UNADJ,
-      CARBON_AG,
-      DRYBIO_AG
+      CARBON_AG_interpolated = CARBON_AG,
+      DRYBIO_AG_interpolated = DRYBIO_AG
     )
   data_prepped <- fia_tidy(db) |>
     dplyr::filter(INTENSITY == 1) |>
-    dplyr::rename(YEAR = INVYR) |>
+    dplyr::rename(
+      YEAR = INVYR,
+      CARBON_AG_interpolated = CARBON_AG,
+      DRYBIO_AG_interpolated = DRYBIO_AG
+    ) |>
     prep_carbon() |>
     # add back TPA_UNADJ from raw data because we are skipping interpolation steps
     dplyr::left_join(
@@ -41,8 +45,8 @@ test_that("estimates match those in raw data", {
       dplyr::select(
         tree_ID,
         YEAR = INVYR,
-        CARBON_AG_orig = CARBON_AG,
-        DRYBIO_AG_orig = DRYBIO_AG
+        CARBON_AG_orig = CARBON_AG_interpolated,
+        DRYBIO_AG_orig = DRYBIO_AG_interpolated
       )
   ) |>
     dplyr::left_join(data_carbon |> dplyr::filter(!is.na(tree_ID))) #ignore empty plots
@@ -68,3 +72,27 @@ test_that("no carbon or biomass estimates for fallen dead trees", {
     all()
   expect_true(test_val)
 })
+
+test_that("no negative carbon or biomass", {
+  db <- fia_load(
+    "RI",
+    dir = system.file("exdata", package = "forestTIME")
+  )
+  data_tidy <- fia_tidy(db) |>
+    filter(plot_ID %in% c("1_44_3_129", "1_44_3_135", "1_44_3_211"))
+  data_estimated <- fia_annualize(data_tidy, use_mortyr = FALSE) |>
+    fia_estimate()
+  expect_equal(nrow(data_estimated |> filter(CARBON_AG < 0)), 0)
+  expect_equal(nrow(data_estimated |> filter(DRYBIO_AG < 0)), 0)
+
+  # The issue is really only with woodland species
+  data_interpolated <- readRDS(testthat::test_path("testdata/CO_MORTYR.rds"))
+
+  woodland_example <- data_interpolated |>
+    prep_carbon() |>
+    estimate_carbon()
+
+  expect_equal(nrow(woodland_example |> filter(CARBON_AG < 0)), 0)
+  expect_equal(nrow(woodland_example |> filter(DRYBIO_AG < 0)), 0)
+})
+

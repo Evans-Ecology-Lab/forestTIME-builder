@@ -119,8 +119,7 @@ estimate_carbon <- function(data_prepped) {
   carbon_joined <- dplyr::left_join(
     data_prepped, # input
     fiadb2, # carbon estimates
-    by = dplyr::join_by(plot_ID, tree_ID, YEAR),
-    suffix = c("_interpolated", "_recalculated") # TODO: temporary
+    by = dplyr::join_by(plot_ID, tree_ID, YEAR)
   ) |>
     # This is a temporary workaround for estimating carbon of woodland species
     # through interpolation rather than re-calculating.  The `coalesce()` fills
@@ -129,22 +128,28 @@ estimate_carbon <- function(data_prepped) {
     dplyr::mutate(
       DRYBIO_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
-        dplyr::coalesce(
-          DRYBIO_AG_recalculated,
-          DRYBIO_AG_interpolated
+        pmax(
+          # set negative numbers to 0
+          dplyr::coalesce(
+            DRYBIO_AG,
+            DRYBIO_AG_interpolated
+          ),
+          0
         ),
-        DRYBIO_AG_recalculated
+        DRYBIO_AG
       ),
       CARBON_AG = dplyr::if_else(
         JENKINS_SPGRPCD == 10,
-        dplyr::coalesce(
-          CARBON_AG_recalculated,
-          DRYBIO_AG_interpolated
+        pmax(
+          dplyr::coalesce(
+            CARBON_AG,
+            CARBON_AG_interpolated
+          ),
+          0
         ),
-        CARBON_AG_recalculated
+        CARBON_AG
       )
-    ) |>
-    dplyr::select(-CARBON_AG_recalculated, -DRYBIO_AG_recalculated)
+    )
 
   carbon_joined
 }
