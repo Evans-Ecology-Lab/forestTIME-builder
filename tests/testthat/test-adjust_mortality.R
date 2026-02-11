@@ -530,7 +530,7 @@ test_that("Negative numbers are dealt with", {
       row.names = c(NA, -16L),
       class = c("tbl_df", "tbl", "data.frame")
     ) |>
-    mutate(CARBON_AG = NA, DRYBIO_AG = NA)
+    mutate(CARBON_AG_interpolated = NA, DRYBIO_AG_interpolated = NA)
 
   data_adj <- adjust_mortality(data_interpolated, use_mortyr = TRUE)
 
