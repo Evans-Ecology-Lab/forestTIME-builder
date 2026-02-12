@@ -23,7 +23,9 @@ test_that("variables with NAs get interpolated correctly", {
       STANDING_DEAD_CD,
       DECAYCD,
       PROP_BASIS,
-      MACRO_BREAKPOINT_DIA
+      MACRO_BREAKPOINT_DIA,
+      CARBON_AG,
+      DRYBIO_AG
     )
   data_interpolated <- data |>
     expand_data() |>
@@ -107,7 +109,9 @@ test_that("TPA_UNADJ is interpolated correctly", {
       interpolated = c(FALSE, FALSE, FALSE),
       CONDID = c(1, 1, 1),
       COND_STATUS_CD = c(1, 1, 1),
-      CONDPROP_UNADJ = c(1, 1, 0.802895)
+      CONDPROP_UNADJ = c(1, 1, 0.802895),
+      CARBON_AG = c(NA, NA, NA),
+      DRYBIO_AG = c(NA, NA, NA)
     ),
     row.names = c(NA, -3L),
     class = c("tbl_df", "tbl", "data.frame")

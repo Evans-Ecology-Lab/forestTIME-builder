@@ -140,7 +140,16 @@ adjust_mortality <- function(data_interpolated, use_mortyr = TRUE) {
     # fallen trees shouldn't have measurements for anything
     dplyr::mutate(
       dplyr::across(
-        c(DIA, HT, ACTUALHT, CULL, CR, CARBON_AG, DRYBIO_AG),
+        c(
+          DIA,
+          HT,
+          ACTUALHT,
+          CULL,
+          CR,
+          # Temporary workaround for woodland sp
+          CARBON_AG_interpolated,
+          DRYBIO_AG_interpolated
+        ),
         \(x) dplyr::if_else(STANDING_DEAD_CD == 0, NA, x, missing = x)
       )
     ) |>
