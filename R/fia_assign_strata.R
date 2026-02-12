@@ -11,12 +11,12 @@
 #' 3. When there are gaps (e.g. because a plot was not sampled and not belong to
 #'    an EVALID with `"EXPVOL"` or `"EXPCURR"`) the EVALIDs are filled down,
 #'    then up.
-#' 
+#'
 #' EVALID-associated data added by this function **may be in conflict with the
 #' results of interpolation by `fia_annualize()`!** When using this function to
 #' do stratified estimation, use the `PLOT_STATUS_CD` as part of the domain
 #' indicator to correctly exclude any non-sampled plots with no tree data!
-#' 
+#'
 #' @param data_annualized Annualized data produced by [fia_annualize()].
 #' @param db The list of tables produced by [fia_load()].
 #' @examples
@@ -35,6 +35,23 @@
 #' @export
 fia_assign_strata <- function(data_annualized, db) {
   pop_info <- fia_eval_info(db)
+
+  # Handle Texas.  Remove plots part of any EVALID associated with West/East
+  # Texas
+  if (48 %in% unique(db$COND$STATECD)) {
+    # fmt: table
+    bad_evalids <- c(
+      482320 , 482321 , 482323 , 482329 , 482327 , 481277 , 480320 , 480321 ,
+      480329 , 481223 , 481229 , 480323 , 480420 , 480421 , 480429 , 480520 ,
+      480521 , 480529 , 480620 , 480621 , 480623 , 480629 , 480723 , 480729 ,
+      480823 , 480829 , 480923 , 480929 , 481023 , 481029 , 481377 , 481323 ,
+      481329 , 481429 , 487503 , 488601 , 488602 , 488603 , 489201 , 489202 ,
+      489203 , 487501 , 481529 , 481177 , 481123 , 481129 , 487502
+    )
+
+    pop_info <- pop_info |>
+      dplyr::filter(!.data$EVALID %in% bad_evalids)
+  }
 
   # # TODO need to collapse EVALIDs that are only EXPVOL or EXPCURR into a single
   # # row I think.  These *might* only exist pre-1999 though.
