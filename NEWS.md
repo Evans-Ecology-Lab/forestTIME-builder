@@ -1,5 +1,7 @@
 # forestTIME (development version)
 
+- EVALIDs specific to East or West Texas won't be matched to plots by `fia_assign_strat()`
+
 # forestTIME 2.2.0
 
 - The internal function `fia_eval_info()` was added.
