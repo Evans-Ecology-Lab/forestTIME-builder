@@ -43,6 +43,6 @@ A tibble.
 db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 data_tidy <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [261ms]
+#> ✔ Wrangling data [258ms]
 #> 
 ```

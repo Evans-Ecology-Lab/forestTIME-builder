@@ -2,6 +2,7 @@
 
 ## forestTIME (development version)
 
+- Changed package license to MIT.
 - Fixed a bug where for woodland species, carbon was being replaced with
   biomass.
 - As part of the workaround for woodland species

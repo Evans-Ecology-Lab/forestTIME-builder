@@ -22,7 +22,8 @@
 
 - **Brian F. Walters**. Contributor.
 
-- **Arizona Board of Regents**. Copyright holder.
+- **Arizona Board of Regents on behalf of The University of Arizona**.
+  Copyright holder.
   [![ROR](https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb.svg)](https://ror.org/https://ror.org/0054f1w39)
 
 ## Citation
