@@ -167,24 +167,24 @@ fia_eval_info <- function(db) {
     dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
     dplyr::left_join(pop_eval_type, by = dplyr::join_by(EVALID))
 
-  # # Extract middle two digits of EVALID and convert to a year
-  # pop_info <- pop_info |>
-  #   dplyr::mutate(
-  #     EVALID_YEAR = stringr::str_extract(
-  #       EVALID,
-  #       # the first 1 *or 2* digits are state code (leading zero may not be
-  #       # there)
-  #       "^\\d{1}\\d?(\\d{2})\\d{2}$",
-  #       group = 1
-  #     ),
-  #     EVALID_YEAR = dplyr::if_else(
-  #       as.numeric(EVALID_YEAR) > 30,
-  #       as.integer(paste0("19", EVALID_YEAR)),
-  #       as.integer(paste0("20", EVALID_YEAR))
-  #     ),
+  # Extract middle two digits of EVALID and convert to a year
+  pop_info <- pop_info |>
+    dplyr::mutate(
+      EVALID_YEAR = stringr::str_extract(
+        EVALID,
+        # the first 1 *or 2* digits are state code (leading zero may not be
+        # there)
+        "^\\d{1}\\d?(\\d{2})\\d{2}$",
+        group = 1
+      ),
+      EVALID_YEAR = dplyr::if_else(
+        as.numeric(EVALID_YEAR) > 30,
+        as.integer(paste0("19", EVALID_YEAR)),
+        as.integer(paste0("20", EVALID_YEAR))
+      ),
 
-  #     .after = EVALID
-  #   )
+      .after = EVALID
+    )
 
   pop_info
 }
