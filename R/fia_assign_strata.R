@@ -44,24 +44,22 @@ fia_assign_strata <- function(data_annualized, db) {
   #     count(plot_ID, INVYR, EVAL_TYPs) |> filter(n>1)
 
   chosen_evals <- pop_info |>
-    dplyr::filter(EXPVOL & EXPCURR) |>
-    dplyr::select(-INVYR)
+    dplyr::filter(EXPVOL & EXPCURR)
 
+  # FIXME: this doesn't work because the overlap join grows the number of rows
+  # (every EVALID that the year fits in get's added)
   data_eval <- dplyr::left_join(
     data_annualized,
     chosen_evals,
-    by = dplyr::join_by(plot_ID, YEAR == EVALID_YEAR),
-    keep = TRUE # to keep EVALID_YEAR
-  ) |>
-    dplyr::select(plot_ID = plot_ID.x, dplyr::everything(), -plot_ID.y)
-
-  # Fill NAs down then up (doesn't matter much, I think, because plots that
-  # shouldn't be included in EXPCURR evals will be excluded due to PLOT_STATUS_CD)
+    by = dplyr::join_by(plot_ID, between(YEAR, START_INVYR, END_INVYR))
+  )
+  # Fill NAs down (plots that "incorrectly" get assigned EVALIDs as a result
+  # will be excluded because of PLOT_STATUS_CD being interpolated correctly)
 
   data_eval <- data_eval |>
     dplyr::group_by(plot_ID) |>
     dplyr::arrange(YEAR) |>
-    tidyr::fill(colnames(chosen_evals), .direction = "downup") |>
+    tidyr::fill(colnames(chosen_evals), .direction = "down") |>
     dplyr::ungroup()
 
   data_expns <- data_eval |>
@@ -91,11 +89,11 @@ fia_assign_strata <- function(data_annualized, db) {
 #' Get information about the EVALIDs associated with plots from the various
 #' `POP_*` tables.
 #'
-#' @param db A list of tibbles produced by [fia_load()]. 
+#' @param db A list of tibbles produced by [fia_load()].
 #' @returns A tibble with variables that can be used for stratified estimation
-#' that can be joined to annualized data. 
-#' @examples 
-#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME")) 
+#' that can be joined to annualized data.
+#' @examples
+#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 #' fia_eval_info(db)
 #' @keywords internal
 #' @export
@@ -163,24 +161,24 @@ fia_eval_info <- function(db) {
     dplyr::left_join(POP_ESTN_UNIT, by = dplyr::join_by(EVALID, ESTN_UNIT)) |>
     dplyr::left_join(pop_eval_type, by = dplyr::join_by(EVALID))
 
-  # Extract middle two digits of EVALID and convert to a year
-  pop_info <- pop_info |>
-    dplyr::mutate(
-      EVALID_YEAR = stringr::str_extract(
-        EVALID,
-        # the first 1 *or 2* digits are state code (leading zero may not be
-        # there)
-        "^\\d{1}\\d?(\\d{2})\\d{2}$",
-        group = 1
-      ),
-      EVALID_YEAR = dplyr::if_else(
-        as.numeric(EVALID_YEAR) > 30,
-        as.integer(paste0("19", EVALID_YEAR)),
-        as.integer(paste0("20", EVALID_YEAR))
-      ),
+  # # Extract middle two digits of EVALID and convert to a year
+  # pop_info <- pop_info |>
+  #   dplyr::mutate(
+  #     EVALID_YEAR = stringr::str_extract(
+  #       EVALID,
+  #       # the first 1 *or 2* digits are state code (leading zero may not be
+  #       # there)
+  #       "^\\d{1}\\d?(\\d{2})\\d{2}$",
+  #       group = 1
+  #     ),
+  #     EVALID_YEAR = dplyr::if_else(
+  #       as.numeric(EVALID_YEAR) > 30,
+  #       as.integer(paste0("19", EVALID_YEAR)),
+  #       as.integer(paste0("20", EVALID_YEAR))
+  #     ),
 
-      .after = EVALID
-    )
+  #     .after = EVALID
+  #   )
 
   pop_info
 }
