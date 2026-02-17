@@ -1,5 +1,5 @@
 test_that("fia_download() works", {
-  skip_on_cran()
+  skip_on_ci()
 
   path <- withr::local_tempdir()
   fia_download(states = "RI", download_dir = path, keep_zip = TRUE)
@@ -14,7 +14,7 @@ test_that("fia_download() works", {
 })
 
 test_that("`extract = 'rFIA'` works", {
-  skip_on_cran()
+  skip_on_ci()
 
   path <- withr::local_tempdir()
   fia_download(states = "RI", download_dir = path, extract = "rFIA")

@@ -1,6 +1,7 @@
 # forestTIME (development version)
 
 - EVALIDs specific to East or West Texas won't be matched to plots by `fia_assign_strat()`
+- Changed package license to MIT.
 - Fixed a bug where for woodland species, carbon was being replaced with biomass.
 - As part of the workaround for woodland species (#163), any negative interpolated carbon and biomass values were set to 0.
 
