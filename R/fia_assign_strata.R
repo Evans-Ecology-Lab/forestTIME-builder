@@ -3,14 +3,13 @@
 #' This adds columns from various `POP_*` tables to annualized data so that it
 #' can be used for stratified estimation (see, for example, [FIA
 #' Demystified](https://doserlab.com/files/rfia/articles/fiademystified#with-sampling-errors)).
-#' Each plot in each year is matched with an EVALID and it's associated data as such:
+#' Each plot in each year is matched with an EVALID and it's associated data as
+#' such:
 #' 1. The EVALID must have both the `"EXPVOL"` and `"EXPCURR"` `EVAL_TYP`.
-#' 2. The year indicated by the middle two digits of the EVALID (usually, but
-#'    not always the `END_INVYR`) must match the `YEAR` in the annualized data
-#'    for that plot.
-#' 3. When there are gaps (e.g. because a plot was not sampled and not belong to
-#'    an EVALID with `"EXPVOL"` or `"EXPCURR"`) the EVALIDs are filled down,
-#'    then up.
+#' 2. The `YEAR` must be between `START_INVYR` and `END_INVYR`.
+#' 3. The first matching EVALID is used—i.e. if the `YEAR` is 2002 and there are
+#'    EVALIDs for 2000--2003, 2001--2004, and 2002--2005, the one from
+#'    2000--2003 will be matched.
 #'
 #' EVALID-associated data added by this function **may be in conflict with the
 #' results of interpolation by `fia_annualize()`!** When using this function to
@@ -18,8 +17,8 @@
 #' indicator to correctly exclude any non-sampled plots with no tree data!
 #'
 #' @param data_annualized Annualized data produced by [fia_annualize()].
-#' @param db The list of tables produced by [fia_load()].
-#' @examples
+#' @param db The list of tables produced by [fia_load()]. 
+#' @examples 
 #' \dontrun{
 #' # Load example data included in package
 #' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
@@ -29,9 +28,9 @@
 #'    fia_annualize(use_mortyr = FALSE)
 #'
 #' # Assign plots to strata, estimation units, and EVLIDs
-#' data_stratified <- fia_assign_strata(data_annualized, db)
-#' }
-#' @seealso [fia_eval_info()] to see all possible EVALIDs associated with plots.
+#' data_stratified <- fia_assign_strata(data_annualized, db) 
+#' } 
+#' @seealso [fia_eval_info()] to see all possible EVALIDs associated with plots. 
 #' @export
 fia_assign_strata <- function(data_annualized, db) {
   pop_info <- fia_eval_info(db)
