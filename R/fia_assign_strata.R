@@ -44,6 +44,7 @@ fia_assign_strata <- function(data_annualized, db) {
 
   chosen_evals <- pop_info |>
     dplyr::filter(EXPVOL & EXPCURR) |>
+    dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
     dplyr::select(-INVYR)
 
   # Rolling join to match all EVALIDs containing YEAR
