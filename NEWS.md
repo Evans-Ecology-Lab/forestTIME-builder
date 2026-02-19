@@ -1,5 +1,7 @@
 # forestTIME (development version)
 
+- EVALIDs specific to East or West Texas won't be matched to plots by `fia_assign_strata()`.
+- Early EVALIDs in NM and WY that "don't work" no longer assigned to plots by `fia_assign_strata()`.
 - Changed behavior of `fia_assign_strata()` so that for each plot x year, the *first* EVALID that contains the `YEAR` (i.e. between `START_INVYR` and `END_INVYR`) is matched.  EVALIDs and their associated info is no longer "filled down" to fill in gaps, as this is no longer necessary with an overlap join.
 - Changed package license to MIT.
 - Fixed a bug where for woodland species, carbon was being replaced with biomass.
