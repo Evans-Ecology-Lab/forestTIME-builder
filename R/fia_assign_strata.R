@@ -3,20 +3,19 @@
 #' This adds columns from various `POP_*` tables to annualized data so that it
 #' can be used for stratified estimation (see, for example, [FIA
 #' Demystified](https://doserlab.com/files/rfia/articles/fiademystified#with-sampling-errors)).
-#' Each plot in each year is matched with an EVALID and it's associated data as such:
+#' Each plot in each year is matched with an EVALID and it's associated data as
+#' such:
 #' 1. The EVALID must have both the `"EXPVOL"` and `"EXPCURR"` `EVAL_TYP`.
-#' 2. The year indicated by the middle two digits of the EVALID (usually, but
-#'    not always the `END_INVYR`) must match the `YEAR` in the annualized data
-#'    for that plot.
-#' 3. When there are gaps (e.g. because a plot was not sampled and not belong to
-#'    an EVALID with `"EXPVOL"` or `"EXPCURR"`) the EVALIDs are filled down,
-#'    then up.
-#' 
+#' 2. The `YEAR` must be between `START_INVYR` and `END_INVYR`.
+#' 3. The first matching EVALID is used—i.e. if the `YEAR` is 2002 and there are
+#'    EVALIDs for 2000--2003, 2001--2004, and 2002--2005, the one from
+#'    2000--2003 will be matched.
+#'
 #' EVALID-associated data added by this function **may be in conflict with the
 #' results of interpolation by `fia_annualize()`!** When using this function to
 #' do stratified estimation, use the `PLOT_STATUS_CD` as part of the domain
 #' indicator to correctly exclude any non-sampled plots with no tree data!
-#' 
+#'
 #' @param data_annualized Annualized data produced by [fia_annualize()].
 #' @param db The list of tables produced by [fia_load()].
 #' @examples
@@ -45,24 +44,28 @@ fia_assign_strata <- function(data_annualized, db) {
 
   chosen_evals <- pop_info |>
     dplyr::filter(EXPVOL & EXPCURR) |>
-    dplyr::filter(EVALID_YEAR >= 1999) |> # just in case!
-    dplyr::select(-INVYR)
+    dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
+    dplyr::filter(EVALID_YEAR >= 1999) |> # TODO: possibly not necessary because of handling of specific states below
+    dplyr::select(-INVYR) |>
+    fia_split_composite_ids()
 
+  # Handle NM and WY. They list early FHM inventories, but they don't work, so
+  # dropping. (modified from rFIA
+  # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
+  if (any(c(35, 56) %in% unique(chosen_evals$STATECD))) {
+    chosen_evals <- chosen_evals |>
+      dplyr::filter(!(STATECD %in% c(35, 56) & END_INVYR < 2001))
+  }
+
+  # Rolling join to match all EVALIDs containing YEAR
   data_eval <- dplyr::left_join(
     data_annualized,
     chosen_evals,
-    by = dplyr::join_by(plot_ID, YEAR == EVALID_YEAR),
-    keep = TRUE # to keep EVALID_YEAR
+    by = dplyr::join_by(plot_ID, dplyr::between(YEAR, START_INVYR, END_INVYR))
   ) |>
-    dplyr::select(plot_ID = plot_ID.x, dplyr::everything(), -plot_ID.y)
-
-  # Fill NAs down then up (doesn't matter much, I think, because plots that
-  # shouldn't be included in EXPCURR evals will be excluded due to PLOT_STATUS_CD)
-
-  data_eval <- data_eval |>
-    dplyr::group_by(plot_ID) |>
-    dplyr::arrange(YEAR) |>
-    tidyr::fill(colnames(chosen_evals), .direction = "downup") |>
+    # For each tree x year, only keep one row (the first EVALID match)
+    dplyr::group_by(plot_ID, tree_ID, YEAR) |>
+    dplyr::slice_head(n = 1) |>
     dplyr::ungroup()
 
   data_expns <- data_eval |>
@@ -92,11 +95,11 @@ fia_assign_strata <- function(data_annualized, db) {
 #' Get information about the EVALIDs associated with plots from the various
 #' `POP_*` tables.
 #'
-#' @param db A list of tibbles produced by [fia_load()]. 
+#' @param db A list of tibbles produced by [fia_load()].
 #' @returns A tibble with variables that can be used for stratified estimation
-#' that can be joined to annualized data. 
-#' @examples 
-#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME")) 
+#' that can be joined to annualized data.
+#' @examples
+#' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 #' fia_eval_info(db)
 #' @keywords internal
 #' @export
@@ -129,6 +132,7 @@ fia_eval_info <- function(db) {
       EVAL_CN = CN,
       EVAL_GRP_CN,
       EVALID,
+      EVAL_DESCR,
       START_INVYR,
       END_INVYR,
       ESTN_METHOD
