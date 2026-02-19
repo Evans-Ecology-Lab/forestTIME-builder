@@ -40,8 +40,8 @@ data_annualized <- db |> fia_tidy() |>
    fia_annualize(use_mortyr = FALSE)
 
 # Assign plots to strata, estimation units, and EVLIDs
-data_stratified <- fia_assign_strata(data_annualized, db) 
-} 
+data_stratified <- fia_assign_strata(data_annualized, db)
+}
 }
 \seealso{
 \code{\link[=fia_eval_info]{fia_eval_info()}} to see all possible EVALIDs associated with plots.
