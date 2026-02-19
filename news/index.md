@@ -2,6 +2,11 @@
 
 ## forestTIME (development version)
 
+- EVALIDs specific to East or West Texas won’t be matched to plots by
+  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md).
+- Early EVALIDs in NM and WY that “don’t work” no longer assigned to
+  plots by
+  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md).
 - Changed behavior of
   [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md)
   so that for each plot x year, the *first* EVALID that contains the
