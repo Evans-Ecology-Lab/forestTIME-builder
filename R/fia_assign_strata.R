@@ -35,6 +35,27 @@
 fia_assign_strata <- function(data_annualized, db) {
   pop_info <- fia_eval_info(db)
 
+  # # TODO need to collapse EVALIDs that are only EXPVOL or EXPCURR into a single
+  # # row I think.  These *might* only exist pre-1999 though.
+  # pop_info |>
+  #     filter(EXPVOL | EXPCURR) |>
+  #     filter(INVYR == END_INVYR) |> # one per year per type
+  #     count(plot_ID, INVYR, EVAL_TYPs) |> filter(n>1)
+
+  chosen_evals <- pop_info |>
+    dplyr::filter(EXPVOL & EXPCURR) |>
+    dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
+    dplyr::filter(EVALID_YEAR >= 1999) |> # TODO: possibly not necessary because of handling of specific states below
+    dplyr::select(-INVYR)
+
+  # Handle NM and WY. They list early FHM inventories, but they don't work, so
+  # dropping. (modified from rFIA
+  # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
+  if (any(c(35, 56) %in% unique(db$COND$STATECD))) {
+    chosen_evals <- chosen_evals |>
+      dplyr::filter(!(STATECD %in% c(35, 56) & END_INVYR < 2001))
+  }
+
   # Handle Texas.  Remove plots part of any EVALID associated with West/East
   # Texas
   if (48 %in% unique(db$COND$STATECD)) {
@@ -48,30 +69,8 @@ fia_assign_strata <- function(data_annualized, db) {
       489203 , 487501 , 481529 , 481177 , 481123 , 481129 , 487502
     )
 
-    pop_info <- pop_info |>
-      dplyr::filter(!.data$EVALID %in% bad_evalids)
-  }
-
-  # # TODO need to collapse EVALIDs that are only EXPVOL or EXPCURR into a single
-  # # row I think.  These *might* only exist pre-1999 though.
-  # pop_info |>
-  #     filter(EXPVOL | EXPCURR) |>
-  #     filter(INVYR == END_INVYR) |> # one per year per type
-  #     count(plot_ID, INVYR, EVAL_TYPs) |> filter(n>1)
-
-  chosen_evals <- pop_info |>
-    dplyr::filter(EXPVOL & EXPCURR) |>
-    dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
-    dplyr::filter(EVALID_YEAR >= 1999) |> # TODO: possibly not necessary because of handling of specific states below
-    dplyr::select(-INVYR) |>
-    fia_split_composite_ids()
-
-  # Handle NM and WY. They list early FHM inventories, but they don't work, so
-  # dropping. (modified from rFIA
-  # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
-  if (any(c(35, 56) %in% unique(chosen_evals$STATECD))) {
     chosen_evals <- chosen_evals |>
-      dplyr::filter(!(STATECD %in% c(35, 56) & END_INVYR < 2001))
+      dplyr::filter(!.data$EVALID %in% bad_evalids)
   }
 
   # Rolling join to match all EVALIDs containing YEAR
