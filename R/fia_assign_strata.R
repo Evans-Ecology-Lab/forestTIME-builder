@@ -53,7 +53,9 @@ fia_assign_strata <- function(data_annualized, db) {
   # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
   if (any(c(35, 56) %in% unique(db$COND$STATECD))) {
     chosen_evals <- chosen_evals |>
-      dplyr::filter(!(STATECD %in% c(35, 56) & END_INVYR < 2001))
+      fia_split_composite_ids() |>
+      dplyr::filter(!(STATECD %in% c(35, 56) & END_INVYR < 2001)) |>
+      dplyr::select(-all_of(c("UNITCD", "STATECD", "COUNTYCD", "PLOT")))
   }
 
   # Handle Texas.  Remove plots part of any EVALID associated with West/East
