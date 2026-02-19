@@ -104,7 +104,7 @@ fia_assign_strata <- function(data_annualized, db) {
     ) |>
     # remove cols that could be joined in from eval info
     dplyr::select(
-      -all_of(
+      -all_of(c(
         "UNITCD",
         "STATECD",
         "COUNTYCD",
@@ -117,7 +117,7 @@ fia_assign_strata <- function(data_annualized, db) {
         "END_INVYR",
         "ESTN_METHOD",
         "EVAL_TYPs"
-      )
+      ))
     )
 
   data_out
