@@ -46,7 +46,16 @@ fia_assign_strata <- function(data_annualized, db) {
     dplyr::filter(EXPVOL & EXPCURR) |>
     dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
     dplyr::filter(EVALID_YEAR >= 1999) |> # just in case!
-    dplyr::select(-INVYR)
+    dplyr::select(-INVYR) |>
+    fia_split_composite_ids()
+
+  # Handle NM and WY. They list early FHM inventories, but they don't work, so
+  # dropping. (modified from rFIA
+  # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
+  if (any(c(35, 56) %in% unique(chosen_evals$STATECD))) {
+    chosen_evals <- chosen_evals |>
+      dplyr::filter(!(STATECD %in% c(35, 56) & END_INVYR < 2001))
+  }
 
   # Rolling join to match all EVALIDs containing YEAR
   data_eval <- dplyr::left_join(
@@ -132,6 +141,7 @@ fia_eval_info <- function(db) {
       EVAL_CN = CN,
       EVAL_GRP_CN,
       EVALID,
+      EVAL_DESCR,
       START_INVYR,
       END_INVYR,
       ESTN_METHOD
