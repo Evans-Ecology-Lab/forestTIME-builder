@@ -17,8 +17,8 @@
 #' indicator to correctly exclude any non-sampled plots with no tree data!
 #'
 #' @param data_annualized Annualized data produced by [fia_annualize()].
-#' @param db The list of tables produced by [fia_load()]. 
-#' @examples 
+#' @param db The list of tables produced by [fia_load()].
+#' @examples
 #' \dontrun{
 #' # Load example data included in package
 #' db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
@@ -28,9 +28,9 @@
 #'    fia_annualize(use_mortyr = FALSE)
 #'
 #' # Assign plots to strata, estimation units, and EVLIDs
-#' data_stratified <- fia_assign_strata(data_annualized, db) 
-#' } 
-#' @seealso [fia_eval_info()] to see all possible EVALIDs associated with plots. 
+#' data_stratified <- fia_assign_strata(data_annualized, db)
+#' }
+#' @seealso [fia_eval_info()] to see all possible EVALIDs associated with plots.
 #' @export
 fia_assign_strata <- function(data_annualized, db) {
   pop_info <- fia_eval_info(db)
@@ -45,7 +45,7 @@ fia_assign_strata <- function(data_annualized, db) {
   chosen_evals <- pop_info |>
     dplyr::filter(EXPVOL & EXPCURR) |>
     dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
-    dplyr::filter(EVALID_YEAR >= 1999) |> # just in case!
+    dplyr::filter(EVALID_YEAR >= 1999) |> # TODO: possibly not necessary because of handling of specific states below
     dplyr::select(-INVYR) |>
     fia_split_composite_ids()
 
@@ -67,15 +67,6 @@ fia_assign_strata <- function(data_annualized, db) {
     dplyr::group_by(plot_ID, tree_ID, YEAR) |>
     dplyr::slice_head(n = 1) |>
     dplyr::ungroup()
-
-  # # Fill NAs down (plots that "incorrectly" get assigned EVALIDs as a result
-  # # will be excluded because of PLOT_STATUS_CD being interpolated correctly)
-  # data_eval <- data_eval |>
-  #   dplyr::group_by(plot_ID) |>
-  #   dplyr::arrange(YEAR) |>
-  #   tidyr::replace_na(list(EXPCURR = FALSE, EXPVOL = FALSE)) |>
-  #   tidyr::fill(colnames(chosen_evals), .direction = "down") |>
-  #   dplyr::ungroup()
 
   data_expns <- data_eval |>
     # Calculate P2POINTCNT ("The number of field plots that are within the stratum")
