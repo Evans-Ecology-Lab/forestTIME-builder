@@ -46,21 +46,20 @@ fia_assign_strata <- function(data_annualized, db) {
     dplyr::filter(EXPVOL & EXPCURR) |>
     dplyr::arrange(INVYR, START_INVYR, END_INVYR) |>
     dplyr::filter(EVALID_YEAR >= 1999) |> # TODO: possibly not necessary because of handling of specific states below
-    dplyr::select(-INVYR)
+    dplyr::select(-INVYR) |>
+    fia_split_composite_ids()
 
   # Handle NM and WY. They list early FHM inventories, but they don't work, so
   # dropping. (modified from rFIA
   # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
-  if (any(c(35, 56) %in% unique(db$COND$STATECD))) {
+  if (any(c(35, 56) %in% unique(chosen_evals$STATECD))) {
     chosen_evals <- chosen_evals |>
-      fia_split_composite_ids() |>
-      dplyr::filter(!(.data$STATECD %in% c(35, 56) & .data$END_INVYR < 2001)) |>
-      dplyr::select(-dplyr::all_of(c("UNITCD", "STATECD", "COUNTYCD", "PLOT")))
+      dplyr::filter(!(.data$STATECD %in% c(35, 56) & .data$END_INVYR < 2001))
   }
 
   # Handle Texas.  Remove plots part of any EVALID associated with West/East
   # Texas
-  if (48 %in% unique(db$COND$STATECD)) {
+  if (48 %in% unique(chosen_evals$STATECD)) {
     # fmt: table
     bad_evalids <- c(
       482320 , 482321 , 482323 , 482329 , 482327 , 481277 , 480320 , 480321 ,
@@ -102,6 +101,23 @@ fia_assign_strata <- function(data_annualized, db) {
     dplyr::mutate(
       EXPCURR = dplyr::if_else(is.na(EVALID), FALSE, EXPCURR),
       EXPVOL = dplyr::if_else(is.na(EXPVOL), FALSE, EXPVOL)
+    ) |>
+    # remove cols that could be joined in from eval info
+    dplyr::select(
+      -all_of(
+        "UNITCD",
+        "STATECD",
+        "COUNTYCD",
+        "PLOT",
+        "EVALID_YEAR",
+        "STRATUM_DESCR",
+        "ESTN_UNIT_DESCR",
+        "EVAL_DESCR",
+        "START_INVYR",
+        "END_INVYR",
+        "ESTN_METHOD",
+        "EVAL_TYPs"
+      )
     )
 
   data_out
