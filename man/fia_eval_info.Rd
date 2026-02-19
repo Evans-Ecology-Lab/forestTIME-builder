@@ -18,7 +18,7 @@ Get information about the EVALIDs associated with plots from the various
 \verb{POP_*} tables.
 }
 \examples{
-db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME")) 
+db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 fia_eval_info(db)
 }
 \keyword{internal}

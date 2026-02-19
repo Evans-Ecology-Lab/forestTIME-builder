@@ -14,15 +14,14 @@ fia_assign_strata(data_annualized, db)
 \description{
 This adds columns from various \verb{POP_*} tables to annualized data so that it
 can be used for stratified estimation (see, for example, \href{https://doserlab.com/files/rfia/articles/fiademystified#with-sampling-errors}{FIA Demystified}).
-Each plot in each year is matched with an EVALID and it's associated data as such:
+Each plot in each year is matched with an EVALID and it's associated data as
+such:
 \enumerate{
 \item The EVALID must have both the \code{"EXPVOL"} and \code{"EXPCURR"} \code{EVAL_TYP}.
-\item The year indicated by the middle two digits of the EVALID (usually, but
-not always the \code{END_INVYR}) must match the \code{YEAR} in the annualized data
-for that plot.
-\item When there are gaps (e.g. because a plot was not sampled and not belong to
-an EVALID with \code{"EXPVOL"} or \code{"EXPCURR"}) the EVALIDs are filled down,
-then up.
+\item The \code{YEAR} must be between \code{START_INVYR} and \code{END_INVYR}.
+\item The first matching EVALID is used—i.e. if the \code{YEAR} is 2002 and there are
+EVALIDs for 2000--2003, 2001--2004, and 2002--2005, the one from
+2000--2003 will be matched.
 }
 }
 \details{
@@ -41,8 +40,8 @@ data_annualized <- db |> fia_tidy() |>
    fia_annualize(use_mortyr = FALSE)
 
 # Assign plots to strata, estimation units, and EVLIDs
-data_stratified <- fia_assign_strata(data_annualized, db)
-}
+data_stratified <- fia_assign_strata(data_annualized, db) 
+} 
 }
 \seealso{
 \code{\link[=fia_eval_info]{fia_eval_info()}} to see all possible EVALIDs associated with plots.

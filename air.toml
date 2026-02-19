@@ -1,3 +1,2 @@
 [format]
 exclude = ["carbon_code/", "R/predictCRM2.R"]
-skip = ["tribble"]
