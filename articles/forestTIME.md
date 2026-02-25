@@ -58,7 +58,7 @@ plot and tree IDS, `plot_ID` and `tree_ID`.
 ``` r
 data <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [606ms]
+#> ✔ Wrangling data [644ms]
 #> 
 data
 ```
@@ -100,10 +100,10 @@ data_midpt <- fia_annualize(data, use_mortyr = FALSE)
 #> ✔ Expanding years between surveys [7.7s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [28.3s]
+✔ Interpolating between surveys [28.2s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [33s]
+✔ Adjusting for mortality [32.9s]
 ```
 
 ``` r
@@ -117,10 +117,10 @@ data_midpt_stepwise <- data |>
 #> ✔ Expanding years between surveys [7.7s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [27.4s]
+✔ Interpolating between surveys [27.9s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [32.1s]
+✔ Adjusting for mortality [32.6s]
 ```
 
 ``` r
@@ -142,7 +142,7 @@ later steps.
 ``` r
 data_expanded <- expand_data(data)
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [7.8s]
+#> ✔ Expanding years between surveys [7.7s]
 #> 
 data_expanded
 ```
@@ -163,7 +163,7 @@ species), they are assumed to be fallen dead and have `STATUSCD` set to
 ``` r
 data_interpolated <- interpolate_data(data_expanded)
 #> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [19.7s]
+#> ✔ Interpolating between surveys [19.6s]
 #> 
 data_interpolated
 ```
@@ -180,11 +180,11 @@ data_mortyr <- adjust_mortality(data_interpolated, use_mortyr = TRUE)
 #> ℹ Adjusting for mortality
 #> Warning: ! No recorded `MORTYR` in data.
 #> ℹ Setting `use_mortyr` to `FALSE`
-#> ✔ Adjusting for mortality [4.5s]
+#> ✔ Adjusting for mortality [4.6s]
 #> 
 data_midpt <- adjust_mortality(data_interpolated, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
-#> ✔ Adjusting for mortality [4.5s]
+#> ✔ Adjusting for mortality [4.6s]
 #> 
 all.equal(data_mortyr, data_midpt)
 #> [1] TRUE
@@ -204,16 +204,15 @@ variables using the National Scale Volume and Biomass estimators (NSVB)
 ``` r
 data_midpt_carbon <- fia_estimate(data_midpt)
 #> ℹ Prepping for estimating carbon
-#> ✔ Prepping for estimating carbon [389ms]
+#> ✔ Prepping for estimating carbon [235ms]
 #> 
 #> ⠙ Estimating carbon: prepping data
 #> ⠹ Estimating carbon: predicting merchantable stem wood volume
-#> ⠸ Estimating carbon: predicting stump wood volume
+#> ⠸ Estimating carbon: predicting merchantable stem wood and bark volume
 #> ⠼ Estimating carbon: predicting sawlog stem wood volume
-#> ⠴ Estimating carbon: predicting sawlog stem wood and bark volume
-#> ⠦ Estimating carbon: predicting total stem bark weight
-#> ⠧ Estimating carbon: harmonizing components
-#> ✔ Estimating carbon: harmonizing components [30s]
+#> ⠴ Estimating carbon: predicting total stem bark weight
+#> ⠦ Estimating carbon: predicting foliage weight
+#> ✔ Estimating carbon: harmonizing components [30.6s]
 #> 
 #> ℹ Joining carbon estimation results
 #> ✔ Joining carbon estimation results [30ms]

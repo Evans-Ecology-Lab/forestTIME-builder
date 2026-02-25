@@ -41,7 +41,7 @@
 <h2 class="pkg-version" data-toc-text="development version" id="foresttime-development-version">forestTIME (development version)<a class="anchor" aria-label="anchor" href="#foresttime-development-version"></a></h2>
 <ul><li>EVALIDs specific to East or West Texas won’t be matched to plots by <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code>.</li>
 <li>Early EVALIDs in NM and WY that “don’t work” no longer assigned to plots by <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code>.</li>
-<li>Changed behavior of <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code> so that for each plot x year, the <em>first</em> EVALID that contains the <code>YEAR</code> (i.e. between <code>START_INVYR</code> and <code>END_INVYR</code>) is matched. EVALIDs and their associated info is no longer “filled down” to fill in gaps, as this is no longer necessary with an overlap join.</li>
+<li>Changed behavior of <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code> so that for each plot x year, the <em>first</em> EVALID that contains the <code>YEAR</code> (i.e. between <code>START_INVYR</code> and <code>END_INVYR</code>) is matched.</li>
 <li>Changed package license to MIT.</li>
 <li>Fixed a bug where for woodland species, carbon was being replaced with biomass.</li>
 <li>As part of the workaround for woodland species (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/163" class="external-link">#163</a>), any negative interpolated carbon and biomass values were set to 0.</li>
