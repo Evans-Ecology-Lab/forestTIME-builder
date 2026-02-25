@@ -25,6 +25,8 @@ for interpolation.
 (to handle trees that change \code{SPCD}).
 \item Fills a tree's \code{MORTYR} column so every row contains the recorded
 mortality year.
+\item Filters to only include inventories that came after the start of the
+annual inventory in each state.
 }
 }
 \examples{
