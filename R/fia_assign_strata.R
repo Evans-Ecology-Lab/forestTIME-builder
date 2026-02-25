@@ -52,7 +52,7 @@ fia_assign_strata <- function(data_annualized, db) {
     # takes the place of some of the state-specific fixes implemented in rFIA
     # here:
     # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/getDesignInfo.R#L55C3-L62C4)
-    dplyr::left_join(appendix_j, by = "STATECD") |>
+    dplyr::left_join(annual_inventory_start, by = "STATECD") |>
     dplyr::select(
       plot_ID,
       EVALID,

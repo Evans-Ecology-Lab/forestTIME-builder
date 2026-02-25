@@ -1,4 +1,5 @@
-make_appendix_j <- function() {
+# Modified slightly from Appendix J of FIADB user guides - Volume: Database Description (version: 9.3)
+make_annual_inventory_start <- function() {
   dplyr::tribble(
     ~state_code , ~state_name         , ~periodic_inventories                          , ~annual_inventory_start ,
     "1"         , "Alabama"           , "1972, 1982, 1990"                             ,                    2000 ,
