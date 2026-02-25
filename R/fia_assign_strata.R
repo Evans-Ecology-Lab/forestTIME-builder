@@ -74,15 +74,23 @@ fia_assign_strata <- function(data_annualized, db) {
       dplyr::filter(!.data$EVALID %in% bad_evalids)
   }
 
-  # Rolling join to match all EVALIDs containing YEAR
+  # Rolling join to match all EVALIDs containing YEAR between START_INVYR and
+  # END_INVYR
   data_eval <- dplyr::left_join(
     data_annualized,
     chosen_evals,
     by = dplyr::join_by(plot_ID, dplyr::between(YEAR, START_INVYR, END_INVYR))
   ) |>
-    # For each tree x year, only keep one row (the first EVALID match)
+    # For each tree x year, only keep one row (the first/earliest EVALID match)
     dplyr::group_by(plot_ID, tree_ID, YEAR) |>
     dplyr::slice_head(n = 1) |>
+    # Fill down within each tree to carry EVALIDs forward across inventories where
+    # trees weren't sampled.  Not doing this by plot because there are some edge
+    # cases where a plot was not sampled and then an entirely different set of
+    # trees was sampled the following inventory.
+    dplyr::arrange(plot_ID, tree_ID, YEAR) |>
+    dplyr::group_by(tree_ID) |>
+    tidyr::fill(colnames(chosen_evals), .direction = "down") |>
     dplyr::ungroup()
 
   data_expns <- data_eval |>
