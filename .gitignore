@@ -36,25 +36,8 @@ inst/doc
 /Meta/
 **/.quarto/
 *.zip
-notes/.posit/publish/Investigating dropped trees-OEJ2.toml
-notes/.posit/publish/deployments/deployment-E1MC.toml
 
-notes/imputation_alternatives_files/
-notes/imputation_alternatives.html
-
-notes/evalids_files/
-notes/evalids.html
-notes/EVALID-timeseries_files/libs/bootstrap/bootstrap-d6a003b94517c951b2d65075d42fb01b.min.css
-notes/EVALID-timeseries_files/libs/bootstrap/bootstrap-icons.css
-notes/EVALID-timeseries_files/libs/bootstrap/bootstrap-icons.woff
-notes/EVALID-timeseries_files/libs/bootstrap/bootstrap.min.js
-notes/EVALID-timeseries_files/libs/clipboard/clipboard.min.js
-notes/EVALID-timeseries_files/libs/quarto-html/anchor.min.js
-notes/EVALID-timeseries_files/libs/quarto-html/popper.min.js
-notes/EVALID-timeseries_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css
-notes/EVALID-timeseries_files/libs/quarto-html/quarto.js
-notes/EVALID-timeseries_files/libs/quarto-html/tippy.css
-notes/EVALID-timeseries_files/libs/quarto-html/tippy.umd.min.js
-notes/EVALID-timeseries_files/libs/quarto-html/axe/axe-check.js
-notes/EVALID-timeseries_files/libs/quarto-html/tabsets/tabsets.js
-notes/EVALID-timeseries.html
+# Notes generated files
+notes/.posit/*
+notes/*_files/
+notes/*.html
