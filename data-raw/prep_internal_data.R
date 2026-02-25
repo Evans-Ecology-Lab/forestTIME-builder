@@ -31,6 +31,12 @@ all_coefs <- lapply(
 )
 names(all_coefs) <- gsub("_coefs.csv", "", fs::path_file(coef_files))
 
+source("data-raw/appendix_J.R")
+states <- tibble(state_abb = state.abb, state_name = state.name)
+appendix_j <- make_appendix_j() |>
+  left_join(states, by = join_by(state_name)) |> 
+  select(state_code, state_abb, state_name, annual_inventory_start)
+
 
 usethis::use_data(
   REF_SPECIES,
@@ -39,6 +45,8 @@ usethis::use_data(
   median_crprop_csv,
   equation_forms_and_calls_csv,
   all_coefs,
+  appendix_j,
   internal = TRUE,
   overwrite = TRUE
 )
+
