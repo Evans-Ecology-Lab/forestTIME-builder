@@ -43,3 +43,9 @@ See the tidyverse guide on [how to create a great issue](https://code-review.tid
 
 User-facing functions should be prefixed with `fia_` to enable easy tab-completion.
 For internal or un-exported functions, this is not essential.
+
+## General R package guidelines
+
+For general advice on creating and maintaining R packages, the 2nd edition of the [R Packages]( https://r-pkgs.org) book is a definitive source and great reference.  
+See also: the devtools [website](https://devtools.r-lib.org/index.html) and [cheat sheet](https://rstudio.github.io/cheatsheets/html/package-development.html).
+For advice on programming with the tidyverse (e.g. turning `dplyr` pipelines into reusable functions that pass `devtools::check()`), see [Programming with dplyr](https://dplyr.tidyverse.org/articles/programming.html).
