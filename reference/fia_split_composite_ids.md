@@ -30,10 +30,10 @@ The input tibble with additional columns `UNITCD`, `STATECD`,
 db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 data_tidy <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [426ms]
+#> ✔ Wrangling data [532ms]
 #> 
 fia_split_composite_ids(data_tidy)
-#> # A tibble: 15,890 × 33
+#> # A tibble: 15,890 × 34
 #>    UNITCD STATECD COUNTYCD PLOT  plot_ID SUBP  TREE  tree_ID INVYR PLT_CN CONDID
 #>    <chr>  <chr>   <chr>    <chr> <chr>   <chr> <chr> <chr>   <dbl> <chr>   <int>
 #>  1 1      44      1        155   1_44_1… NA    NA    NA       2005 62270…      1
@@ -47,10 +47,10 @@ fia_split_composite_ids(data_tidy)
 #>  9 1      44      1        228   1_44_1… 1     2     1_44_1…  2004 55944…      2
 #> 10 1      44      1        228   1_44_1… 1     2     1_44_1…  2008 12004…      2
 #> # ℹ 15,880 more rows
-#> # ℹ 22 more variables: CONDPROP_UNADJ <dbl>, PROP_BASIS <chr>,
+#> # ℹ 23 more variables: CONDPROP_UNADJ <dbl>, PROP_BASIS <chr>,
 #> #   COND_STATUS_CD <int>, STDORGCD <int>, MORTYR <lgl>, STATUSCD <int>,
 #> #   RECONCILECD <int>, DECAYCD <int>, STANDING_DEAD_CD <int>, DIA <dbl>,
 #> #   CR <int>, HT <int>, ACTUALHT <int>, CULL <int>, SPCD <dbl>,
 #> #   CARBON_AG <dbl>, DRYBIO_AG <dbl>, MACRO_BREAKPOINT_DIA <lgl>,
-#> #   INTENSITY <int>, SUBCYCLE <int>, PLOT_STATUS_CD <int>, ECOSUBCD <chr>
+#> #   INTENSITY <int>, SUBCYCLE <int>, PLOT_STATUS_CD <int>, ECOSUBCD <chr>, …
 ```

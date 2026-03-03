@@ -10,6 +10,8 @@ Overwrites SPCD with whatever the last value of SPCD is for each tree
 (to handle trees that change SPCD).
 Fills a tree's MORTYR column so every row contains the recorded
 mortality year.
+Filters to only include inventories that came after the start of the
+annual inventory in each state.
 
 "><meta property="og:description" content="Reads in all the tables needed for carbon estimation and population scaling
 and joins them into a single table. Then, some additional data cleaning steps
@@ -22,6 +24,8 @@ Overwrites SPCD with whatever the last value of SPCD is for each tree
 (to handle trees that change SPCD).
 Fills a tree's MORTYR column so every row contains the recorded
 mortality year.
+Filters to only include inventories that came after the start of the
+annual inventory in each state.
 
 "></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -73,6 +77,8 @@ for interpolation.</p></li>
 (to handle trees that change <code>SPCD</code>).</p></li>
 <li><p>Fills a tree's <code>MORTYR</code> column so every row contains the recorded
 mortality year.</p></li>
+<li><p>Filters to only include inventories that came after the start of the
+annual inventory in each state.</p></li>
 </ol></div>
 
     <div class="section level2">
@@ -102,7 +108,7 @@ mortality year.</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">db</span> <span class="op">&lt;-</span> <span class="fu"><a href="fia_load.html">fia_load</a></span><span class="op">(</span><span class="st">"RI"</span>, dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"exdata"</span>, package <span class="op">=</span> <span class="st">"forestTIME"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data_tidy</span> <span class="op">&lt;-</span> <span class="fu">fia_tidy</span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Wrangling data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Wrangling data <span style="color: #B2B2B2;">[276ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Wrangling data <span style="color: #B2B2B2;">[394ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

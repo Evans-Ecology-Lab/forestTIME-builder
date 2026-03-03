@@ -16,6 +16,9 @@ cleaning steps are performed.
 4.  Fills a tree's `MORTYR` column so every row contains the recorded
     mortality year.
 
+5.  Filters to only include inventories that came after the start of the
+    annual inventory in each state.
+
 ## Usage
 
 ``` r
@@ -43,6 +46,6 @@ A tibble.
 db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
 data_tidy <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [276ms]
+#> ✔ Wrangling data [394ms]
 #> 
 ```

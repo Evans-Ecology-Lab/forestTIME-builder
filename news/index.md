@@ -2,6 +2,13 @@
 
 ## forestTIME (development version)
 
+- Now uses the annual inventory start years from Appendix J of the FIADB
+  user guide to filter both raw data (in
+  [`fia_tidy()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_tidy.md))
+  and EVALIDs (in
+  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md))
+  to include only annual inventory years and exclude earlier periodic
+  inventories.
 - Fix to internal function
   [`inter_extra_polate()`](https://evans-ecology-lab.github.io/forestTIME/reference/inter_extra_polate.md)
   which was not handling leading `NA`s correctly in linear interpolation
