@@ -49,12 +49,15 @@ inter_extra_polate <- function(x, y, extrapolate = TRUE) {
     # If any trailing NAs
     if (any(is.na(interpolated)) & is.na(interpolated[length(interpolated)])) {
       # Everything but trailing NAs
-      x_tr <- c(x[1:which.min(interpolated) - 1], x[!is.na(interpolated)])
+      x_tr <- c(
+        x[1:min(which(!is.na(interpolated))) - 1],
+        x[!is.na(interpolated)]
+      )
       y_tr <- c(
-        interpolated[1:which.min(interpolated) - 1],
+        interpolated[1:min(which(!is.na(interpolated))) - 1],
         interpolated[!is.na(interpolated)]
       )
-      xout_tr <- x[is.na(interpolated) & x > which.min(interpolated)]
+      xout_tr <- x[is.na(interpolated) & x >= min(which(!is.na(interpolated)))]
       extrapolated <-
         Hmisc::approxExtrap(
           x = x_tr,

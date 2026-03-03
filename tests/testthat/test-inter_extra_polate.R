@@ -34,4 +34,9 @@ test_that("leading NAs handled correctly", {
     inter_extra_polate(x = seq_along(y2), y = y2, extrapolate = TRUE),
     y2
   )
+  y3 <- c(NA, 7, NA, 5, NA)
+  expect_equal(
+    inter_extra_polate(x = seq_along(y3), y = y3, extrapolate = TRUE),
+    c(NA, 7, 6, 5, 4)
+  )
 })
