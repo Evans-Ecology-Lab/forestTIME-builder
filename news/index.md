@@ -2,6 +2,10 @@
 
 ## forestTIME (development version)
 
+- Fix to internal function
+  [`inter_extra_polate()`](https://evans-ecology-lab.github.io/forestTIME/reference/inter_extra_polate.md)
+  which was not handling leading `NA`s correctly in linear interpolation
+  ([\#225](https://github.com/Evans-Ecology-Lab/forestTIME/issues/225)).
 - EVALIDs specific to East or West Texas won’t be matched to plots by
   [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md).
 - Early EVALIDs in NM and WY that “don’t work” no longer assigned to

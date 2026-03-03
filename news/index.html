@@ -39,7 +39,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="foresttime-development-version">forestTIME (development version)<a class="anchor" aria-label="anchor" href="#foresttime-development-version"></a></h2>
-<ul><li>EVALIDs specific to East or West Texas won’t be matched to plots by <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code>.</li>
+<ul><li>Fix to internal function <code><a href="../reference/inter_extra_polate.html">inter_extra_polate()</a></code> which was not handling leading <code>NA</code>s correctly in linear interpolation (<a href="https://github.com/Evans-Ecology-Lab/forestTIME/issues/225" class="external-link">#225</a>).</li>
+<li>EVALIDs specific to East or West Texas won’t be matched to plots by <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code>.</li>
 <li>Early EVALIDs in NM and WY that “don’t work” no longer assigned to plots by <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code>.</li>
 <li>Changed behavior of <code><a href="../reference/fia_assign_strata.html">fia_assign_strata()</a></code> so that for each plot x year, the <em>first</em> EVALID that contains the <code>YEAR</code> (i.e. between <code>START_INVYR</code> and <code>END_INVYR</code>) is matched.</li>
 <li>Changed package license to MIT.</li>
