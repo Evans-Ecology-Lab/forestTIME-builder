@@ -11,6 +11,8 @@
 #'   (to handle trees that change `SPCD`).
 #' 4. Fills a tree's `MORTYR` column so every row contains the recorded
 #'   mortality year.
+#' 5. Filters to only include inventories that came after the start of the
+#'    annual inventory in each state.
 #'
 #' @param db A list of tables produced by [fia_load()].
 #' @export
@@ -95,17 +97,12 @@ fia_tidy <- function(db) {
     dplyr::left_join(PLOT, by = dplyr::join_by(plot_ID, PLT_CN, INVYR)) |>
     dplyr::left_join(PLOTGEOM, by = dplyr::join_by(INVYR, PLT_CN))
 
-  # # Use only base intensity plots "Subcycle is 0 for a periodic inventory.
-  # # Subcycle 99 may be used for plots that are not included in the estimation
-  # # process." --FIADB user guide. For *most* states, this effectively filters
-  # # INVYR>= 2000, but in some southern states it appears all base-intenstiy
-  # # plots were measured in 1999
-  # # (https://github.com/Evans-Ecology-Lab/forestTIME/issues/171)
-  # data <- data |>
-  #   dplyr::filter(INTENSITY == 1 & SUBCYCLE != 0 & SUBCYCLE != 99)
-
-  # For now at least, just keep plots from 1999 or later
-  data <- data |> dplyr::filter(INVYR >= 1999)
+  # Only keep years that are part of the annual inventory in each state.
+  data <- data |>
+    fia_split_composite_ids() |>
+    dplyr::left_join(annual_inventory_start, by = "STATECD") |>
+    dplyr::filter(INVYR >= annual_inventory_start) |>
+    dplyr::select(-UNITCD, -STATECD, -COUNTYCD, -PLOT, -SUBP, -TREE)
 
   # fill MORTYR so it is a property of trees
   data <- data |>

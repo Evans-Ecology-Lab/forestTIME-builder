@@ -1,5 +1,6 @@
 # forestTIME (development version)
 
+- Now uses the annual inventory start years from Appendix J of the FIADB user guide to filter both raw data (in `fia_tidy()`) and EVALIDs (in `fia_assign_strata()`) to include only annual inventory years and exclude earlier periodic inventories.
 - Fix to internal function `inter_extra_polate()` which was not handling leading `NA`s correctly in linear interpolation (#225).
 - EVALIDs specific to East or West Texas won't be matched to plots by `fia_assign_strata()`.
 - Early EVALIDs in NM and WY that "don't work" no longer assigned to plots by `fia_assign_strata()`.

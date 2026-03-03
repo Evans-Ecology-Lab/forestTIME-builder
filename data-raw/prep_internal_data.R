@@ -31,6 +31,10 @@ all_coefs <- lapply(
 )
 names(all_coefs) <- gsub("_coefs.csv", "", fs::path_file(coef_files))
 
+source("data-raw/annual_inventory_start.R")
+annual_inventory_start <- make_annual_inventory_start() |>
+  select(STATECD = state_code, annual_inventory_start)
+
 
 usethis::use_data(
   REF_SPECIES,
@@ -39,6 +43,8 @@ usethis::use_data(
   median_crprop_csv,
   equation_forms_and_calls_csv,
   all_coefs,
+  annual_inventory_start,
   internal = TRUE,
   overwrite = TRUE
 )
+
