@@ -1,5 +1,6 @@
 # forestTIME (development version)
 
+- Fix to internal function `inter_extra_polate()` which was not handling leading `NA`s correctly in linear interpolation (#225).
 - EVALIDs specific to East or West Texas won't be matched to plots by `fia_assign_strata()`.
 - Early EVALIDs in NM and WY that "don't work" no longer assigned to plots by `fia_assign_strata()`.
 - Changed behavior of `fia_assign_strata()` so that for each plot x year, the *first* EVALID that contains the `YEAR` (i.e. between `START_INVYR` and `END_INVYR`) is matched.
