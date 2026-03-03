@@ -33,6 +33,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: local::. 
+          cache-version: 2
       
       - name: Generate state parquet
         run: Rscript -e 'source("scripts/state-parquet.R")'
