@@ -84,12 +84,13 @@ fia_assign_strata <- function(data_annualized, db) {
   # Rolling join to match all EVALIDs containing YEAR between START_INVYR and
   # END_INVYR
   data_eval <- dplyr::left_join(
-    data_annualized,
+    data_annualized |> dplyr::select(-annual_inventory_start),
     chosen_evals,
     by = dplyr::join_by(plot_ID, dplyr::between(YEAR, START_INVYR, END_INVYR))
   ) |>
     # For each tree x year, only keep one row (the first/earliest EVALID match)
     dplyr::group_by(plot_ID, tree_ID, YEAR) |>
+    dplyr::arrange(EVALID_YEAR) |>
     dplyr::slice_head(n = 1) |>
     # Fill down within each tree to carry EVALIDs forward across inventories where
     # trees weren't sampled.  Not doing this by plot because there are some edge
@@ -98,15 +99,137 @@ fia_assign_strata <- function(data_annualized, db) {
     dplyr::arrange(plot_ID, tree_ID, YEAR) |>
     dplyr::group_by(tree_ID) |>
     tidyr::fill(colnames(chosen_evals), .direction = "down") |>
-    dplyr::ungroup()
-
-  data_expns <- data_eval |>
-    # Calculate P2POINTCNT ("The number of field plots that are within the stratum")
+    dplyr::ungroup() |>
+    # Calculate P2POINTCNT (number of plots per stratum in each year)
     dplyr::mutate(
       .by = c(EVALID, ESTN_UNIT_CN, STRATUM_CN, YEAR),
       P2POINTCNT = ifelse(!is.na(EVALID), length(unique(plot_ID)), NA)
-    ) |>
-    # Calculate EXPNS
+    )
+
+  # Identify small strata with too few plots for variance calculation
+  # TODO:
+  # - Use a better algorithm than adist().  E.g. try
+  #   `stringdist::stringdistmatrix(... method = "jaccard")`
+  # - Detect small strata iteratively so the next small stratum in the for-loop
+  #   doesn't try to merge with a stratum that has already been merged.
+  # - Don't merge strata with "buff" in the description with strata that don't
+  #   have "buff" in the description (PNW only).
+
+  # Make unique ID for stratum / year pairs
+  data_eval$stratID <- paste(data_eval$STRATUM_CN, data_eval$YEAR, sep = "_")
+
+  data_eval <- data_eval |>
+    dplyr::mutate(too_small = P2POINTCNT == 1) |> # NOTE: in rFIA it is `< 2` but that's the same as `== 1` for integers.
+    dplyr::arrange(P2POINTCNT) |>
+    dplyr::mutate(
+      .by = c(EVALID, ESTN_UNIT_CN, YEAR),
+      n_strata = length(unique(STRATUM_CN))
+    )
+
+  # This recreates the chosen_evals, but only the ones that matched with a plot
+  # in the data
+  pop_matched <- data_eval |>
+    dplyr::distinct(
+      stratID,
+      EVALID,
+      ESTN_UNIT_CN,
+      STRATUM_CN,
+      STRATUM_DESCR,
+      YEAR,
+      P1POINTCNT,
+      P2POINTCNT,
+      too_small,
+      n_strata
+    )
+
+  ## Check if any fail
+  warnMe <- c()
+
+  ## If any are too small, i.e., only one plot --> do some merging
+  if (any(pop_matched$too_small)) {
+    for (i in pop_matched$stratID[pop_matched$too_small == TRUE]) {
+      # Subset rows of the pop info matched with data
+      pop <- pop_matched |> dplyr::filter(stratID == i)
+
+      # Use fuzzy string matching if there are any other strata available to merge with
+      if (pop$n_strata > 1) {
+        neighbors <- pop_matched |>
+          dplyr::filter(ESTN_UNIT_CN == pop$ESTN_UNIT_CN) |>
+          dplyr::filter(YEAR == pop$YEAR) |>
+          dplyr::filter(stratID != i)
+
+        if (nrow(neighbors) < 1) {
+          warnMe <- c(warnMe, TRUE)
+        } else {
+          warnMe <- c(warnMe, FALSE)
+
+          # Find the most similar neighbor in terms of stratum description
+          # FIXME: adist() doesn't do particularly well here. Explore
+          # alternatives.
+          msn <- adist(pop$STRATUM_DESCR, neighbors$STRATUM_DESCR)
+          msnID <- neighbors$stratID[which.min(msn)]
+
+          # In `data_eval`, we want to update all rows of the giving and receiving
+          # strata where giving gets a change in STRATUM_CN, P1POINTCNT, and
+          # P2POINTCNT
+
+          # Giving Stratum ----
+          data_eval[data_eval$stratID == i, 'STRATUM_CN'] <- unique(pop_matched[
+            pop_matched$stratID == msnID,
+            'STRATUM_CN'
+          ])
+          data_eval[data_eval$stratID == i, 'P1POINTCNT'] <- unique(pop_matched[
+            pop_matched$stratID == msnID,
+            'P1POINTCNT'
+          ])
+          data_eval[data_eval$stratID == i, 'P2POINTCNT'] <- unique(pop_matched[
+            pop_matched$stratID == msnID,
+            'P2POINTCNT'
+          ])
+
+          # Receiving Stratum ----
+          data_eval[
+            data_eval$stratID == msnID,
+            'P1POINTCNT'
+          ] <- unique(pop_matched[
+            pop_matched$stratID == msnID,
+            'P1POINTCNT'
+          ]) +
+            pop$P1POINTCNT
+
+          data_eval[
+            data_eval$stratID == msnID,
+            'P2POINTCNT'
+          ] <- unique(pop_matched[
+            pop_matched$stratID == msnID,
+            'P2POINTCNT'
+          ]) +
+            pop$P2POINTCNT
+        }
+      } else {
+        # If this is the only available stratum in the estimation unit in a given year
+
+        # Not sure what to do in this situation.  In rFIA they combine strata
+        # from different years in the same estimation unit and EVALID, but that
+        # involves changing the INVYR of the EVALID. In effect, perhaps we are
+        # already doing this by using an overlap join to allow matching of *any*
+        # EVALID where the plot's YEAR is between the start and end of the eval.
+        warnMe <- c(warnMe, TRUE)
+      }
+    }
+  }
+
+  if (any(warnMe)) {
+    cli::cli_warn(
+      "Bad stratification, i.e., strata too small to compute variance of interpolated data in some years."
+    )
+  }
+
+  # TODO: not 100% sure how to adapt this or if we need it:
+  # https://github.com/doserjef/rFIA/blob/ac9c8cb7c524935afeb25ef859ab422a2bb68044/R/util.R#L1039-L1062
+
+  # Calculate EXPNS
+  data_expns <- data_eval |>
     dplyr::mutate(
       EXPNS = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT
     )
@@ -114,7 +237,7 @@ fia_assign_strata <- function(data_annualized, db) {
   # If a plot isn't assigned an EVALID, it's not EXPCURR or EXPVOL
   data_out <- data_expns |>
     dplyr::mutate(
-      EXPCURR = dplyr::if_else(is.na(EVALID), FALSE, EXPCURR),
+      EXPCURR = dplyr::if_else(is.na(EXPCURR), FALSE, EXPCURR),
       EXPVOL = dplyr::if_else(is.na(EXPVOL), FALSE, EXPVOL)
     ) |>
     # remove cols that could easily be joined in from eval info later

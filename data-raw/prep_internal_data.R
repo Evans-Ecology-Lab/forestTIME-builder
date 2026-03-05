@@ -33,7 +33,7 @@ names(all_coefs) <- gsub("_coefs.csv", "", fs::path_file(coef_files))
 
 source("data-raw/annual_inventory_start.R")
 annual_inventory_start <- make_annual_inventory_start() |>
-  select(STATECD = state_code, annual_inventory_start)
+  dplyr::select(STATECD = state_code, annual_inventory_start)
 
 
 usethis::use_data(
