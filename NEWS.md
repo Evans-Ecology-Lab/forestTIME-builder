@@ -1,5 +1,6 @@
 # forestTIME (development version)
 
+- `fia_assign_strata()` now attempts to combine small strata within a year and estimation unit if any strata only contain 1 plot (#201).
 - Now uses the annual inventory start years from Appendix J of the FIADB user guide to filter both raw data (in `fia_tidy()`) and EVALIDs (in `fia_assign_strata()`) to include only annual inventory years and exclude earlier periodic inventories.
 - Fix to internal function `inter_extra_polate()` which was not handling leading `NA`s correctly in linear interpolation (#225).
 - EVALIDs specific to East or West Texas won't be matched to plots by `fia_assign_strata()`.

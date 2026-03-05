@@ -106,8 +106,7 @@ fia_assign_strata <- function(data_annualized, db) {
       P2POINTCNT = ifelse(!is.na(EVALID), length(unique(plot_ID)), NA)
     )
 
-  
-# Identify small strata with too few plots for variance calculation
+  # Identify small strata with too few plots for variance calculation
   # TODO:
   # - Use a better algorithm than adist().  E.g. try
   #   `stringdist::stringdistmatrix(... method = "jaccard")`
