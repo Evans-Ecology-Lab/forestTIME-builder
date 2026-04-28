@@ -3,7 +3,7 @@
 ``` r
 library(forestTIME)
 #> ! forestTIME is an experimental package and currently a work-in-progress. It is
-#>   not an official product of the US Forest Service.
+#>   not an official product of the US Forest Service. MESSAGE CHANGE!
 library(dplyr)
 #> 
 #> Attaching package: 'dplyr'
@@ -47,6 +47,14 @@ db <- fia_load(states = "DE", dir = "fia")
 names(db)
 ```
 
+    #> Warning: replacing previous import 'bit64::setdiff' by 'dplyr::setdiff' when
+    #> loading 'rFIA'
+    #> Warning: replacing previous import 'bit64::intersect' by 'dplyr::intersect'
+    #> when loading 'rFIA'
+    #> Warning: replacing previous import 'bit64::union' by 'dplyr::union' when
+    #> loading 'rFIA'
+    #> Warning: replacing previous import 'bit64::setequal' by 'dplyr::setequal' when
+    #> loading 'rFIA'
     #> [1] "COND"                   "PLOT"                   "PLOTGEOM"
     #> [4] "POP_ESTN_UNIT"          "POP_EVAL_TYP"           "POP_EVAL"
     #> [7] "POP_PLOT_STRATUM_ASSGN" "POP_STRATUM"            "TREE"
@@ -58,7 +66,7 @@ plot and tree IDS, `plot_ID` and `tree_ID`.
 ``` r
 data <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [702ms]
+#> ✔ Wrangling data [517ms]
 #> 
 data
 ```
@@ -97,13 +105,13 @@ data_midpt <- fia_annualize(data, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [5.6s]
+#> ✔ Expanding years between surveys [4.9s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [21.3s]
+✔ Interpolating between surveys [18.1s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [24.7s]
+✔ Adjusting for mortality [21.4s]
 ```
 
 ``` r
@@ -114,13 +122,13 @@ data_midpt_stepwise <- data |>
 #> ℹ Adjusting for mortality
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [5.6s]
+#> ✔ Expanding years between surveys [5s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [20.5s]
+✔ Interpolating between surveys [18.1s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [24s]
+✔ Adjusting for mortality [21.1s]
 ```
 
 ``` r
@@ -142,7 +150,7 @@ later steps.
 ``` r
 data_expanded <- expand_data(data)
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [5.6s]
+#> ✔ Expanding years between surveys [5.1s]
 #> 
 data_expanded
 ```
@@ -163,7 +171,7 @@ species), they are assumed to be fallen dead and have `STATUSCD` set to
 ``` r
 data_interpolated <- interpolate_data(data_expanded)
 #> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [14.8s]
+#> ✔ Interpolating between surveys [12.9s]
 #> 
 data_interpolated
 ```
@@ -184,7 +192,7 @@ data_mortyr <- adjust_mortality(data_interpolated, use_mortyr = TRUE)
 #> 
 data_midpt <- adjust_mortality(data_interpolated, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
-#> ✔ Adjusting for mortality [3.3s]
+#> ✔ Adjusting for mortality [3.2s]
 #> 
 all.equal(data_mortyr, data_midpt)
 #> [1] TRUE
@@ -204,24 +212,24 @@ variables using the National Scale Volume and Biomass estimators (NSVB)
 ``` r
 data_midpt_carbon <- fia_estimate(data_midpt)
 #> ℹ Prepping for estimating carbon
-#> ✔ Prepping for estimating carbon [366ms]
+#> ✔ Prepping for estimating carbon [189ms]
 #> 
 #> ⠙ Estimating carbon: prepping data
 #> ⠹ Estimating carbon: finding merchantable height
 #> ⠸ Estimating carbon: predicting merchantable stem wood volume
-#> ⠼ Estimating carbon: finding sawlog height
+#> ⠼ Estimating carbon: predicting stump wood and bark volume
 #> ⠴ Estimating carbon: predicting sawlog stem wood volume
-#> ⠦ Estimating carbon: predicting total biomass
-#> ⠧ Estimating carbon: predicting total branch weight
-#> ✔ Estimating carbon: harmonizing components [30.7s]
+#> ⠦ Estimating carbon: predicting sawlog stem wood and bark volume
+#> ⠧ Estimating carbon: predicting total stem bark weight
+#> ⠇ Estimating carbon: predicting foliage weight
+#> ✔ Estimating carbon: harmonizing components [32.5s]
 #> 
 #> ℹ Joining carbon estimation results
-#> ✔ Joining carbon estimation results [65ms]
+#> ✔ Joining carbon estimation results [30ms]
 #> 
 data_midpt_carbon
 ```
 
-Westfall, James A., John W. Coulston, Andrew N. Gray, John D. Shaw,
-Philip J. Radtke, David M. Walker, Aaron R. Weiskittel, et al. 2024. “A
+Westfall, James A., John W. Coulston, Andrew N. Gray, et al. 2024. *A
 National-Scale Tree Volume, Biomass, and Carbon Modeling System for the
-United States.” <https://doi.org/10.2737/wo-gtr-104>.
+United States*. <https://doi.org/10.2737/wo-gtr-104>.

@@ -50,7 +50,7 @@ A, MacFarlane D, Affleck D, Zhao D, Temesgen H, Poudel K, Frank J,
 Prisley S, Wang Y, Sánchez Meador A, Auty D, Domke G (2024). “A
 national-scale tree volume, biomass, and carbon modeling system for the
 United States.” U.S. Department of Agriculture, Forest Service.
-[doi:10.2737/wo-gtr-104](https://doi.org/10.2737/wo-gtr-104),
+[doi:10.2737/wo-gtr-104](https://doi.org/10.2737/wo-gtr-104).
 <http://dx.doi.org/10.2737/WO-GTR-104>.
 
     @TechReport{westfall_etall:2024,
