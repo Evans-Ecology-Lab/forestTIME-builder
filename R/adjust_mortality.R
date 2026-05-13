@@ -13,7 +13,7 @@
 #' - Adjusts `STANDING_DEAD_CD` so that it only applies to dead trees
 #' - Adjusts `DECAYCD` so that it only applies to standing dead trees
 #' - Adjusts `DIA`, `HT`, `ACTUALHT`, `CULL`, and `CR` so that they only apply
-#'   to live or standing dead trees in sampled conitions.
+#'   to live or standing dead trees in sampled conditions.
 #'
 #' @param data_interpolated tibble created by [interpolate_data()]
 #' @param use_mortyr logical; use `MORTYR` (if recorded) as the first year a
@@ -153,7 +153,7 @@ adjust_mortality <- function(data_interpolated, use_mortyr = TRUE) {
         \(x) dplyr::if_else(STANDING_DEAD_CD == 0, NA, x, missing = x)
       )
     ) |>
-    # trees in non-sampled areas shoudn't have measurements for anything
+    # trees in non-sampled areas shouldn't have measurements for anything
     # https://github.com/Evans-Ecology-Lab/forestTIME/issues/59
     dplyr::mutate(
       dplyr::across(
