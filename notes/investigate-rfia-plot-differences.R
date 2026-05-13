@@ -18,7 +18,7 @@ db <- fia_load(
 data <- fia_tidy(db) #single tibble
 data_midpt <- data |>
   fia_annualize(use_mortyr = FALSE) |>
-  fia_estimate()
+  fia_allometry()
 
 ft_plots <- data_midpt |>
   filter(COND_STATUS_CD == 1 & INTENSITY == 1, STATUSCD == 1) |>

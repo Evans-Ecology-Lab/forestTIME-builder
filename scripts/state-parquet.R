@@ -23,14 +23,14 @@ if (do_both) {
   data_mortyr <-
     data_interpolated |>
     adjust_mortality(use_mortyr = TRUE) #|>
-  # fia_estimate() |>
+  # fia_allometry() |>
   # fia_split_composite_ids()
 }
 
 data_midpt <-
   data_interpolated |>
   adjust_mortality(use_mortyr = FALSE) #|>
-# fia_estimate() |>
+# fia_allometry() |>
 # fia_split_composite_ids()
 
 max_rows <- 1.6e6 #larger than CO, which works currently

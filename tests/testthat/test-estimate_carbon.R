@@ -30,7 +30,7 @@ test_that("estimates match those in raw data", {
     )
 
   data_carbon <- data_prepped |>
-    estimate_carbon() |>
+    tree_allometry() |>
     dplyr::select(
       tree_ID,
       YEAR,
@@ -38,7 +38,7 @@ test_that("estimates match those in raw data", {
       DRYBIO_AG_est = DRYBIO_AG
     )
   # add the original estimates of carbon and biomass to the prepped data, then
-  # add the outputs of estimate_carbon()
+  # add the outputs of tree_allometry()
   test <- dplyr::left_join(
     data_prepped |> dplyr::filter(!is.na(tree_ID)), #ignore empty plots
     orig |>
@@ -65,7 +65,7 @@ test_that("no carbon or biomass estimates for fallen dead trees", {
   test_val <- data_tidy |>
     filter(tree_ID == test_tree) |>
     fia_annualize() |>
-    fia_estimate() |>
+    fia_allometry() |>
     filter(YEAR > 2020) |>
     pull(CARBON_AG) |>
     is.na() |>
@@ -81,7 +81,7 @@ test_that("no negative carbon or biomass", {
   data_tidy <- fia_tidy(db) |>
     filter(plot_ID %in% c("1_44_3_129", "1_44_3_135", "1_44_3_211"))
   data_estimated <- fia_annualize(data_tidy, use_mortyr = FALSE) |>
-    fia_estimate()
+    fia_allometry()
   expect_equal(nrow(data_estimated |> filter(CARBON_AG < 0)), 0)
   expect_equal(nrow(data_estimated |> filter(DRYBIO_AG < 0)), 0)
 
@@ -90,7 +90,7 @@ test_that("no negative carbon or biomass", {
 
   woodland_example <- data_interpolated |>
     prep_carbon() |>
-    estimate_carbon()
+    tree_allometry()
 
   expect_equal(nrow(woodland_example |> filter(CARBON_AG < 0)), 0)
   expect_equal(nrow(woodland_example |> filter(DRYBIO_AG < 0)), 0)

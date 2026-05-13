@@ -7,7 +7,7 @@ db <- fia_load(
 data_annualized <- db |>
   fia_tidy() |>
   fia_annualize(use_mortyr = FALSE) |>
-  fia_estimate()
+  fia_allometry()
 
 # Create pop info, left join to annualized data, interpolate with midpt switch
 
