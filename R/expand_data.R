@@ -11,6 +11,7 @@
 #'
 #' @param data tibble produced by [fia_tidy()]---must have at least `tree_ID`
 #'   and `INVYR` columns.
+#' @param year_var character indicating which year variable to use; default is `INVYR`.
 #' @export
 #' @keywords internal
 #' @returns a tibble with a logical column `interpolated` marking whether a row

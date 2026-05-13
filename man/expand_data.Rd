@@ -9,6 +9,8 @@ expand_data(data, year_var = c("INVYR", "MEASYEAR"))
 \arguments{
 \item{data}{tibble produced by \code{\link[=fia_tidy]{fia_tidy()}}---must have at least \code{tree_ID}
 and \code{INVYR} columns.}
+
+\item{year_var}{character indicating which year variable to use; default is \code{INVYR}.}
 }
 \value{
 a tibble with a logical column \code{interpolated} marking whether a row

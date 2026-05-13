@@ -23,6 +23,7 @@
 #' @seealso For more details on each step, see: [expand_data()],
 #'   [interpolate_data()], [adjust_mortality()]
 #' @param data_tidy A tibble produced by [fia_tidy()].
+#' @param year_var character indicating which year variable to use; default is `INVYR`.
 #' @param use_mortyr logical; Use `MORTYR` (if recorded) as the first year a
 #'   tree was dead? Passed to [adjust_mortality()].
 #' @export
