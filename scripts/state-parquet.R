@@ -37,11 +37,11 @@ max_rows <- 1.6e6 #larger than CO, which works currently
 if (nrow(data_midpt) <= max_rows) {
   if (do_both) {
     data_mortyr <- data_mortyr |>
-      fia_estimate() |>
+      fia_allometry() |>
       fia_split_composite_ids()
   }
   data_midpt <- data_midpt |>
-    fia_estimate() |>
+    fia_allometry() |>
     fia_split_composite_ids()
 } else {
   #chunk into a list of data frames with at most `max_rows` rows
@@ -52,7 +52,7 @@ if (nrow(data_midpt) <= max_rows) {
       mutate(cut_group = cut(1:n(), n_groups)) |>
       group_by(cut_group) |>
       group_split() |>
-      map(fia_estimate) |>
+      map(fia_allometry) |>
       list_rbind() |>
       fia_split_composite_ids()
   }
@@ -61,7 +61,7 @@ if (nrow(data_midpt) <= max_rows) {
     mutate(cut_group = cut(1:n(), n_groups)) |>
     group_by(cut_group) |>
     group_split() |>
-    map(fia_estimate) |>
+    map(fia_allometry) |>
     list_rbind() |>
     fia_split_composite_ids()
 }
