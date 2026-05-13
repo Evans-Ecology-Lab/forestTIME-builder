@@ -1,13 +1,13 @@
-#' Estimate carbon
+#' Tree Allometry
 #'
-#' Estimates carbon using code provided by David Walker with slight
+#' Takes the interpolated diameter, height, and status code data and applies NSVB allometric equations to calculate volume, carbon, and biomass using code provided by David Walker with slight
 #' modifications
 #'
 #' @param data_prepped tibble produced by [prep_carbon()].
 #' @author David Walker
 #' @noRd
 #' @returns a tibble
-estimate_carbon <- function(data_prepped) {
+tree_allometry <- function(data_prepped) {
   med_cr_prop <-
     median_crprop_csv |>
     dplyr::mutate(SFTWD_HRDWD = dplyr::if_else(hwd_yn == 'N', 'S', 'H'))
