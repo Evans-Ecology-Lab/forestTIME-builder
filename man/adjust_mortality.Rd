@@ -31,7 +31,7 @@ following year.
 \item Adjusts \code{STANDING_DEAD_CD} so that it only applies to dead trees
 \item Adjusts \code{DECAYCD} so that it only applies to standing dead trees
 \item Adjusts \code{DIA}, \code{HT}, \code{ACTUALHT}, \code{CULL}, and \code{CR} so that they only apply
-to live or standing dead trees in sampled conitions.
+to live or standing dead trees in sampled conditions.
 }
 }
 \keyword{internal}
