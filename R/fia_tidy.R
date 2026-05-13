@@ -119,7 +119,7 @@ fia_tidy <- function(db) {
   all_plots <- data |>
     dplyr::select(plot_ID, INVYR) |>
     dplyr::distinct() |>
-    dplyr::left_join(PLOT |> select(-MEASYEAR),
+    dplyr::left_join(PLOT |> dplyr::select(-MEASYEAR),
                      by = dplyr::join_by(plot_ID, INVYR))
 
   # coalesce ACTUALHT so it can be interpolated
