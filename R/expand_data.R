@@ -2,7 +2,7 @@
 #'
 #' This is an "internal" function—most users will want to run [fia_annualize()]
 #' instead. This expands the data frame in preparation for interpolation of now
-#' "missing" values between inventory years. Time-invariant variables `tree_ID`,
+#' "missing" values between inventory years or measurement years depending on the year variable selection. Time-invariant variables `tree_ID`,
 #' `plot_ID`, `SPCD`, `MORTYR`, `ECOSUBCD`, `DESIGNCD`, and `PROP_BASIS` are
 #' simply filled in with [tidyr::fill()]. Categorical variables `STATUDSCD`,
 #' `RECONCILECD`, `STDORGCD`, `CONDID`, and `COND_STATUS_CD` are modified to
@@ -15,8 +15,14 @@
 #' @keywords internal
 #' @returns a tibble with a logical column `interpolated` marking whether a row
 #'   was present in the original data (`FALSE`) or was added (`TRUE`).
-expand_data <- function(data) {
+expand_data <- function(data, year_var = c("INVYR", "MEASYEAR")) {
   cli::cli_progress_step("Expanding years between surveys")
+
+  year_var <- match.arg(year_var)
+
+  #add column that identifies if YEAR is coming from INVYR or MEASYEAR
+  data <- data |>
+    dplyr::mutate(YEAR_SOURCE = year_var)
 
   data <- data |>
     # replace NAs for some categorical variables with 999 (temporarily) so they
@@ -48,10 +54,14 @@ expand_data <- function(data) {
       tree_ID = dplyr::if_else(is.na(tree_ID), paste0("NA_", CONDID), tree_ID)
     )
 
+  #Create YEAR column to match the user defined year variable (either INVYR or MEASYEAR)
+  data <- data |>
+    dplyr::mutate(YEAR = !!rlang::sym(year_var))
+
   all_yrs <-
     data |>
     dplyr::group_by(plot_ID, tree_ID) |>
-    tidyr::expand(YEAR = tidyr::full_seq(INVYR, 1))
+    tidyr::expand(YEAR = tidyr::full_seq(YEAR, 1))
 
   # Join while creating a flag indicating whether the row is from the original
   # data or a result of "expanding"
@@ -59,13 +69,12 @@ expand_data <- function(data) {
     dplyr::right_join(
       data |> dplyr::mutate(interpolated = FALSE),
       all_yrs |> dplyr::mutate(interpolated = TRUE),
-      by = dplyr::join_by(plot_ID, tree_ID, INVYR == YEAR)
+      by = dplyr::join_by(plot_ID, tree_ID, YEAR)
     ) |>
     dplyr::mutate(
       interpolated = dplyr::coalesce(interpolated.x, interpolated.y),
       .keep = "unused" #to remove interpolated.x and interpolated.y
     ) |>
-    dplyr::rename(YEAR = INVYR) |>
     dplyr::arrange(tree_ID, YEAR) |>
     #fill down any time-invariant columns
     dplyr::group_by(plot_ID, tree_ID) |>
@@ -77,7 +86,8 @@ expand_data <- function(data) {
         "ECOSUBCD",
         "PROP_BASIS",
         "MACRO_BREAKPOINT_DIA",
-        "MORTYR"
+        "MORTYR",
+        "YEAR_SOURCE"
       )),
       .direction = "downup"
     ) |>
@@ -87,7 +97,10 @@ expand_data <- function(data) {
       any_of(c(
         "plot_ID",
         "tree_ID",
+        "INVYR",
+        "MEASYEAR",
         "YEAR",
+        "YEAR_SOURCE",
         "interpolated",
         "DIA",
         "HT",
