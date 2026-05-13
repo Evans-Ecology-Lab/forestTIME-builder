@@ -37,6 +37,7 @@ fia_tidy <- function(db) {
       plot_ID,
       PLT_CN = CN,
       INVYR,
+      MEASYEAR,
       MACRO_BREAKPOINT_DIA, #for assigning TPA_UNADJ
       INTENSITY,
       SUBCYCLE,
@@ -118,7 +119,8 @@ fia_tidy <- function(db) {
   all_plots <- data |>
     dplyr::select(plot_ID, INVYR) |>
     dplyr::distinct() |>
-    dplyr::left_join(PLOT, by = dplyr::join_by(plot_ID, INVYR))
+    dplyr::left_join(PLOT |> select(-MEASYEAR),
+                     by = dplyr::join_by(plot_ID, INVYR))
 
   # coalesce ACTUALHT so it can be interpolated
   data <- data |>
@@ -140,7 +142,7 @@ fia_tidy <- function(db) {
       )
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
-    dplyr::select(plot_ID, tree_ID, INVYR, everything())
+    dplyr::select(plot_ID, tree_ID, INVYR, MEASYEAR, everything())
 
   # return:
   data
