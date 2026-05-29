@@ -126,6 +126,10 @@ fia_tidy <- function(db) {
   data <- data |>
     dplyr::mutate(ACTUALHT = dplyr::coalesce(ACTUALHT, HT))
 
+  # Fill NA values in MEASYEAR column with INVYR. This happens when plot is nonsampled and skipped
+  data <- data |>
+    dplyr::mutate(MEASYEAR = dplyr::coalesce(MEASYEAR, INVYR))
+
   # join the empty plots back in
   data <-
     dplyr::full_join(
@@ -147,3 +151,4 @@ fia_tidy <- function(db) {
   # return:
   data
 }
+
