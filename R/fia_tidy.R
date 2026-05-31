@@ -105,6 +105,10 @@ fia_tidy <- function(db) {
     dplyr::filter(INVYR >= annual_inventory_start) |>
     dplyr::select(-UNITCD, -STATECD, -COUNTYCD, -PLOT, -SUBP, -TREE)
 
+  # filter out subcycle 0 and 99 plots
+  data <- data |>
+    dplyr::filter(SUBCYCLE !=0 & SUBCYCLE !=99)
+
   # fill MORTYR so it is a property of trees
   data <- data |>
     dplyr::group_by(tree_ID) |>
