@@ -32,7 +32,7 @@ fia_tidy <- function(db) {
   PLOT <-
     db$PLOT |>
     #fix Oregon plot with incorrect UNITCD
-    dplyr::mutate(UNITCD = case_when(STATECD  == 41 &
+    dplyr::mutate(UNITCD = dplyr::case_when(STATECD  == 41 &
                                      COUNTYCD == 49 &
                                      PLOT     == 60223 &
                                      INVYR    == 2002 &
