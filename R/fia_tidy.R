@@ -31,6 +31,13 @@ fia_tidy <- function(db) {
 
   PLOT <-
     db$PLOT |>
+    #fix Oregon plot with incorrect UNITCD
+    dplyr::mutate(UNITCD = case_when(STATECD  == 41 &
+                                     COUNTYCD == 49 &
+                                     PLOT     == 60223 &
+                                     INVYR    == 2002 &
+                                     UNITCD   == 4 ~ 3,
+                                     TRUE ~ UNITCD)) |>
     dplyr::mutate(CN = as.character(CN)) |>
     fia_add_composite_ids() |>
     dplyr::select(
@@ -130,7 +137,7 @@ fia_tidy <- function(db) {
   data <- data |>
     dplyr::mutate(ACTUALHT = dplyr::coalesce(ACTUALHT, HT))
 
-  # Fill NA values in MEASYEAR column with INVYR. This happens when plot is nonsampled and skipped
+  # fill NA values in MEASYEAR column with INVYR.
   data <- data |>
     dplyr::mutate(MEASYEAR = dplyr::coalesce(MEASYEAR, INVYR))
 
