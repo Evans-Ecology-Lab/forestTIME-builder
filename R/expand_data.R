@@ -65,11 +65,11 @@ expand_data <- function(data, year_var = c("INVYR", "MEASYEAR")) {
       dplyr::group_by(plot_ID, tree_ID, MEASYEAR) |>
       dplyr::arrange(INVYR, .by_group = TRUE) |>
       dplyr::mutate(
-        MEASYEAR_duplicate_flag = dplyr::case_when(
+        MEASYEAR_repeat_flag = dplyr::case_when(
           dplyr::n() == 2 &
             dplyr::n_distinct(INVYR) == 2 &
             dplyr::row_number() == 2 ~
-            "duplicate MEASYEAR; kept later INVYR",
+            "repeat MEASYEAR; kept later INVYR",
           TRUE ~ NA_character_
         )
       ) |>
