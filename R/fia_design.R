@@ -108,7 +108,7 @@ fia_design <- function(data_annualized, db) {
     ) |>
     # Calculate EXPNS
     dplyr::mutate(
-      EXPNS = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT_ft
+      EXPNS_ft = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT_ft
     )
 
   # If a plot isn't assigned an EVALID, it's not EXPCURR or EXPVOL
