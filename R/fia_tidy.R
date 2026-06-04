@@ -139,7 +139,12 @@ fia_tidy <- function(db) {
 
   # fill NA values in MEASYEAR column with INVYR.
   data <- data |>
-    dplyr::mutate(MEASYEAR = dplyr::coalesce(MEASYEAR, INVYR))
+    dplyr::mutate(
+      MEASYEAR_NA_flag = dplyr::if_else(
+        is.na(MEASYEAR),
+        "MEASYEAR filled with INVYR",
+        NA_character_),
+      MEASYEAR = dplyr::coalesce(MEASYEAR, INVYR))
 
   # join the empty plots back in
   data <-

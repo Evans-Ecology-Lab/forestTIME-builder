@@ -21,7 +21,7 @@ expand_data <- function(data, year_var = c("INVYR", "MEASYEAR")) {
 
   year_var <- match.arg(year_var)
 
-  #add column that identifies if YEAR is coming from INVYR or MEASYEAR
+  # add column that identifies if YEAR is coming from INVYR or MEASYEAR
   data <- data |>
     dplyr::mutate(YEAR_SOURCE = year_var)
 
@@ -55,16 +55,39 @@ expand_data <- function(data, year_var = c("INVYR", "MEASYEAR")) {
       tree_ID = dplyr::if_else(is.na(tree_ID), paste0("NA_", CONDID), tree_ID)
     )
 
-  #Create YEAR column to match the user defined year variable (either INVYR or MEASYEAR)
+  # create YEAR column to match the user defined year variable (either INVYR or MEASYEAR)
   data <- data |>
     dplyr::mutate(YEAR = !!rlang::sym(year_var))
 
+  # if a tree or empty plot has the same measurement year for two different inventory years, drop the first for year_var = "MEASYEAR" only
+  if (year_var == "MEASYEAR") {
+    data <- data |>
+      dplyr::group_by(plot_ID, tree_ID, MEASYEAR) |>
+      dplyr::arrange(INVYR, .by_group = TRUE) |>
+      dplyr::mutate(
+        MEASYEAR_duplicate_flag = dplyr::case_when(
+          dplyr::n() == 2 &
+            dplyr::n_distinct(INVYR) == 2 &
+            dplyr::row_number() == 2 ~
+            "duplicate MEASYEAR; kept later INVYR",
+          TRUE ~ NA_character_
+        )
+      ) |>
+      dplyr::filter(
+        !(dplyr::n() == 2 &
+            dplyr::n_distinct(INVYR) == 2 &
+            dplyr::row_number() == 1)
+      ) |>
+      dplyr::ungroup()
+  }
+
+  # create full time series of years from first observation to last
   all_yrs <-
     data |>
     dplyr::group_by(plot_ID, tree_ID) |>
     tidyr::expand(YEAR = tidyr::full_seq(YEAR, 1))
 
-  # Join while creating a flag indicating whether the row is from the original
+  # join while creating a flag indicating whether the row is from the original
   # data or a result of "expanding"
   tree_annual <-
     dplyr::right_join(
