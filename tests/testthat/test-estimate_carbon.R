@@ -34,8 +34,8 @@ test_that("estimates match those in raw data", {
     dplyr::select(
       tree_ID,
       YEAR,
-      CARBON_AG_est = CARBON_AG,
-      DRYBIO_AG_est = DRYBIO_AG
+      CARBON_AG_est = CARBON_AG_ft,
+      DRYBIO_AG_est = DRYBIO_AG_ft
     )
   # add the original estimates of carbon and biomass to the prepped data, then
   # add the outputs of tree_allometry()
@@ -67,7 +67,7 @@ test_that("no carbon or biomass estimates for fallen dead trees", {
     fia_annualize() |>
     fia_allometry() |>
     filter(YEAR > 2020) |>
-    pull(CARBON_AG) |>
+    pull(CARBON_AG_ft) |>
     is.na() |>
     all()
   expect_true(test_val)
@@ -82,8 +82,8 @@ test_that("no negative carbon or biomass", {
     filter(plot_ID %in% c("1_44_3_129", "1_44_3_135", "1_44_3_211"))
   data_estimated <- fia_annualize(data_tidy, use_mortyr = FALSE) |>
     fia_allometry()
-  expect_equal(nrow(data_estimated |> filter(CARBON_AG < 0)), 0)
-  expect_equal(nrow(data_estimated |> filter(DRYBIO_AG < 0)), 0)
+  expect_equal(nrow(data_estimated |> filter(CARBON_AG_ft < 0)), 0)
+  expect_equal(nrow(data_estimated |> filter(DRYBIO_AG_ft < 0)), 0)
 
   # The issue is really only with woodland species
   data_interpolated <- readRDS(testthat::test_path("testdata/CO_MORTYR.rds"))
@@ -92,7 +92,7 @@ test_that("no negative carbon or biomass", {
     prep_carbon() |>
     tree_allometry()
 
-  expect_equal(nrow(woodland_example |> filter(CARBON_AG < 0)), 0)
-  expect_equal(nrow(woodland_example |> filter(DRYBIO_AG < 0)), 0)
+  expect_equal(nrow(woodland_example |> filter(CARBON_AG_ft < 0)), 0)
+  expect_equal(nrow(woodland_example |> filter(DRYBIO_AG_ft < 0)), 0)
 })
 
