@@ -162,7 +162,8 @@ fia_tidy <- function(db) {
       )
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
-    dplyr::select(plot_ID, tree_ID, INVYR, MEASYEAR, everything())
+    dplyr::select(plot_ID, tree_ID, INVYR, MEASYEAR, everything()) |>
+    dplyr::select(-annual_inventory_start)
 
   # return:
   data
