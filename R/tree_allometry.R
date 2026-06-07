@@ -149,6 +149,18 @@ tree_allometry <- function(data_prepped) {
         ),
         CARBON_AG
       )
+    ) |>
+    # add forestTIME identifier to carbon and biomass columns
+    dplyr::rename(
+      CARBON_AG_ft = CARBON_AG,
+      DRYBIO_AG_ft = DRYBIO_AG
+    ) |>
+    # drop temporary carbon and biomass interpolated columns to avoid confusion
+    dplyr::select(
+      -dplyr::any_of(c(
+        "CARBON_AG_interpolated",
+        "DRYBIO_AG_interpolated"
+      ))
     )
 
   carbon_joined
