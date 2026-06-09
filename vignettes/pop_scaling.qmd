@@ -112,7 +112,7 @@ data <- fia_tidy(db) #single tibble
 # Adjust for mortality and estimate carbon.
 data_midpt <- data |>
   fia_annualize(use_mortyr = FALSE) |>
-  fia_estimate()
+  fia_allometry()
 ```
 
 I'll add domain indicator columns as is done in the `rFIA` demystified vignette so we calculate carbon in live trees per area of forested land using base intensity plots only.

@@ -157,10 +157,10 @@ These tables will be identical in states like RI where `MORTYR` is never used, b
 
 ## Carbon Estimation
 
-`fia_estimate()` uses code provided by David Walker to calculate carbon and biomass variables using the National Scale Volume and Biomass estimators (NSVB) [@westfall2024].
+`fia_allometry()` uses code provided by David Walker to calculate carbon and biomass variables using the National Scale Volume and Biomass estimators (NSVB) [@westfall2024].
 
 ```{r}
 #| label: prep-carbon
-data_midpt_carbon <- fia_estimate(data_midpt)
+data_midpt_carbon <- fia_allometry(data_midpt)
 data_midpt_carbon
 ```

@@ -4,16 +4,18 @@
 \alias{fia_annualize}
 \title{Create annualized FIA data}
 \usage{
-fia_annualize(data_tidy, use_mortyr = TRUE)
+fia_annualize(data_tidy, year_var = c("INVYR", "MEASYEAR"), use_mortyr = TRUE)
 }
 \arguments{
 \item{data_tidy}{A tibble produced by \code{\link[=fia_tidy]{fia_tidy()}}.}
+
+\item{year_var}{character indicating which year variable to use; default is \code{INVYR}.}
 
 \item{use_mortyr}{logical; Use \code{MORTYR} (if recorded) as the first year a
 tree was dead? Passed to \code{\link[=adjust_mortality]{adjust_mortality()}}.}
 }
 \description{
-Converts tidied panel data into annualized data with interpolated measurments
+Converts tidied panel data into annualized data with interpolated measurements
 for trees for years between inventories. This happens in three steps, which
 can be "manually" replicated by chaining other \code{forestTIME}
 functions.

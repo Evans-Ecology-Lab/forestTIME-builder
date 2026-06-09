@@ -1,6 +1,6 @@
 #' Create annualized FIA data
 #'
-#' Converts tidied panel data into annualized data with interpolated measurments
+#' Converts tidied panel data into annualized data with interpolated measurements
 #' for trees for years between inventories. This happens in three steps, which
 #' can be "manually" replicated by chaining other `forestTIME`
 #' functions.
@@ -23,6 +23,7 @@
 #' @seealso For more details on each step, see: [expand_data()],
 #'   [interpolate_data()], [adjust_mortality()]
 #' @param data_tidy A tibble produced by [fia_tidy()].
+#' @param year_var character indicating which year variable to use; default is `INVYR`.
 #' @param use_mortyr logical; Use `MORTYR` (if recorded) as the first year a
 #'   tree was dead? Passed to [adjust_mortality()].
 #' @export
@@ -33,9 +34,9 @@
 #' data_annualized <- fia_annualize(data_tidy)
 #' }
 #'
-fia_annualize <- function(data_tidy, use_mortyr = TRUE) {
+fia_annualize <- function(data_tidy, year_var = c("INVYR", "MEASYEAR"), use_mortyr = TRUE) {
   data_tidy |>
-    expand_data() |>
+    expand_data(year_var = year_var) |>
     interpolate_data() |>
     adjust_mortality(use_mortyr = use_mortyr)
 }

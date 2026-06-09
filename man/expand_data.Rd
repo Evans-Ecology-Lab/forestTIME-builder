@@ -4,11 +4,13 @@
 \alias{expand_data}
 \title{Expand data to include years between inventory years}
 \usage{
-expand_data(data)
+expand_data(data, year_var = c("INVYR", "MEASYEAR"))
 }
 \arguments{
 \item{data}{tibble produced by \code{\link[=fia_tidy]{fia_tidy()}}---must have at least \code{tree_ID}
 and \code{INVYR} columns.}
+
+\item{year_var}{character indicating which year variable to use; default is \code{INVYR}.}
 }
 \value{
 a tibble with a logical column \code{interpolated} marking whether a row
@@ -17,7 +19,7 @@ was present in the original data (\code{FALSE}) or was added (\code{TRUE}).
 \description{
 This is an "internal" function—most users will want to run \code{\link[=fia_annualize]{fia_annualize()}}
 instead. This expands the data frame in preparation for interpolation of now
-"missing" values between inventory years. Time-invariant variables \code{tree_ID},
+"missing" values between inventory years or measurement years depending on the year variable selection. Time-invariant variables \code{tree_ID},
 \code{plot_ID}, \code{SPCD}, \code{MORTYR}, \code{ECOSUBCD}, \code{DESIGNCD}, and \code{PROP_BASIS} are
 simply filled in with \code{\link[tidyr:fill]{tidyr::fill()}}. Categorical variables \code{STATUDSCD},
 \code{RECONCILECD}, \code{STDORGCD}, \code{CONDID}, and \code{COND_STATUS_CD} are modified to

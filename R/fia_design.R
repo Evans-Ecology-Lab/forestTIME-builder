@@ -28,11 +28,11 @@
 #'    fia_annualize(use_mortyr = FALSE)
 #'
 #' # Assign plots to strata, estimation units, and EVLIDs
-#' data_stratified <- fia_assign_strata(data_annualized, db)
+#' data_stratified <- fia_design(data_annualized, db)
 #' }
 #' @seealso [fia_eval_info()] to see all possible EVALIDs associated with plots.
 #' @export
-fia_assign_strata <- function(data_annualized, db) {
+fia_design <- function(data_annualized, db) {
   pop_info <- fia_eval_info(db)
 
   # # TODO need to collapse EVALIDs that are only EXPVOL or EXPCURR into a single
@@ -104,11 +104,11 @@ fia_assign_strata <- function(data_annualized, db) {
     # Calculate P2POINTCNT ("The number of field plots that are within the stratum")
     dplyr::mutate(
       .by = c(EVALID, ESTN_UNIT_CN, STRATUM_CN, YEAR),
-      P2POINTCNT = ifelse(!is.na(EVALID), length(unique(plot_ID)), NA)
+      P2POINTCNT_ft = ifelse(!is.na(EVALID), length(unique(plot_ID)), NA)
     ) |>
     # Calculate EXPNS
     dplyr::mutate(
-      EXPNS = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT
+      EXPNS_ft = (AREA_USED * P1POINTCNT / P1PNTCNT_EU) / P2POINTCNT_ft
     )
 
   # If a plot isn't assigned an EVALID, it's not EXPCURR or EXPVOL
@@ -167,7 +167,8 @@ fia_eval_info <- function(db) {
       ESTN_UNIT_CN,
       STRATUMCD,
       STRATUM_DESCR,
-      P1POINTCNT
+      P1POINTCNT,
+      P2POINTCNT
     ) |>
     dplyr::mutate(dplyr::across(dplyr::ends_with("_CN"), as.character))
 

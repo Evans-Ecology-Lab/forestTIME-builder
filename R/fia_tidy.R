@@ -31,12 +31,20 @@ fia_tidy <- function(db) {
 
   PLOT <-
     db$PLOT |>
+    #fix Oregon plot with incorrect UNITCD
+    dplyr::mutate(UNITCD = dplyr::case_when(STATECD  == 41 &
+                                     COUNTYCD == 49 &
+                                     PLOT     == 60223 &
+                                     INVYR    == 2002 &
+                                     UNITCD   == 4 ~ 3,
+                                     TRUE ~ UNITCD)) |>
     dplyr::mutate(CN = as.character(CN)) |>
     fia_add_composite_ids() |>
     dplyr::select(
       plot_ID,
       PLT_CN = CN,
       INVYR,
+      MEASYEAR,
       MACRO_BREAKPOINT_DIA, #for assigning TPA_UNADJ
       INTENSITY,
       SUBCYCLE,
@@ -104,6 +112,10 @@ fia_tidy <- function(db) {
     dplyr::filter(INVYR >= annual_inventory_start) |>
     dplyr::select(-UNITCD, -STATECD, -COUNTYCD, -PLOT, -SUBP, -TREE)
 
+  # filter out subcycle 0 and 99 plots
+  data <- data |>
+    dplyr::filter(SUBCYCLE !=0 & SUBCYCLE !=99)
+
   # fill MORTYR so it is a property of trees
   data <- data |>
     dplyr::group_by(tree_ID) |>
@@ -118,11 +130,21 @@ fia_tidy <- function(db) {
   all_plots <- data |>
     dplyr::select(plot_ID, INVYR) |>
     dplyr::distinct() |>
-    dplyr::left_join(PLOT, by = dplyr::join_by(plot_ID, INVYR))
+    dplyr::left_join(PLOT |> dplyr::select(-MEASYEAR),
+                     by = dplyr::join_by(plot_ID, INVYR))
 
   # coalesce ACTUALHT so it can be interpolated
   data <- data |>
     dplyr::mutate(ACTUALHT = dplyr::coalesce(ACTUALHT, HT))
+
+  # fill NA values in MEASYEAR column with INVYR.
+  data <- data |>
+    dplyr::mutate(
+      MEASYEAR_NA_flag = dplyr::if_else(
+        is.na(MEASYEAR),
+        "MEASYEAR filled with INVYR",
+        NA_character_),
+      MEASYEAR = dplyr::coalesce(MEASYEAR, INVYR))
 
   # join the empty plots back in
   data <-
@@ -140,8 +162,10 @@ fia_tidy <- function(db) {
       )
     ) |>
     dplyr::arrange(plot_ID, tree_ID, INVYR) |>
-    dplyr::select(plot_ID, tree_ID, INVYR, everything())
+    dplyr::select(plot_ID, tree_ID, INVYR, MEASYEAR, everything()) |>
+    dplyr::select(-annual_inventory_start)
 
   # return:
   data
 }
+
