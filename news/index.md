@@ -5,23 +5,19 @@
 - Now uses the annual inventory start years from Appendix J of the FIADB
   user guide to filter both raw data (in
   [`fia_tidy()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_tidy.md))
-  and EVALIDs (in
-  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md))
-  to include only annual inventory years and exclude earlier periodic
-  inventories.
+  and EVALIDs (in `fia_assign_strata()`) to include only annual
+  inventory years and exclude earlier periodic inventories.
 - Fix to internal function
   [`inter_extra_polate()`](https://evans-ecology-lab.github.io/forestTIME/reference/inter_extra_polate.md)
   which was not handling leading `NA`s correctly in linear interpolation
   ([\#225](https://github.com/Evans-Ecology-Lab/forestTIME/issues/225)).
 - EVALIDs specific to East or West Texas won’t be matched to plots by
-  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md).
+  `fia_assign_strata()`.
 - Early EVALIDs in NM and WY that “don’t work” no longer assigned to
-  plots by
-  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md).
-- Changed behavior of
-  [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md)
-  so that for each plot x year, the *first* EVALID that contains the
-  `YEAR` (i.e. between `START_INVYR` and `END_INVYR`) is matched.
+  plots by `fia_assign_strata()`.
+- Changed behavior of `fia_assign_strata()` so that for each plot x
+  year, the *first* EVALID that contains the `YEAR` (i.e. between
+  `START_INVYR` and `END_INVYR`) is matched.
 - Changed package license to MIT.
 - Fixed a bug where for woodland species, carbon was being replaced with
   biomass.
@@ -34,10 +30,10 @@
 - The internal function
   [`fia_eval_info()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_eval_info.md)
   was added.
-- [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md)
-  was added to match plots in each year of the annualized data to an
-  EVALID, estimation unit, and stratum along with associated values
-  necessary for population level estimation with variance calculations.
+- `fia_assign_strata()` was added to match plots in each year of the
+  annualized data to an EVALID, estimation unit, and stratum along with
+  associated values necessary for population level estimation with
+  variance calculations.
 - [`fia_tidy()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_tidy.md)
   now adds several columns from the POP\_\* tables relating to EVALIDs.
   Each plot in each INVYR is matched to the EVALID of each type that has
@@ -63,20 +59,18 @@
 - A temporary workaround was implmented to deal with missing code for
   calculating biomass and carbon for woodland species
   ([\#163](https://github.com/Evans-Ecology-Lab/forestTIME/issues/163)).
-  Eventually, we will modify
-  [`fia_estimate()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_estimate.md)
-  to be able to produce carbon and biomass estimates for woodland
-  species and this can be reverted to avoid confusion.
+  Eventually, we will modify `fia_estimate()` to be able to produce
+  carbon and biomass estimates for woodland species and this can be
+  reverted to avoid confusion.
   - [`fia_tidy()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_tidy.md)
     now keeps the `CARBON_AG` and `DRYBIO_AG` columns
   - [`interpolate_data()`](https://evans-ecology-lab.github.io/forestTIME/reference/interpolate_data.md)
     (and therefore
     [`fia_annualize()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_annualize.md))
     now linearly interpolates `CARBON_AG` and `DRYBIO_AG`
-  - [`fia_estimate()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_estimate.md)
-    now overwrites `CARBON_AG` and `DRYBIO_AG` columns in the input
-    unless the result of carbon estimation is `NA` (as is the case with
-    woodland species).
+  - `fia_estimate()` now overwrites `CARBON_AG` and `DRYBIO_AG` columns
+    in the input unless the result of carbon estimation is `NA` (as is
+    the case with woodland species).
 - The calculation of the `EXPNS` column no longer occurs as part of
   [`interpolate_data()`](https://evans-ecology-lab.github.io/forestTIME/reference/interpolate_data.md).
 
@@ -96,9 +90,9 @@
   with no observations). It now falls back on the information in
   `plot_ID` when `tree_ID` is in the data frame but `NA`
   ([\#149](https://github.com/Evans-Ecology-Lab/forestTIME/issues/149)).
-- [`fia_estimate()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_estimate.md)
-  now returns the additional variables `DRIBIO_FOLIAGE`, `VOLTSGRS`, and
-  `VOLTSSND` in addition to `DRYBIO_AG` and `CARBON_AG`.
+- `fia_estimate()` now returns the additional variables
+  `DRIBIO_FOLIAGE`, `VOLTSGRS`, and `VOLTSSND` in addition to
+  `DRYBIO_AG` and `CARBON_AG`.
 - Code to deal with negative extrapolated values has moved to
   [`adjust_mortality()`](https://evans-ecology-lab.github.io/forestTIME/reference/adjust_mortality.md).
   Therefore, the results of

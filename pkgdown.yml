@@ -1,10 +1,10 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   forestTIME: forestTIME.html
   pop_scaling: pop_scaling.html
-last_built: 2026-04-28T16:41Z
+last_built: 2026-06-09T17:48Z
 urls:
   reference: https://evans-ecology-lab.github.io/forestTIME/reference
   article: https://evans-ecology-lab.github.io/forestTIME/articles

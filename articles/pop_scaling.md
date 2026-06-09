@@ -6,6 +6,7 @@
 > `forestTIME`! We will fix it soon!
 
 ``` r
+
 library(forestTIME)
 library(dplyr)
 library(rFIA)
@@ -31,6 +32,7 @@ to set `extract = "rFIA"` to extract all the tables needed for both
 `forestTIME` and `rFIA`.
 
 ``` r
+
 fia_download(states = "RI", download_dir = "fia", extract = "rFIA")
 ```
 
@@ -41,6 +43,7 @@ fia_download(states = "RI", download_dir = "fia", extract = "rFIA")
 > ballpark.
 >
 > ``` r
+>
 > rfia_RI <- readFIA(
 >   dir = system.file("exdata", package = "forestTIME"),
 >   states = "RI"
@@ -80,6 +83,7 @@ We’ll use the standard basic workflow to get estimated aboveground
 carbon for each tree in each year.
 
 ``` r
+
 # Data prep
 db <- fia_load(
   "RI",
@@ -91,7 +95,7 @@ data <- fia_tidy(db) #single tibble
 # Adjust for mortality and estimate carbon.
 data_midpt <- data |>
   fia_annualize(use_mortyr = FALSE) |>
-  fia_estimate()
+  fia_allometry()
 ```
 
 I’ll add domain indicator columns as is done in the `rFIA` demystified
@@ -109,6 +113,7 @@ So we can’t just `filter(STATUSCD == 1 & COND_STATUSCD == 1)` to
 estimate carbon tons/acre.
 
 ``` r
+
 data_midpt <-
   data_midpt |>
   mutate(
@@ -131,6 +136,7 @@ We think these `EXPNS` values can be used much in the same way as the
 ones in the “raw” FIA database.
 
 ``` r
+
 data_midpt <- data_midpt |> fia_calc_expns()
 
 data_midpt |>
@@ -151,6 +157,7 @@ demystified
 vignette](https://doserlab.com/files/rfia/articles/fiademystified#without-sampling-errors).
 
 ``` r
+
 tree_totals <- data_midpt |>
   group_by(plot_ID, YEAR) |>
   summarize(
@@ -186,6 +193,7 @@ agc_pop
 ```
 
 ``` r
+
 all <- bind_rows(agc_rfia_annual, agc_rfia_ti, agc_pop)
 
 ggplot(all, aes(x = YEAR, y = carbon_total, color = method)) +

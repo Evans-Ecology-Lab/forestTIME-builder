@@ -41,4 +41,4 @@ This does the following:
 - Adjusts `DECAYCD` so that it only applies to standing dead trees
 
 - Adjusts `DIA`, `HT`, `ACTUALHT`, `CULL`, and `CR` so that they only
-  apply to live or standing dead trees in sampled conitions.
+  apply to live or standing dead trees in sampled conditions.

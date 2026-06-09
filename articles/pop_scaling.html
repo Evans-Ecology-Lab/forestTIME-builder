@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Population scaling • forestTIME</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="pop_scaling_files/libs/quarto-html/popper.min.js"></script><script src="pop_scaling_files/libs/quarto-html/tippy.umd.min.js"></script><link href="pop_scaling_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="pop_scaling_files/libs/quarto-html/light-border.css" rel="stylesheet">
@@ -153,7 +153,7 @@
 <span><span class="co"># Adjust for mortality and estimate carbon.</span></span>
 <span><span class="va">data_midpt</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fia_annualize.html">fia_annualize</a></span><span class="op">(</span>use_mortyr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/fia_estimate.html">fia_estimate</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/fia_allometry.html">fia_allometry</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>I’ll add domain indicator columns as is done in the <code>rFIA</code> demystified vignette so we calculate carbon in live trees per area of forested land using base intensity plots only. Reason:</p>
 <blockquote>

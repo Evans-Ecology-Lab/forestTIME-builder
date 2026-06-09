@@ -1,6 +1,7 @@
 # forestTIME
 
 ``` r
+
 library(forestTIME)
 #> ! forestTIME is an experimental package and currently a work-in-progress. It is
 #>   not an official product of the US Forest Service. MESSAGE CHANGE!
@@ -24,6 +25,7 @@ downloads zip files of all CSVs and extracts the necessary ones. It will
 skip downloading if the files already exist.
 
 ``` r
+
 fia_download(
   states = "DE",
   download_dir = "fia",
@@ -43,18 +45,11 @@ is a wrapper around
 and reads in all the required tables as a list of data frames.
 
 ``` r
+
 db <- fia_load(states = "DE", dir = "fia")
 names(db)
 ```
 
-    #> Warning: replacing previous import 'bit64::setdiff' by 'dplyr::setdiff' when
-    #> loading 'rFIA'
-    #> Warning: replacing previous import 'bit64::intersect' by 'dplyr::intersect'
-    #> when loading 'rFIA'
-    #> Warning: replacing previous import 'bit64::union' by 'dplyr::union' when
-    #> loading 'rFIA'
-    #> Warning: replacing previous import 'bit64::setequal' by 'dplyr::setequal' when
-    #> loading 'rFIA'
     #> [1] "COND"                   "PLOT"                   "PLOTGEOM"
     #> [4] "POP_ESTN_UNIT"          "POP_EVAL_TYP"           "POP_EVAL"
     #> [7] "POP_PLOT_STRATUM_ASSGN" "POP_STRATUM"            "TREE"
@@ -64,9 +59,10 @@ gets all the columns needed into a single table and create the unique
 plot and tree IDS, `plot_ID` and `tree_ID`.
 
 ``` r
+
 data <- fia_tidy(db)
 #> ℹ Wrangling data
-#> ✔ Wrangling data [517ms]
+#> ✔ Wrangling data [525ms]
 #> 
 data
 ```
@@ -74,6 +70,7 @@ data
 Check that each tree has only 1 entry per year
 
 ``` r
+
 n <- data |>
   group_by(tree_ID, INVYR) |>
   filter(!is.na(tree_ID)) |> #remove empty plots
@@ -105,13 +102,13 @@ data_midpt <- fia_annualize(data, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [4.9s]
+#> ✔ Expanding years between surveys [5.9s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [18.1s]
+✔ Interpolating between surveys [21s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [21.4s]
+✔ Adjusting for mortality [24.6s]
 ```
 
 ``` r
@@ -122,16 +119,17 @@ data_midpt_stepwise <- data |>
 #> ℹ Adjusting for mortality
 #> ℹ Interpolating between surveys
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [5s]
+#> ✔ Expanding years between surveys [5.7s]
 #> 
 #> ℹ Interpolating between surveys
-✔ Interpolating between surveys [18.1s]
+✔ Interpolating between surveys [20.5s]
 #> 
 #> ℹ Adjusting for mortality
-✔ Adjusting for mortality [21.1s]
+✔ Adjusting for mortality [23.9s]
 ```
 
 ``` r
+
 identical(data_midpt, data_midpt_stepwise)
 #> [1] TRUE
 ```
@@ -148,9 +146,10 @@ them from the `NA`s between surveys to aid in linear interpolation in
 later steps.
 
 ``` r
+
 data_expanded <- expand_data(data)
 #> ℹ Expanding years between surveys
-#> ✔ Expanding years between surveys [5.1s]
+#> ✔ Expanding years between surveys [5.6s]
 #> 
 data_expanded
 ```
@@ -169,9 +168,10 @@ species), they are assumed to be fallen dead and have `STATUSCD` set to
 2 and `STANDING_DEAD_CD` set to 0.
 
 ``` r
+
 data_interpolated <- interpolate_data(data_expanded)
 #> ℹ Interpolating between surveys
-#> ✔ Interpolating between surveys [12.9s]
+#> ✔ Interpolating between surveys [15s]
 #> 
 data_interpolated
 ```
@@ -184,15 +184,16 @@ dead trees and `STANDING_DEAD_CD` only applies to trees with `STATUSCD`
 2 (dead).
 
 ``` r
+
 data_mortyr <- adjust_mortality(data_interpolated, use_mortyr = TRUE)
 #> ℹ Adjusting for mortality
 #> Warning: ! No recorded `MORTYR` in data.
 #> ℹ Setting `use_mortyr` to `FALSE`
-#> ✔ Adjusting for mortality [3.2s]
+#> ✔ Adjusting for mortality [3.4s]
 #> 
 data_midpt <- adjust_mortality(data_interpolated, use_mortyr = FALSE)
 #> ℹ Adjusting for mortality
-#> ✔ Adjusting for mortality [3.2s]
+#> ✔ Adjusting for mortality [3.5s]
 #> 
 all.equal(data_mortyr, data_midpt)
 #> [1] TRUE
@@ -204,28 +205,28 @@ differ slightly for some subset of trees.
 
 ## Carbon Estimation
 
-[`fia_estimate()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_estimate.md)
+[`fia_allometry()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_allometry.md)
 uses code provided by David Walker to calculate carbon and biomass
 variables using the National Scale Volume and Biomass estimators (NSVB)
 ([Westfall et al. 2024](#ref-westfall2024)).
 
 ``` r
-data_midpt_carbon <- fia_estimate(data_midpt)
+
+data_midpt_carbon <- fia_allometry(data_midpt)
 #> ℹ Prepping for estimating carbon
-#> ✔ Prepping for estimating carbon [189ms]
+#> ✔ Prepping for estimating carbon [293ms]
 #> 
 #> ⠙ Estimating carbon: prepping data
 #> ⠹ Estimating carbon: finding merchantable height
 #> ⠸ Estimating carbon: predicting merchantable stem wood volume
-#> ⠼ Estimating carbon: predicting stump wood and bark volume
+#> ⠼ Estimating carbon: predicting merchantable stem wood and bark volume
 #> ⠴ Estimating carbon: predicting sawlog stem wood volume
-#> ⠦ Estimating carbon: predicting sawlog stem wood and bark volume
-#> ⠧ Estimating carbon: predicting total stem bark weight
-#> ⠇ Estimating carbon: predicting foliage weight
-#> ✔ Estimating carbon: harmonizing components [32.5s]
+#> ⠦ Estimating carbon: predicting total biomass
+#> ⠧ Estimating carbon: predicting foliage weight
+#> ✔ Estimating carbon: harmonizing components [30.2s]
 #> 
 #> ℹ Joining carbon estimation results
-#> ✔ Joining carbon estimation results [30ms]
+#> ✔ Joining carbon estimation results [58ms]
 #> 
 data_midpt_carbon
 ```

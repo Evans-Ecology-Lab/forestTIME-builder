@@ -4,14 +4,15 @@
 
 - [`fia_add_composite_ids()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_add_composite_ids.md)
   : Add composite ID columns to data
+- [`fia_allometry()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_allometry.md)
+  : Scale interpolated tree-level biometric data to tree-level biomass
+  and carbon using NSVB framework
 - [`fia_annualize()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_annualize.md)
   : Create annualized FIA data
-- [`fia_assign_strata()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_assign_strata.md)
+- [`fia_design()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_design.md)
   : Assign interpolated data plots to estimation units and strata
 - [`fia_download()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_download.md)
   : Download zip files from FIA datamart
-- [`fia_estimate()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_estimate.md)
-  : Estimate biomass and carbon using NSVB framework
 - [`fia_load()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_load.md)
   : Read in needed tables
 - [`fia_split_composite_ids()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_split_composite_ids.md)

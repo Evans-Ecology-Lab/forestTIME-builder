@@ -33,10 +33,6 @@ for "undoing" this.
 
 ``` r
 db <- fia_load("RI", dir = system.file("exdata", package = "forestTIME"))
-#> Warning: replacing previous import ‘bit64::setdiff’ by ‘dplyr::setdiff’ when loading ‘rFIA’
-#> Warning: replacing previous import ‘bit64::intersect’ by ‘dplyr::intersect’ when loading ‘rFIA’
-#> Warning: replacing previous import ‘bit64::union’ by ‘dplyr::union’ when loading ‘rFIA’
-#> Warning: replacing previous import ‘bit64::setequal’ by ‘dplyr::setequal’ when loading ‘rFIA’
 fia_add_composite_ids(db$TREE)
 #> # A tibble: 22,707 × 196
 #>    plot_ID  tree_ID         CN  PLT_CN PREV_TRE_CN INVYR STATECD UNITCD COUNTYCD

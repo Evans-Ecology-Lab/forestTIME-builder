@@ -17,12 +17,14 @@ every tree in every year rather than the original panel design.
 To install from r-universe:
 
 ``` r
+
 install.packages("forestTIME", repos = c("https://cct-datascience.r-universe.dev", getOption("repos")))
 ```
 
 To install from GitHub:
 
 ``` r
+
 #install.packages("pak")
 pak::pak("Evans-Ecology-Lab/forestTIME")
 ```

@@ -43,7 +43,7 @@ Trees with only one measurement have that measurement carried forward as
 appropriate (e.g. until fallen and dead or in non-sampled condition).
 
 Since missing values for `CULL` are already assumed to be 0 by
-[`fia_estimate()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_estimate.md),
+[`fia_allometry()`](https://evans-ecology-lab.github.io/forestTIME/reference/fia_allometry.md),
 they are converted to 0s by
 [`expand_data()`](https://evans-ecology-lab.github.io/forestTIME/reference/expand_data.md)
 for better linear interpolation here and then set back to `NA` if `DIA`
