@@ -133,6 +133,7 @@ expand_data <- function(data, year_var = c("INVYR", "MEASYEAR")) {
         "CULL"
       )),
       everything()
-    )
+    ) |>
+    dplyr::select(-INVYR, -MEASYEAR)
   tree_annual
 }
