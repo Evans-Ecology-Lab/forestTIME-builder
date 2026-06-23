@@ -277,7 +277,7 @@ mean(carb_pop$carbon_ton_acre)
 ```
 
 ```{r}
-#| label: plot-results
+#| label: post-strat-results
 
 all <- bind_rows(agc_rfia_annual, agc_rfia_ti, agc_pop)
 
