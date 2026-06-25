@@ -38,8 +38,6 @@ How can we use the interpolated data produced by `forestTIME` to get population-
 
 ::: callout-warning
 
-The interpolated values produced by `forestTIME` are *inferences* and not samples but we will treat them the same to produce state-level estimates
-
 The interpolated values produced by `forestTIME` are *inferences* and not samples, so it may not be appropriate to use (modified) design-based estimators, as we do in this vignette, which treat the data, including interpolated values, as a probability sample.
 
 :::
@@ -119,7 +117,7 @@ data_midpt <- data |>
 
 ## Domain Indicator 
 
-We'll add domain indicator columns as is done in the `rFIA` demystified vignette following equation 4.1, pg. 47 of Bechtold and Patterson(2005). These will be used to select which trees/plots/conditions fall within our population of interest. In this example we set the domain indicator for live trees per area of forested land.
+We'll add domain indicator columns as is done in the `rFIA` demystified vignette following equation 4.1, pg. 47 of Bechtold and Patterson(2005). These will be used to select which trees/plots/conditions fall within our population of interest. In this example we set the domain indicator for live trees per acre of forested land.
 
 Reason:
 
@@ -141,24 +139,24 @@ data_midpt <-
 ```
 
 
-## Using Expansion Factors
+## Without Sampling Error - Using Expansion Factors
 
-Expansion factors are weights that scale tree-level measurements to population-level totals. They were widely used in the older periodic FIA sampling design because they made estimation simple. However, expansion factors do not support valid variance estimation, and in the annual panel system they become unstable because each panel combination produces different weights. They are still widely used so we will demonstrate how to use them with our annualized dataset. See [Bechtold and Patterson (2005)](https://www.srs.fs.usda.gov/pubs/gtr/gtr_srs080/gtr_srs080.pdf) section 4.4 for more information. 
+Expansion factors are weights that scale tree-level measurements to population-level totals. They were widely used in the older periodic FIA sampling design because they made estimation simple. However, the expansion factors provided in FIADB (POP_STRATUM.EXPNS) do not support valid variance estimation, and in the annual panel system they become unstable because each panel combination produces different weights. They are still widely used so we will demonstrate how to use them with our annualized data set. See [Bechtold and Patterson (2005)](https://www.srs.fs.usda.gov/pubs/gtr/gtr_srs080/gtr_srs080.pdf) section 4.4 for more information. 
 
-The FIA-supplied `EXPNS` values are no longer appropriate when using forestTIME because annualization changes the number of plots. We therefore compute a new expansion factor (`EXPNS_ft`) in fia_design using FIA's post stratified evaluation information with our updated plot counts. 
+The FIA-supplied `EXPNS` values are no longer appropriate when using forestTIME because annualization changes the number of plots with "measurements" in each individual year. We therefore compute a new expansion factor (`EXPNS_ft`) in fia_design using FIA's post stratified evaluation information with our updated plot counts. 
 
 We think these `EXPNS` values can be used much in the same way as the ones in the "raw" FIA database.
 
 Using these expansion factors, we can follow the methods in the [FIA demystified vignette](https://doserlab.com/files/rfia/articles/fiademystified#without-sampling-errors).
 
 ```{r}
-#| label: estimators
+#| label: without-sample-error-estimators
 
 tree_totals <- data_midpt |>
   group_by(plot_ID, YEAR) |>
   summarize(
     # purposefully omits adjustment factor `aAdj` because it is assumed to be 1
-    carbPlot = sum(CARBON_AG * TPA_UNADJ * EXPNS_ft * tDI / 2000, na.rm = TRUE), #tons/plot
+    carbPlot = sum(CARBON_AG_ft * TPA_UNADJ * EXPNS_ft * tDI / 2000, na.rm = TRUE), #tons/plot
   )
 
 area_totals <- data_midpt |>
@@ -189,7 +187,7 @@ agc_pop
 ```
 
 ```{r}
-#| label: plot-results
+#| label: plot-without-sample-error-results
 
 all <- bind_rows(agc_rfia_annual, agc_rfia_ti, agc_pop)
 
@@ -205,15 +203,19 @@ ggplot(all, aes(x = YEAR, y = carbon_ton_acre, color = method)) +
 
 We have some ballpark similar estimates to the ones `rFIA` produces.
 
-## Using Post-Stratification
+## With Sampling Error
 
-If we want to compute sampling error using FIA's design-based variance estimator, we cannot use `EXPNS`. Instead, we need to use post-stratification where the landscape is divided into estimation units (for example, private land, public land, water) and then into smaller strata (for example, tree canopy cover) using remote-sensing data. Each pixel is assigned to a stratum, and the proportion of area in each stratum becomes its stratum weight. Phase 2 ground plots are then linked to their stratum (P2POINTCNT), and plot-level measurements are averaged within each stratum. The stratum means are then combined using the stratum weights first at the strata level and then at the estimation unit level to produced design-based population estimates. This stratified information changes from year to year as the land is resurvyed and this is reflected in the `EVALID`.
+Note: Doing population scaling this way is compatible with FIA variance estimation but has not yet been implemented in forestTIME
 
-The `fia_design()` function attaches all of the necessary design information to the annualized data so that population estimates can be produced using FIA's post-stratified estimators. forestTIME attempts to match the data year to the same evalution year however, some plots belong to non-matching evaluation years if a). no evaluation was done that year or b). the plot never belonged to that evaluation. 
+If we want to compute sampling error using FIA's design-based variance estimator, we cannot use `EXPNS`. Instead, we need to use post-stratification where the landscape is divided into estimation units (for example, private land, public land, water) and then into smaller strata (for example, tree canopy cover) using remote-sensing data. Each pixel is assigned to a stratum, and the proportion of area in each stratum becomes its stratum weight. Phase 2 ground plots are then linked to their stratum (P2POINTCNT), and plot-level measurements are averaged within each stratum. The stratum means are then combined using the stratum weights first at the strata level and then at the estimation unit level to produced design-based population estimates. This stratified information changes from year to year as the land is resurveyed and this is reflected in the `EVALID`.
+
+The `fia_design()` function attaches all of the necessary design information to the annualized data so that population estimates can be produced using FIA's post-stratified estimators. forestTIME attempts to match the data year to the same evaluation year however, some plots belong to non-matching evaluation years if a). no evaluation was done that year or b). the plot never belonged to that evaluation. 
 
 ```{r}
+#| label: with-sample-error-estimators-plot-level
+
 #  Estimate Tree attributes -- plot level
-tree_pop <- data_midpt_carbon |>
+tree_pop <- data_midpt |>
   filter(EXPVOL == TRUE) |>
   distinct(ESTN_UNIT_CN, STRATUM_CN, CONDID, plot_ID, tree_ID, YEAR, .keep_all = TRUE) |>
   group_by(YEAR, ESTN_UNIT_CN, STRATUM_CN, plot_ID, EVALID) |>
@@ -223,7 +225,7 @@ tree_pop <- data_midpt_carbon |>
   )
 
 # Estimate Area attributes -- plot level
-area_pop <- data_midpt_carbon |>
+area_pop <- data_midpt |>
   filter(EXPCURR == TRUE) |>   # use EXPCURR flag
   distinct(ESTN_UNIT_CN, STRATUM_CN, CONDID, plot_ID, YEAR, .keep_all = TRUE) |>
   group_by(YEAR, P1POINTCNT, P1PNTCNT_EU, P2POINTCNT_ft, AREA_USED,
@@ -238,6 +240,8 @@ carb_pop_plot <- left_join(tree_pop, area_pop)
 ```
 
 ```{r}
+#| label: with-sample-error-estimators-strata-level
+
 # Strata level estimates
 carb_pop_strat <- carb_pop_plot |>
   group_by(YEAR, ESTN_UNIT_CN, STRATUM_CN, EVALID) |>
@@ -257,6 +261,8 @@ carb_pop_eu <- carb_pop_strat |>
 ```
 
 ```{r}
+#| label: with-sample-error-estimators-estn-level
+
 # sum across Estimation Units for totals
 carb_pop <- carb_pop_eu |>
   group_by(YEAR) |>
@@ -277,7 +283,7 @@ mean(carb_pop$carbon_ton_acre)
 ```
 
 ```{r}
-#| label: post-strat-results
+#| label: plot-with-sample-error-results
 
 all <- bind_rows(agc_rfia_annual, agc_rfia_ti, agc_pop)
 
