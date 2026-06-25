@@ -104,6 +104,7 @@ test_that("TPA_UNADJ is interpolated correctly", {
       YEAR = c(2006, 2004, 2006),
       DIA = c(3, 5.8, 35.5),
       CULL = c(0, 0, 0),
+      CR = c(25, 35, 55),
       PROP_BASIS = c("MACR", "MACR", "MACR"),
       MACRO_BREAKPOINT_DIA = c(30L, 30L, 30L),
       interpolated = c(FALSE, FALSE, FALSE),
