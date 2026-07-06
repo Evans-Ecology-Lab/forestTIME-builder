@@ -91,13 +91,14 @@ fia_design <- function(data_annualized, db) {
     # For each tree x year, only keep one row (the first/earliest EVALID match)
     dplyr::group_by(plot_ID, tree_ID, YEAR) |>
     dplyr::slice_head(n = 1) |>
+    # TODO: review this
     # Fill down within each tree to carry EVALIDs forward across inventories where
     # trees weren't sampled.  Not doing this by plot because there are some edge
     # cases where a plot was not sampled and then an entirely different set of
     # trees was sampled the following inventory.
-    dplyr::arrange(plot_ID, tree_ID, YEAR) |>
-    dplyr::group_by(tree_ID) |>
-    tidyr::fill(dplyr::any_of(colnames(chosen_evals)), .direction = "down") |>
+    #dplyr::arrange(plot_ID, tree_ID, YEAR) |>
+    #dplyr::group_by(tree_ID) |>
+    #tidyr::fill(dplyr::any_of(colnames(chosen_evals)), .direction = "down") |>
     dplyr::ungroup()
 
   data_expns <- data_eval |>
