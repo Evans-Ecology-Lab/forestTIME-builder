@@ -250,6 +250,8 @@ carb_pop_strat <- carb_pop_plot |>
             # We don't want a vector of these values, since they are repeated
             P2POINTCNT = first(P2POINTCNT_ft),
             AREA_USED = first(AREA_USED),
+                # Strata weight, relative to estimation unit
+            w = first(P1POINTCNT) / first(P1PNTCNT_EU),
             .groups = 'drop')
 
 # Moving on to the estimation unit estimates
