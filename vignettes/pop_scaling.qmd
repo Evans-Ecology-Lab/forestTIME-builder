@@ -18,13 +18,6 @@ execute:
   eval: false
 ---
 
-::: {.callout-caution}
-## 🚧 UNDER CONSTRUCTION 🚧
-
-This vignette currently doesn't work with the latest version of `forestTIME`!  We will fix it soon!
-
-:::
-
 ```{r}
 #| label: setup
 
@@ -162,7 +155,7 @@ tree_totals <- data_midpt |>
 area_totals <- data_midpt |>
   group_by(plot_ID, YEAR) |>
   # Keep only one row for each condition in each plot and year
-  distinct(CONDID, COND_STATUS_CD, CONDPROP_UNADJ, EXPNS, aDI) |>
+  distinct(CONDID, COND_STATUS_CD, CONDPROP_UNADJ, EXPNS_ft, aDI) |>
   summarize(
     # purposefully omits adjustment factor `aAdj` because it is assumed to be 1
     forArea = sum(CONDPROP_UNADJ * EXPNS_ft * aDI, na.rm = TRUE) #acres/plot
@@ -205,7 +198,7 @@ We have some ballpark similar estimates to the ones `rFIA` produces.
 
 ## With Sampling Error
 
-Note: Doing population scaling this way is compatible with FIA variance estimation but has not yet been implemented in forestTIME
+Note: Small strata merging has not yet been implemented in the forestTIME workflow so some strata may contain too few plots to compute reliable variance estimates. Small strata merging is currently being developed for forestTIME. Disregard if only interested in totals and ratio estimates.
 
 If we want to compute sampling error using FIA's design-based variance estimator, we cannot use `EXPNS`. Instead, we need to use post-stratification where the landscape is divided into estimation units (for example, private land, public land, water) and then into smaller strata (for example, tree canopy cover) using remote-sensing data. Each pixel is assigned to a stratum, and the proportion of area in each stratum becomes its stratum weight. Phase 2 ground plots are then linked to their stratum (P2POINTCNT), and plot-level measurements are averaged within each stratum. The stratum means are then combined using the stratum weights first at the strata level and then at the estimation unit level to produced design-based population estimates. This stratified information changes from year to year as the land is resurveyed and this is reflected in the `EVALID`.
 
@@ -250,8 +243,16 @@ carb_pop_strat <- carb_pop_plot |>
             # We don't want a vector of these values, since they are repeated
             P2POINTCNT = first(P2POINTCNT_ft),
             AREA_USED = first(AREA_USED),
-                # Strata weight, relative to estimation unit
+            # Strata weight, relative to estimation unit
             w = first(P1POINTCNT) / first(P1PNTCNT_EU),
+            # Strata level variances
+            aVar = (sum(forArea^2) - sum(P2POINTCNT * aStrat^2)) / 
+                   (P2POINTCNT * (P2POINTCNT-1)),
+            carbVar = (sum(carbPlot^2) - sum(P2POINTCNT * carbStrat^2)) / 
+                      (P2POINTCNT * (P2POINTCNT-1)),
+            # Strata level co-varainces
+            carbCV = (sum(forArea*carbPlot) - sum(P2POINTCNT * aStrat *carbStrat)) / 
+                     (P2POINTCNT * (P2POINTCNT-1)), 
             .groups = 'drop')
 
 # Moving on to the estimation unit estimates
@@ -259,6 +260,14 @@ carb_pop_eu <- carb_pop_strat |>
   group_by(YEAR, ESTN_UNIT_CN, EVALID) |>
   summarize(aEst = sum(aStrat * w, na.rm = TRUE) * first(AREA_USED), # Mean Area
             carbEst = sum(carbStrat * w, na.rm = TRUE) * first(AREA_USED), # Mean carbon
+             # Estimation unit variances
+            aVar = (first(AREA_USED)^2 / sum(P2POINTCNT)) *
+              (sum(P2POINTCNT*w*aVar) + sum((1-w)*(P2POINTCNT/sum(P2POINTCNT))*aVar)),
+            carbVar = (first(AREA_USED)^2 / sum(P2POINTCNT)) *
+              (sum(P2POINTCNT*w*carbVar) + sum((1-w)*(P2POINTCNT/sum(P2POINTCNT))*carbVar)),
+            # Estimation unit covariances
+            carbCV = (first(AREA_USED)^2 / sum(P2POINTCNT)) *
+              (sum(P2POINTCNT*w*carbCV) + sum((1-w)*(P2POINTCNT/sum(P2POINTCNT))*carbCV)), 
             .groups = 'drop')
 ```
 
@@ -271,7 +280,16 @@ carb_pop <- carb_pop_eu |>
   summarize(AREA_TOTAL = sum(aEst, na.rm = TRUE),
             CARB_TOTAL = sum(carbEst, na.rm = TRUE),
             # Ratios
-            CARB_ACRE = CARB_TOTAL / AREA_TOTAL) |>
+            CARB_ACRE = CARB_TOTAL / AREA_TOTAL,
+            # Total samping errors
+            AREA_TOTAL_SE = sqrt(sum(aVar, na.rm = TRUE)) / AREA_TOTAL * 100,
+            CARB_TOTAL_SE = sqrt(sum(carbVar, na.rm = TRUE)) / CARB_TOTAL * 100,
+            # Ratio variances
+            carbAcreVar = (1 / AREA_TOTAL^2) * (sum(carbVar) + 
+                          (CARB_ACRE^2) * sum(aVar) - 
+                          2 * CARB_ACRE * sum(carbCV)),
+            CARB_ACRE_SE = sqrt(sum(carbAcreVar, na.rm = TRUE)) / 
+                                   CARB_ACRE * 100) |>
   mutate(method = "forestTIME") |>
   
   # Re ordering
